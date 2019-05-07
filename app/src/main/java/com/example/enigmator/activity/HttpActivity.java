@@ -12,7 +12,7 @@ import com.example.enigmator.controller.HttpAsyncTask;
 /**
  * This class handles network stuff.
  */
-public abstract class HttpActivity extends AppCompatActivity implements IHttpActivity {
+public abstract class HttpActivity extends AppCompatActivity implements IHttpComponent {
     protected HttpAsyncTask httpAsyncTask;
 
     @Override

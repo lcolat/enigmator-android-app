@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.enigmator.activity.HttpActivity;
+import com.example.enigmator.activity.IHttpComponent;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -32,12 +32,12 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
     private static final int READ_TIMEOUT = 9000;
     private static final int CONNECT_TIMEOUT = 14000;
 
-    private final WeakReference<HttpActivity> activity;
+    private final WeakReference<IHttpComponent> activity;
     private final String route;
     private final String method;
     private String requestBody;
 
-    public HttpAsyncTask(HttpActivity activity, String route, String method, @Nullable String requestBody) {
+    public HttpAsyncTask(IHttpComponent activity, String method, String route, @Nullable String requestBody) {
         this.activity = new WeakReference<>(activity);
         this.route = route;
         this.method = method;

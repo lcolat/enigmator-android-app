@@ -38,20 +38,27 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
     private boolean updateMainFragment(@IdRes int itemId) {
+        int index = -1;
         switch (itemId) {
             case R.id.navigation_users:
-                viewPager.setCurrentItem(0);
-                return true;
+                index = 0;
+                break;
             case R.id.navigation_enigma:
-                viewPager.setCurrentItem(1);
-                return true;
+                index = 1;
+                break;
             case R.id.navigation_leaderboard:
-                viewPager.setCurrentItem(2);
-                return true;
+                index = 2;
+                break;
             case R.id.navigation_forum:
-                viewPager.setCurrentItem(3);
-                return true;
+                index = 3;
+                break;
         }
-        return false;
+        if (index < 0) {
+            return false;
+        } else {
+            viewPager.setCurrentItem(index);
+            setTitle(fragmentAdapter.getPageTitle(index));
+            return true;
+        }
     }
 }

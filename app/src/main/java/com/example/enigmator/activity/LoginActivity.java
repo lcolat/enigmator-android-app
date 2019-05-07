@@ -20,13 +20,15 @@ import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class LoginActivity extends HttpActivity implements IHttpActivity {
-    private static final String PREF_USERNAME = "pref_username";
-    private static final String PREF_PASSWORD = "pref_password";
+public class LoginActivity extends HttpActivity implements IHttpComponent {
+    static final String PREF_USERNAME = "pref_username";
+    static final String PREF_PASSWORD = "pref_password";
 
     private ProgressBar mProgressBar;
     private Button mButton;
@@ -92,10 +94,18 @@ public class LoginActivity extends HttpActivity implements IHttpActivity {
         Credentials credentials = new Credentials(username, password);
         String request = gson.toJson(credentials);
 
-        httpAsyncTask = new HttpAsyncTask(this, "/login", HttpAsyncTask.POST, request);
+        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.POST, "/login", request);
+
+        // TODO: remove
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString(PREF_USERNAME, username);
+        editor.putString(PREF_PASSWORD, password);
+        UserEnigmator currentUser = new UserEnigmator(1, 1, "Current", "user", new Date(),
+                username, "current@gmail.com", true, 1, password);
+        editor.putString(MainActivity.PREF_USER, new Gson().toJson(currentUser));
+        editor.apply();
 
         startActivity(new Intent(this, MainActivity.class));
-        //TODO: remove
         // httpAsyncTask.execute();
     }
 
@@ -109,6 +119,13 @@ public class LoginActivity extends HttpActivity implements IHttpActivity {
     public void handleSuccess(String result) {
         mProgressBar.setVisibility(View.GONE);
         mButton.setEnabled(true);
+
+        // TODO: save user locally
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString(PREF_USERNAME, "username");
+        editor.putString(PREF_PASSWORD, "password");
+        editor.putString(MainActivity.PREF_USER, result);
+        editor.apply();
 
         Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
         Log.d(LoginActivity.class.getName(), result);

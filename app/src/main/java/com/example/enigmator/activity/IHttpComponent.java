@@ -1,6 +1,6 @@
 package com.example.enigmator.activity;
 
-public interface IHttpActivity {
+public interface IHttpComponent {
 
     /**
      * Do some UI updates to show that a Http request will be performed
