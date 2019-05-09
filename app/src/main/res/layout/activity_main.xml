@@ -30,45 +30,73 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.42" />
 
-    <Button
-        android:id="@+id/btn_enigma"
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/enigma"
-        app:layout_constraintBottom_toTopOf="@+id/btn_leaderboard"
-        app:layout_constraintEnd_toEndOf="@+id/btn_leaderboard"
-        app:layout_constraintStart_toStartOf="@+id/btn_leaderboard"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <Button
-        android:id="@+id/btn_leaderboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/leaderboard"
-        app:layout_constraintBottom_toTopOf="@+id/btn_forum"
-        app:layout_constraintEnd_toEndOf="@+id/btn_forum"
-        app:layout_constraintStart_toStartOf="@+id/btn_forum"
-        app:layout_constraintTop_toBottomOf="@+id/btn_enigma" />
-
-    <Button
-        android:id="@+id/btn_forum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/forum"
-        app:layout_constraintBottom_toTopOf="@+id/btn_users"
-        app:layout_constraintEnd_toEndOf="@+id/btn_users"
-        app:layout_constraintStart_toStartOf="@+id/btn_users"
-        app:layout_constraintTop_toBottomOf="@+id/btn_leaderboard" />
-
-    <Button
-        android:id="@+id/btn_users"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/users"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_forum" />
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_main"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline">
+
+        <Button
+            android:id="@+id/btn_enigma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/enigma"
+            app:layout_constraintBottom_toTopOf="@+id/btn_leaderboard"
+            app:layout_constraintEnd_toEndOf="@+id/btn_leaderboard"
+            app:layout_constraintStart_toStartOf="@+id/btn_leaderboard"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_leaderboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leaderboard"
+            app:layout_constraintBottom_toTopOf="@+id/btn_forum"
+            app:layout_constraintEnd_toEndOf="@+id/btn_forum"
+            app:layout_constraintStart_toStartOf="@+id/btn_forum"
+            app:layout_constraintTop_toBottomOf="@+id/btn_enigma" />
+
+        <Button
+            android:id="@+id/btn_forum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forum"
+            app:layout_constraintBottom_toTopOf="@+id/btn_users"
+            app:layout_constraintEnd_toEndOf="@+id/btn_users"
+            app:layout_constraintStart_toStartOf="@+id/btn_users"
+            app:layout_constraintTop_toBottomOf="@+id/btn_leaderboard" />
+
+        <Button
+            android:id="@+id/btn_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/users"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_forum" />
+
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>

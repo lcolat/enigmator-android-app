@@ -2,6 +2,8 @@ package com.example.enigmator.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +25,18 @@ public abstract class HttpActivity extends AppCompatActivity implements IHttpCom
         }
     }
 
-    protected AlertDialog buildNoConnectionErrorDialog(Context context, @Nullable DialogInterface.OnClickListener listener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    protected AlertDialog buildNoConnectionErrorDialog(@Nullable DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_no_connection_title);
         builder.setMessage(R.string.dialog_no_connection_message);
         builder.setPositiveButton(android.R.string.ok, listener);
         return builder.create();
+    }
+
+    protected boolean isInternetConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

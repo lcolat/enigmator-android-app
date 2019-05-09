@@ -1,7 +1,12 @@
 package com.example.enigmator.controller;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.enigmator.activity.IHttpComponent;
@@ -9,6 +14,7 @@ import com.example.enigmator.activity.IHttpComponent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,26 +25,37 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
+    public static final String PREF_USER_TOKEN = "pref_user_token";
     private static final String TAG = HttpAsyncTask.class.getName();
 
-    // TODO: change url
-    private static final String BASE_URL = "http://localhost:8000";
+    private static final String BASE_URL = "http://3.19.31.245:3000/api";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
 
-    private static final int READ_TIMEOUT = 9000;
-    private static final int CONNECT_TIMEOUT = 14000;
+    private static final int READ_TIMEOUT = 10000;
+    private static final int CONNECT_TIMEOUT = 15000;
 
-    private final WeakReference<IHttpComponent> activity;
+    private final WeakReference<IHttpComponent> httpComponent;
     private final String route;
     private final String method;
     private String requestBody;
+    private final String token;
 
-    public HttpAsyncTask(IHttpComponent activity, String method, String route, @Nullable String requestBody) {
-        this.activity = new WeakReference<>(activity);
+    public HttpAsyncTask(IHttpComponent component, String method, String route, @Nullable String requestBody) {
+        if (component instanceof Context) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences((AppCompatActivity) component);
+            token = prefs.getString(PREF_USER_TOKEN, null);
+        } else if (component instanceof Fragment) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(((Fragment) component).getContext());
+            token = prefs.getString(PREF_USER_TOKEN, null);
+        } else {
+            token = null;
+        }
+
+        this.httpComponent = new WeakReference<>(component);
         this.route = route;
         this.method = method;
         if (POST.equals(method) || PUT.equals(method)) {
@@ -53,12 +70,12 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        activity.get().prepareRequest();
+        httpComponent.get().prepareRequest();
     }
 
     @Override
     protected String doInBackground(Void... voids) {
-        String result = null;
+        String result;
         HttpURLConnection connection = null;
 
         try {
@@ -70,25 +87,42 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
             connection.setConnectTimeout(CONNECT_TIMEOUT);
             connection.setRequestProperty("Accept", "application/json");
 
+            // Set Token
+            if (token != null) {
+                connection.setRequestProperty("Authorization", token);
+            }
+
             // Send data
             if (requestBody != null) {
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 connection.setDoOutput(true);
                 connection.setFixedLengthStreamingMode(requestBody.length());
 
-                 OutputStream om = new BufferedOutputStream(connection.getOutputStream());
+                OutputStream om = new BufferedOutputStream(connection.getOutputStream());
                 om.write(requestBody.getBytes());
                 om.close();
             }
 
-            // Read data
-            InputStream im = new BufferedInputStream(connection.getInputStream());
-            result = readStream(im);
+            int responseCode  = connection.getResponseCode();
+            Log.e(TAG, "Code: " + responseCode);
+
+            if (responseCode < 400) {
+                // Read data
+                InputStream im = new BufferedInputStream(connection.getInputStream());
+                result = readStream(im);
+            } else {
+                InputStream errorStream = new BufferedInputStream(connection.getErrorStream());
+                result = readStream(errorStream);
+                cancel(false);
+                Log.e(TAG, "Error Stream: " + result);
+            }
         } catch (MalformedURLException e) {
             Log.e(TAG, "MalformedURL: " + BASE_URL + route);
             cancel(false);
+            result = e.getMessage();
         } catch (IOException e) {
-            Log.e(TAG, "Error while opening connection", e);
+            Log.e(TAG, "Error connection", e);
+            result = e.getMessage();
             cancel(false);
         } finally {
             if (connection != null) {
@@ -102,13 +136,14 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onCancelled(String str) {
         super.onCancelled();
-        activity.get().handleError(str);
+        httpComponent.get().handleError(str);
     }
 
     @Override
     protected void onPostExecute(String s) {
+        Log.d(TAG, s);
         if (s != null) {
-            activity.get().handleSuccess(s);
+            httpComponent.get().handleSuccess(s);
         }
     }
 

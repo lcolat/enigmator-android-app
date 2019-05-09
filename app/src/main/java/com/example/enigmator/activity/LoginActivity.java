@@ -1,13 +1,9 @@
 package com.example.enigmator.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,19 +16,20 @@ import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpAsyncTask;
-import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.Serializable;
-import java.util.Date;
+
+import lombok.AllArgsConstructor;
 
 public class LoginActivity extends HttpActivity implements IHttpComponent {
-    static final String PREF_USERNAME = "pref_username";
-    static final String PREF_PASSWORD = "pref_password";
+    private static final String PREF_USERNAME = "pref_username";
+    private static final String PREF_USER_ID = "pref_user_id";
 
     private ProgressBar mProgressBar;
     private Button mButton;
-    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +41,6 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
         final EditText editUsername = findViewById(R.id.edit_username);
         final EditText editPassword = findViewById(R.id.edit_password);
 
-        gson = new Gson();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = prefs.getString(PREF_USERNAME, null);
-        String password = prefs.getString(PREF_PASSWORD, null);
-
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,17 +48,10 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
                 String password = editPassword.getText().toString();
 
                 if (username.length() > 0 && password.length() > 0) {
-
-                    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                    boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-
-                    if (isConnected) {
+                    if (isInternetConnected()) {
                         login(username, password);
                     } else {
-                        AlertDialog dialog = buildNoConnectionErrorDialog(LoginActivity.this, null);
-                        dialog.show();
+                        buildNoConnectionErrorDialog(null).show();
                     }
                 }
             }
@@ -83,30 +67,34 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
             }
         });
 
-        if (username != null && password != null) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = prefs.getString(PREF_USERNAME, null);
+        String userToken = prefs.getString(HttpAsyncTask.PREF_USER_TOKEN, null);
+        int userId = prefs.getInt(PREF_USER_ID, -1);
+
+        if (username != null) {
             editUsername.setText(username);
-            editPassword.setText(password);
-            login(username, password);
+        }
+
+        if (userToken != null && userId > -1) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(MainActivity.USER_ID_KEY, userId);
+            startActivity(intent);
         }
     }
 
+    // TODO: Fix: login fails on first attempt after disconnection
     private void login(String username, String password) {
         Credentials credentials = new Credentials(username, password);
-        String request = gson.toJson(credentials);
+        Gson gson = new Gson();
+        String body = gson.toJson(credentials);
 
-        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.POST, "/login", request);
+        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.POST, "/UserEnigmators/login", body);
+        httpAsyncTask.execute();
 
-        // TODO: remove
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putString(PREF_USERNAME, username);
-        editor.putString(PREF_PASSWORD, password);
-        UserEnigmator currentUser = new UserEnigmator(1, 1, "Current", "user", new Date(),
-                username, "current@gmail.com", true, 1, password);
-        editor.putString(MainActivity.PREF_USER, new Gson().toJson(currentUser));
         editor.apply();
-
-        startActivity(new Intent(this, MainActivity.class));
-        // httpAsyncTask.execute();
     }
 
     @Override
@@ -120,15 +108,19 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
         mProgressBar.setVisibility(View.GONE);
         mButton.setEnabled(true);
 
-        // TODO: save user locally
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(result).getAsJsonObject();
+        int userId = object.get("userId").getAsInt();
+        String token = object.get("id").getAsString();
+
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(PREF_USERNAME, "username");
-        editor.putString(PREF_PASSWORD, "password");
-        editor.putString(MainActivity.PREF_USER, result);
+        editor.putString(HttpAsyncTask.PREF_USER_TOKEN, token);
+        editor.putInt(PREF_USER_ID, userId);
         editor.apply();
 
-        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-        Log.d(LoginActivity.class.getName(), result);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.USER_ID_KEY, userId);
+        startActivity(intent);
     }
 
     @Override
@@ -140,13 +132,9 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
         Log.e(LoginActivity.class.getName(), "Error: "+error);
     }
 
+    @AllArgsConstructor
     private static class Credentials implements Serializable {
         final String username;
         final String password;
-
-        private Credentials(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
     }
 }

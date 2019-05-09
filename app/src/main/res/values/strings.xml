@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Enigmator</string>
 
+    <string name="message_copied">Copied !</string>
+
     <!-- Login Activity -->
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_username">Username</string>
@@ -31,4 +33,6 @@
     <string name="search_icon_description">Search icon</string>
     <string name="rank"># %1$d</string>
     <string name="profile_picture_description">Avatar picture</string>
+    <string name="send_icon_description">Send icon</string>
+    <string name="send_message_hint">Enter message here</string>
 </resources>

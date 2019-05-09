@@ -10,9 +10,6 @@ import android.view.ViewGroup;
 
 import com.example.enigmator.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ForumFragment extends Fragment {
 
     public ForumFragment() {

@@ -73,7 +73,6 @@ public class UserFragment extends Fragment implements IHttpComponent {
         mFriends = new ArrayList<>();
         mOthers = new ArrayList<>();
 
-
         UserEnigmator currentUser = UserEnigmator.getCurrentUser(getContext());
         if (currentUser == null)
             throw new IllegalStateException("User cannot be null");
