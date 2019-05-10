@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.entity.UserEnigmator;
 
 public class MainActivity extends HttpActivity {
     // Shared Preferences
@@ -60,6 +61,12 @@ public class MainActivity extends HttpActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.menu_profile:
+                Intent intent = new Intent(this, UserActivity.class);
+                intent.putExtra(UserActivity.USER_KEY, UserEnigmator.getCurrentUser(this));
+                intent.putExtra(UserActivity.IS_SELF_KEY, true);
+                startActivity(intent);
+                return true;
             case R.id.menu_settings:
                 // TODO : start Settings activity
                 return true;

@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: periodically pull
 public class ChatActivity extends HttpActivity {
     private List<Message> messages;
     private MessageRecyclerViewAdapter mAdapter;
@@ -55,6 +56,7 @@ public class ChatActivity extends HttpActivity {
                         // TODO: post Message
                         Message message = new Message(content);
                         httpAsyncTask = new HttpAsyncTask(ChatActivity.this, HttpAsyncTask.POST, "/messages", gson.toJson(message));
+                        messages.add(message);
                         httpAsyncTask.execute();
                     }
                 } else {
@@ -91,7 +93,7 @@ public class ChatActivity extends HttpActivity {
 
     @Override
     public void handleError(String error) {
-
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

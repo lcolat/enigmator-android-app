@@ -14,18 +14,23 @@ import com.example.enigmator.entity.UserEnigmator;
 
 public class UserActivity extends HttpActivity {
     public static final String USER_KEY = "user_key";
+    static final String IS_SELF_KEY = "is_self_key";
 
     private boolean isFriend;
     private FloatingActionButton button;
 
     private String username;
+    private boolean isSelfProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        final UserEnigmator user = (UserEnigmator) getIntent().getSerializableExtra(USER_KEY);
+        Intent intent = getIntent();
+        final UserEnigmator user = (UserEnigmator) intent.getSerializableExtra(USER_KEY);
+        isSelfProfile = intent.getBooleanExtra(IS_SELF_KEY, false);
+
         username = user.getUsername();
         setTitle(username);
         // TODO: display stats
@@ -39,17 +44,26 @@ public class UserActivity extends HttpActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: remove nextLine
-                isFriend = true;
-                if (isFriend) {
-                    Intent intent = new Intent(UserActivity.this, ChatActivity.class);
-                    intent.putExtra(USER_KEY, user);
-                    startActivity(intent);
+                if (!isSelfProfile) {
+                    // TODO: remove nextLine
+                    isFriend = true;
+                    if (isFriend) {
+                        Intent intent = new Intent(UserActivity.this, ChatActivity.class);
+                        intent.putExtra(USER_KEY, user);
+                        startActivity(intent);
+                    } else {
+                        // TODO: send invite
+                    }
                 } else {
-                    // TODO: send invite
+                    //TODO: editable form
                 }
             }
         });
+
+
+        if (isSelfProfile) {
+            button.setImageResource(R.drawable.ic_edit_white_24dp);
+        }
     }
 
     @Override
@@ -76,7 +90,9 @@ public class UserActivity extends HttpActivity {
     @Override
     public void handleSuccess(String result) {
         button.setEnabled(true);
-        button.setImageResource(R.drawable.ic_chat_white_24dp);
+        if (!isSelfProfile) {
+            button.setImageResource(R.drawable.ic_chat_white_24dp);
+        }
     }
 
     @Override

@@ -93,7 +93,7 @@ public class UserFragment extends Fragment implements IHttpComponent {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        final EditText searchUser = view.findViewById(R.id.edit_search_user);
+        final EditText searchUser = view.findViewById(R.id.edit_search);
         RecyclerView friends = view.findViewById(R.id.list_friends);
         RecyclerView others = view.findViewById(R.id.list_search_user);
         friends.setAdapter(mFriendsAdapter);
@@ -103,7 +103,7 @@ public class UserFragment extends Fragment implements IHttpComponent {
 
         mLayout = view.findViewById(R.id.layout_user_fragment);
         mProgressBar = view.findViewById(R.id.progress_loading);
-        final ImageButton button = view.findViewById(R.id.btn_search_user);
+        final ImageButton button = view.findViewById(R.id.btn_search);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

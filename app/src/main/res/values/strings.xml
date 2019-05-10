@@ -2,19 +2,18 @@
     <string name="app_name">Enigmator</string>
 
     <string name="message_copied">Copied !</string>
+    <string name="search">Search</string>
+    <string name="results">Results</string>
+
+    <string name="dialog_no_connection_title">No Internet Connection</string>
+    <string name="dialog_no_connection_message">You must provide a valid Internet connection</string>
 
     <!-- Login Activity -->
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-
-    <string name="dialog_no_connection_title">No Internet Connection</string>
-    <string name="dialog_no_connection_message">You must provide a valid Internet connection</string>
 
     <!-- Main Activity -->
     <string name="logo_description">Logo of the application</string>
@@ -23,6 +22,7 @@
     <string name="forum">Forum</string>
     <string name="users">Users</string>
 
+    <string name="action_profile">My Profile</string>
     <string name="action_settings">Settings</string>
     <string name="action_disconnect">Disconnect</string>
 
@@ -35,4 +35,8 @@
     <string name="profile_picture_description">Avatar picture</string>
     <string name="send_icon_description">Send icon</string>
     <string name="send_message_hint">Enter message here</string>
+
+    <!-- Forum -->
+    <string name="top_topics">Top topics</string>
+    <string name="posts">Posts</string>
 </resources>

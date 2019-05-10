@@ -128,7 +128,7 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
         mProgressBar.setVisibility(View.GONE);
         mButton.setEnabled(true);
 
-        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show();
         Log.e(LoginActivity.class.getName(), "Error: "+error);
     }
 
