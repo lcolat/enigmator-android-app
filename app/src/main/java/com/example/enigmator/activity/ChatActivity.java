@@ -17,6 +17,7 @@ import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 // TODO: periodically pull
@@ -54,7 +55,7 @@ public class ChatActivity extends HttpActivity {
                         editable.clear();
 
                         // TODO: post Message
-                        Message message = new Message(content);
+                        Message message = new Message(content, new Date());
                         httpAsyncTask = new HttpAsyncTask(ChatActivity.this, HttpAsyncTask.POST, "/messages", gson.toJson(message));
                         messages.add(message);
                         httpAsyncTask.execute();
@@ -86,7 +87,7 @@ public class ChatActivity extends HttpActivity {
     @Override
     public void handleSuccess(String result) {
         // TODO: update message List
-        messages.add(new Message("Hello"));
+        messages.add(new Message("Hello", new Date()));
 
         mAdapter.notifyDataSetChanged();
     }

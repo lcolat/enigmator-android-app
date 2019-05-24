@@ -39,4 +39,5 @@
     <!-- Forum -->
     <string name="top_topics">Top topics</string>
     <string name="posts">Posts</string>
+    <string name="icon_open_in_new_description">Open Enigma in new window</string>
 </resources>

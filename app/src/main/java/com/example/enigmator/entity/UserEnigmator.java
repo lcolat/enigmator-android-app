@@ -24,10 +24,6 @@ public class UserEnigmator implements Serializable {
     private String rang;
     private Date inscription_date;
     private String username;
-    private String email;
-    private boolean emailVerified;
-    private int UserID;
-    private String password;
 
     public static UserEnigmator getCurrentUser(Context context) {
         Gson gson = new Gson();

@@ -42,7 +42,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Message message = mValues.get(position);
         holder.mContent.setText(message.getContent());
-        // TODO: holder.mHour.setText(message.getHour());
+        holder.mHour.setText(message.getHour());
 
         holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -71,7 +71,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
         private final View mViewLeft, mViewRight;
         private final TextView mContent;
@@ -84,12 +84,6 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
             mHour = view.findViewById(R.id.textMessageHour);
             mViewLeft = view.findViewById(R.id.viewMessageLeft);
             mViewRight = view.findViewById(R.id.viewMessageRight);
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContent.getText() + "'";
         }
     }
 }

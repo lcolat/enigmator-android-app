@@ -76,6 +76,7 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
             editUsername.setText(username);
         }
 
+        // TODO: check internet before ?
         if (userToken != null && userId > -1) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(MainActivity.USER_ID_KEY, userId);

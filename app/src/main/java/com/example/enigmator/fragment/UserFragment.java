@@ -79,7 +79,7 @@ public class UserFragment extends Fragment implements IHttpComponent {
 
         // TODO get friends
         mFriends.add(new UserEnigmator(1, 1, "Theo", "admin", new Date(),
-                "Kalfaa", "theo@gmail.com", true, 1, "password"));
+                "Kalfaa"));
 
         httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.GET, "/users/" + currentUser.getId() + "/friends", null);
         //httpAsyncTask.execute();
@@ -162,7 +162,7 @@ public class UserFragment extends Fragment implements IHttpComponent {
         Log.d(UserFragment.class.getName(), "Success: " + result);
 
         mOthers.add(new UserEnigmator(31, 345, "Michel", "normal", new Date(),
-                "ForeverTonight", "michel@point.com", true, 31, "password"));
+                "ForeverTonight"));
         mOthersAdapter.notifyDataSetChanged();
     }
 
