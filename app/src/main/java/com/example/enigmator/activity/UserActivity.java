@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
+import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.UserEnigmator;
 
 public class UserActivity extends HttpActivity {
@@ -44,14 +45,31 @@ public class UserActivity extends HttpActivity {
             @Override
             public void onClick(View v) {
                 if (!isSelfProfile) {
-                    // TODO: remove nextLine
-                    isFriend = true;
+                    isFriend = true; // TODO: remove
                     if (isFriend) {
                         Intent intent = new Intent(UserActivity.this, ChatActivity.class);
                         intent.putExtra(USER_KEY, user);
                         startActivity(intent);
                     } else {
                         // TODO: send invite
+                        httpManager.addToQueue(HttpRequest.POST, "/friends", null, new HttpRequest.HttpRequestListener() {
+                            @Override
+                            public void prepareRequest() {
+                                button.setEnabled(false);
+                            }
+
+                            @Override
+                            public void handleSuccess(String result) {
+                                button.setEnabled(true);
+                                button.setImageResource(R.drawable.ic_chat_white_24dp);
+                                isFriend = true;
+                            }
+
+                            @Override
+                            public void handleError(String error) {
+                                button.setEnabled(true);
+                            }
+                        });
                     }
                 } else {
                     //TODO: editable form
@@ -71,31 +89,5 @@ public class UserActivity extends HttpActivity {
             onBackPressed();
         }
         return true;
-    }
-
-    /**
-     * Do some UI updates to show that a Http request will be performed
-     */
-    @Override
-    public void prepareRequest() {
-        button.setEnabled(false);
-    }
-
-    /**
-     * Update the UI and handle the HTTP response.
-     *
-     * @param result The HTTP response
-     */
-    @Override
-    public void handleSuccess(String result) {
-        button.setEnabled(true);
-        if (!isSelfProfile) {
-            button.setImageResource(R.drawable.ic_chat_white_24dp);
-        }
-    }
-
-    @Override
-    public void handleError(String error) {
-        button.setEnabled(true);
     }
 }

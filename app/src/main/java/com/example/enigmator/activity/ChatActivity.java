@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.enigmator.R;
-import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.MessageRecyclerViewAdapter;
 import com.example.enigmator.entity.Message;
 import com.example.enigmator.entity.UserEnigmator;
@@ -55,10 +55,25 @@ public class ChatActivity extends HttpActivity {
                         editable.clear();
 
                         // TODO: post Message
-                        Message message = new Message(content, new Date());
-                        httpAsyncTask = new HttpAsyncTask(ChatActivity.this, HttpAsyncTask.POST, "/messages", gson.toJson(message));
+                        final Message message = new Message(content, new Date());
                         messages.add(message);
-                        httpAsyncTask.execute();
+                        httpManager.addToQueue(HttpRequest.POST, "/messages", gson.toJson(message), new HttpRequest.HttpRequestListener() {
+                            @Override
+                            public void prepareRequest() {
+
+                            }
+
+                            @Override
+                            public void handleSuccess(String result) {
+                                messages.add(message);
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void handleError(String error) {
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
                 } else {
                     buildNoConnectionErrorDialog(null).show();
@@ -66,35 +81,26 @@ public class ChatActivity extends HttpActivity {
             }
         });
 
-        // TODO: change route
-        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.GET, "/messages", null);
-        httpAsyncTask.execute();
-    }
+        // TODO: change route: get all messages
+        httpManager.addToQueue(HttpRequest.GET, "/messages", null, new HttpRequest.HttpRequestListener() {
+            @Override
+            public void prepareRequest() {
 
-    /**
-     * Do some UI updates to show that a Http request will be performed
-     */
-    @Override
-    public void prepareRequest() {
+            }
 
-    }
+            @Override
+            public void handleSuccess(String result) {
+                // TODO: update message List
+                messages.add(new Message("Hello", new Date()));
 
-    /**
-     * Update the UI and handle the HTTP response.
-     *
-     * @param result The HTTP response
-     */
-    @Override
-    public void handleSuccess(String result) {
-        // TODO: update message List
-        messages.add(new Message("Hello", new Date()));
+                mAdapter.notifyDataSetChanged();
+            }
 
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void handleError(String error) {
-        mAdapter.notifyDataSetChanged();
+            @Override
+            public void handleError(String error) {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

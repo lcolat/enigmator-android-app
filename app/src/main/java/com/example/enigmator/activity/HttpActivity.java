@@ -4,24 +4,31 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.enigmator.R;
-import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.controller.HttpManager;
 
 /**
  * This class handles network stuff.
  */
-public abstract class HttpActivity extends AppCompatActivity implements IHttpComponent {
-    protected HttpAsyncTask httpAsyncTask;
+public abstract class HttpActivity extends AppCompatActivity {
+    protected HttpManager httpManager;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        httpManager = new HttpManager(this);
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (httpAsyncTask != null) {
-            httpAsyncTask.cancel(true);
+        if (httpManager != null) {
+            httpManager.cancel(true);
         }
     }
 

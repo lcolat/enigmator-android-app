@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.enigmator.R;
-import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.PostRecyclerViewAdapter;
 import com.example.enigmator.entity.Post;
 import com.example.enigmator.entity.UserEnigmator;
@@ -84,47 +84,48 @@ public class TopicActivity extends HttpActivity {
                         editable.clear();
 
                         // TODO: post Post
-                        Post message = new Post(currentUser, content, new Date());
-                        httpAsyncTask = new HttpAsyncTask(TopicActivity.this, HttpAsyncTask.POST, "/posts", gson.toJson(message));
-                        posts.add(message);
-                        httpAsyncTask.execute();
+                        final Post post = new Post(currentUser, content, new Date());
+                        httpManager.addToQueue(HttpRequest.POST, "/posts", gson.toJson(post), new HttpRequest.HttpRequestListener() {
+                            @Override
+                            public void prepareRequest() {}
+
+                            @Override
+                            public void handleSuccess(String result) {
+                                posts.add(post);
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void handleError(String error) {}
+                        });
                     }
                 } else {
                     buildNoConnectionErrorDialog(null).show();
                 }
             }
         });
-        // TODO:
-        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.GET, "/posts/" + topicId, null);
-        //httpAsyncTask.execute();
 
-    }
+        // TODO: get all
+        httpManager.addToQueue(HttpRequest.GET, "/posts/" + topicId, null, new HttpRequest.HttpRequestListener() {
+            @Override
+            public void prepareRequest() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
 
-    /**
-     * Do some UI updates to show that a Http request will be performed
-     */
-    @Override
-    public void prepareRequest() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
+            @Override
+            public void handleSuccess(String result) {
+                progressBar.setVisibility(View.GONE);
+                // TODO: handle results
+                UserEnigmator userEnigmator = new UserEnigmator(45, 23, "John", "user", new Date(), "John Doe");
+                posts.add(new Post(userEnigmator, "Cette énigme est très difficile !", new Date()));
+                mAdapter.notifyDataSetChanged();
+            }
 
-    /**
-     * Update the UI and handle the HTTP response.
-     *
-     * @param result The HTTP response
-     */
-    @Override
-    public void handleSuccess(String result) {
-        progressBar.setVisibility(View.GONE);
-        // TODO:
-        UserEnigmator userEnigmator = new UserEnigmator(45, 23, "John", "user", new Date(), "John Doe");
-        posts.add(new Post(userEnigmator, "Cette énigme est très difficile !", new Date()));
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void handleError(String error) {
-        progressBar.setVisibility(View.GONE);
+            @Override
+            public void handleError(String error) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override

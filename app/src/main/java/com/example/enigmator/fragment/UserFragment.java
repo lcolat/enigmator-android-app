@@ -24,9 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.enigmator.R;
-import com.example.enigmator.activity.IHttpComponent;
 import com.example.enigmator.activity.UserActivity;
-import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.controller.HttpManager;
+import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.UserRecyclerViewAdapter;
 import com.example.enigmator.entity.UserEnigmator;
 
@@ -37,14 +37,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserFragment extends Fragment implements IHttpComponent {
+public class UserFragment extends Fragment {
     private List<UserEnigmator> mFriends, mOthers;
     private ProgressBar mProgressBar;
     private LinearLayout mLayout;
     private OnListFragmentInteractionListener mListener;
     private UserRecyclerViewAdapter mFriendsAdapter, mOthersAdapter;
 
-    private HttpAsyncTask httpAsyncTask;
+    private HttpManager httpManager;
+    private int userId;
 
     public UserFragment() {
         // Required empty public constructor
@@ -65,24 +66,28 @@ public class UserFragment extends Fragment implements IHttpComponent {
                 }
             };
         }
+        httpManager = new HttpManager(getContext());
+
+        mFriends = new ArrayList<>();
+        mOthers = new ArrayList<>();
+
+        setRetainInstance(true);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFriends = new ArrayList<>();
-        mOthers = new ArrayList<>();
 
         UserEnigmator currentUser = UserEnigmator.getCurrentUser(getContext());
-        if (currentUser == null)
+        if (currentUser == null) {
             throw new IllegalStateException("User cannot be null");
+        } else {
+            userId = currentUser.getId();
+        }
 
-        // TODO get friends
+        // TODO remove
         mFriends.add(new UserEnigmator(1, 1, "Theo", "admin", new Date(),
                 "Kalfaa"));
-
-        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.GET, "/users/" + currentUser.getId() + "/friends", null);
-        //httpAsyncTask.execute();
 
         mFriendsAdapter = new UserRecyclerViewAdapter(mFriends, mListener);
         mOthersAdapter = new UserRecyclerViewAdapter(mOthers, mListener);
@@ -108,9 +113,30 @@ public class UserFragment extends Fragment implements IHttpComponent {
             @Override
             public void onClick(View v) {
                 final String searched = searchUser.getText().toString();
-                // TODO: search for users
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                // TODO: search for users, change route
+                httpManager.addToQueue(HttpRequest.POST, "/friends", searched, new HttpRequest.HttpRequestListener() {
+                    @Override
+                    public void prepareRequest() {
+                        button.setEnabled(false);
+                    }
+
+                    @Override
+                    public void handleSuccess(String result) {
+                        button.setEnabled(true);
+                        // TODO: handle success
+                        mOthers.add(new UserEnigmator(31,1213, "Paul", "user", new Date(), "User Searched"));
+                        mOthersAdapter.setValues(mOthers);
+                        mOthersAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void handleError(String error) {
+                        button.setEnabled(true);
+                    }
+                });
             }
         });
 
@@ -124,53 +150,48 @@ public class UserFragment extends Fragment implements IHttpComponent {
             }
         });
 
+        if (mFriends.isEmpty()) {
+            // TODO: change route
+            httpManager.addToQueue(HttpRequest.GET, "/users/" + userId + "/friends", null, new HttpRequest.HttpRequestListener() {
+                @Override
+                public void prepareRequest() {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mLayout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void handleSuccess(String result) {
+                    mProgressBar.setVisibility(View.GONE);
+                    mLayout.setVisibility(View.VISIBLE);
+
+                    //TODO: handle results
+                    mFriends.add(new UserEnigmator(31, 345, "Michel", "normal", new Date(),
+                            "ForeverTonight"));
+                    mFriendsAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void handleError(String error) {
+                    mProgressBar.setVisibility(View.GONE);
+                    mLayout.setVisibility(View.VISIBLE);
+                    Log.e(UserFragment.class.getName(), "Error: " + error);
+                }
+            });
+        }
+
         return view;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        httpAsyncTask.cancel(true);
+        httpManager.cancel(true);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * Do some UI updates to show that a Http request will be performed
-     */
-    @Override
-    public void prepareRequest() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mLayout.setVisibility(View.GONE);
-    }
-
-    /**
-     * Update the UI and handle the HTTP response.
-     *
-     * @param result The HTTP response
-     */
-    @Override
-    public void handleSuccess(String result) {
-        mProgressBar.setVisibility(View.GONE);
-        mLayout.setVisibility(View.VISIBLE);
-
-        //TODO
-        Log.d(UserFragment.class.getName(), "Success: " + result);
-
-        mOthers.add(new UserEnigmator(31, 345, "Michel", "normal", new Date(),
-                "ForeverTonight"));
-        mOthersAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void handleError(String error) {
-        mProgressBar.setVisibility(View.GONE);
-        mLayout.setVisibility(View.VISIBLE);
-        Log.e(UserFragment.class.getName(), "Error: " + error);
     }
 
     /**

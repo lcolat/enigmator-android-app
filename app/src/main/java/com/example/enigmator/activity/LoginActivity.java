@@ -15,7 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
-import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.controller.HttpManager;
+import com.example.enigmator.controller.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -24,7 +25,7 @@ import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 
-public class LoginActivity extends HttpActivity implements IHttpComponent {
+public class LoginActivity extends HttpActivity {
     private static final String PREF_USERNAME = "pref_username";
     private static final String PREF_USER_ID = "pref_user_id";
 
@@ -69,7 +70,7 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = prefs.getString(PREF_USERNAME, null);
-        String userToken = prefs.getString(HttpAsyncTask.PREF_USER_TOKEN, null);
+        String userToken = prefs.getString(HttpManager.PREF_USER_TOKEN, null);
         int userId = prefs.getInt(PREF_USER_ID, -1);
 
         if (username != null) {
@@ -90,47 +91,46 @@ public class LoginActivity extends HttpActivity implements IHttpComponent {
         Gson gson = new Gson();
         String body = gson.toJson(credentials);
 
-        httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.POST, "/UserEnigmators/login", body);
-        httpAsyncTask.execute();
+        httpManager.addToQueue(HttpRequest.POST, "/UserEnigmators/login", body, new HttpRequest.HttpRequestListener() {
+            @Override
+            public void prepareRequest() {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mButton.setEnabled(true);
+            }
+
+            @Override
+            public void handleSuccess(String result) {
+                mProgressBar.setVisibility(View.GONE);
+                mButton.setEnabled(true);
+
+                JsonParser parser = new JsonParser();
+                JsonObject object = parser.parse(result).getAsJsonObject();
+                int userId = object.get("userId").getAsInt();
+                String token = object.get("id").getAsString();
+
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+                editor.putString(HttpManager.PREF_USER_TOKEN, token);
+                editor.putInt(PREF_USER_ID, userId);
+                editor.apply();
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.USER_ID_KEY, userId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void handleError(String error) {
+                mProgressBar.setVisibility(View.GONE);
+                mButton.setEnabled(true);
+
+                Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
+                Log.e(LoginActivity.class.getName(), "Error: " + error);
+            }
+        });
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putString(PREF_USERNAME, username);
         editor.apply();
-    }
-
-    @Override
-    public void prepareRequest() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mButton.setEnabled(false);
-    }
-
-    @Override
-    public void handleSuccess(String result) {
-        mProgressBar.setVisibility(View.GONE);
-        mButton.setEnabled(true);
-
-        JsonParser parser = new JsonParser();
-        JsonObject object = parser.parse(result).getAsJsonObject();
-        int userId = object.get("userId").getAsInt();
-        String token = object.get("id").getAsString();
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(HttpAsyncTask.PREF_USER_TOKEN, token);
-        editor.putInt(PREF_USER_ID, userId);
-        editor.apply();
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(MainActivity.USER_ID_KEY, userId);
-        startActivity(intent);
-    }
-
-    @Override
-    public void handleError(String error) {
-        mProgressBar.setVisibility(View.GONE);
-        mButton.setEnabled(true);
-
-        Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show();
-        Log.e(LoginActivity.class.getName(), "Error: "+error);
     }
 
     @AllArgsConstructor

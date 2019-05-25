@@ -14,7 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
-import com.example.enigmator.controller.HttpAsyncTask;
+import com.example.enigmator.controller.HttpManager;
+import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.UserEnigmator;
 
 public class MainActivity extends HttpActivity {
@@ -42,8 +43,32 @@ public class MainActivity extends HttpActivity {
             if (id < 0) {
                 finish();
             } else {
-                httpAsyncTask = new HttpAsyncTask(this, HttpAsyncTask.GET, "/userEnigmators/" + id, null);
-                httpAsyncTask.execute();
+                httpManager.addToQueue(HttpRequest.GET, "/userEnigmators/" + id, null,
+                        new HttpRequest.HttpRequestListener() {
+                            @Override
+                            public void prepareRequest() {
+                                layout.setVisibility(View.GONE);
+                                loadingBar.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void handleSuccess(String result) {
+                                loadingBar.setVisibility(View.GONE);
+                                layout.setVisibility(View.VISIBLE);
+
+                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+                                editor.putString(PREF_USER, result);
+                                editor.apply();
+
+                                setUpButtons();
+                            }
+
+                            @Override
+                            public void handleError(String error) {
+                                Toast.makeText(MainActivity.this, "Cannot get User", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
             }
         } else {
             setUpButtons();
@@ -72,7 +97,7 @@ public class MainActivity extends HttpActivity {
                 return true;
             case R.id.menu_disconnect:
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.remove(HttpAsyncTask.PREF_USER_TOKEN);
+                editor.remove(HttpManager.PREF_USER_TOKEN);
                 editor.remove(PREF_USER);
                 editor.apply();
                 finish();
@@ -126,37 +151,5 @@ public class MainActivity extends HttpActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    /**
-     * Do some UI updates to show that a Http request will be performed
-     */
-    @Override
-    public void prepareRequest() {
-        layout.setVisibility(View.GONE);
-        loadingBar.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Update the UI and handle the HTTP response.
-     *
-     * @param result The HTTP response
-     */
-    @Override
-    public void handleSuccess(String result) {
-        loadingBar.setVisibility(View.GONE);
-        layout.setVisibility(View.VISIBLE);
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(PREF_USER, result);
-        editor.apply();
-
-        setUpButtons();
-    }
-
-    @Override
-    public void handleError(String error) {
-        Toast.makeText(this, "Cannot get User", Toast.LENGTH_SHORT).show();
-        finish();
     }
 }
