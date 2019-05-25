@@ -173,7 +173,6 @@ public class UserFragment extends Fragment implements IHttpComponent {
         Log.e(UserFragment.class.getName(), "Error: " + error);
     }
 
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

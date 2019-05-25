@@ -36,6 +36,9 @@
     <string name="send_icon_description">Send icon</string>
     <string name="send_message_hint">Enter message here</string>
 
+    <!-- Leaderboard -->
+    <string name="tab_overall">Overall</string>
+    <string name="me">Me</string>
     <!-- Forum -->
     <string name="top_topics">Top topics</string>
     <string name="posts">Posts</string>

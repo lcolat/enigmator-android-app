@@ -15,7 +15,7 @@ import java.util.List;
 
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
-    private final List<UserEnigmator> mValues;
+    private List<UserEnigmator> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     public UserRecyclerViewAdapter(List<UserEnigmator> items, OnListFragmentInteractionListener listener) {
@@ -56,7 +56,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void setValues(List<UserEnigmator> users) {
+        mValues = users;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
         private final TextView mUsername;
         private final TextView mUserRank;

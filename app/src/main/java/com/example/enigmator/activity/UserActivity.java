@@ -14,12 +14,11 @@ import com.example.enigmator.entity.UserEnigmator;
 
 public class UserActivity extends HttpActivity {
     public static final String USER_KEY = "user_key";
-    static final String IS_SELF_KEY = "is_self_key";
+    public static final String IS_SELF_KEY = "is_self_key";
 
     private boolean isFriend;
     private FloatingActionButton button;
 
-    private String username;
     private boolean isSelfProfile;
 
     @Override
@@ -31,7 +30,7 @@ public class UserActivity extends HttpActivity {
         final UserEnigmator user = (UserEnigmator) intent.getSerializableExtra(USER_KEY);
         isSelfProfile = intent.getBooleanExtra(IS_SELF_KEY, false);
 
-        username = user.getUsername();
+        String username = user.getUsername();
         setTitle(username);
         // TODO: display stats
 
@@ -56,10 +55,10 @@ public class UserActivity extends HttpActivity {
                     }
                 } else {
                     //TODO: editable form
+                    Toast.makeText(UserActivity.this, "Edit profile", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
 
         if (isSelfProfile) {
             button.setImageResource(R.drawable.ic_edit_white_24dp);
