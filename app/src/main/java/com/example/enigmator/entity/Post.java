@@ -9,7 +9,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Post implements Serializable {
-    private final UserEnigmator author;
+    private final int id;
     private final String content;
     private final Date postDate;
+    private final UserEnigmator user;
 }

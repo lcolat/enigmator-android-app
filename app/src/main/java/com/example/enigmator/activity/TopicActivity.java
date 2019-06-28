@@ -18,8 +18,10 @@ import com.example.enigmator.controller.PostRecyclerViewAdapter;
 import com.example.enigmator.entity.Post;
 import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class TopicActivity extends HttpActivity {
     private PostRecyclerViewAdapter mAdapter;
     private UserEnigmator currentUser;
     private Gson gson;
+
+    private int enigmaId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +71,13 @@ public class TopicActivity extends HttpActivity {
             public void onClick(View v) {
                 /*TODO show enigma
                 Intent enigmaIntent = new Intent(TopicActivity.this, EnigmaActitivy.class);
-                enigmaIntent.putExtra(, topicId);
+                enigmaIntent.putExtra(, enigmaId);
                 startActivity(enigmaIntent);*/
             }
         });
 
         final EditText editPost = findViewById(R.id.edit_post);
-        ImageButton button = findViewById(R.id.btn_send_post);
+        final ImageButton button = findViewById(R.id.btn_send_post);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,9 +87,8 @@ public class TopicActivity extends HttpActivity {
                     if (content.length() > 0) {
                         editable.clear();
 
-                        // TODO: post Post
-                        final Post post = new Post(currentUser, content, new Date());
-                        httpManager.addToQueue(HttpRequest.POST, "/posts", gson.toJson(post), new HttpRequest.HttpRequestListener() {
+                        final Post post = new Post(0, content, new Date(), currentUser);
+                        httpManager.addToQueue(HttpRequest.POST, "/Messages", gson.toJson(post), new HttpRequest.HttpRequestListener() {
                             @Override
                             public void prepareRequest() {}
 
@@ -105,8 +108,29 @@ public class TopicActivity extends HttpActivity {
             }
         });
 
-        // TODO: get all
-        httpManager.addToQueue(HttpRequest.GET, "/posts/" + topicId, null, new HttpRequest.HttpRequestListener() {
+        // Get Enigma for topic
+        httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
+            @Override
+            public void prepareRequest() {
+                button.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void handleSuccess(String result) {
+                button.setVisibility(View.VISIBLE);
+                enigmaId = gson.fromJson(result, JsonObject.class)
+                        .get("id").getAsInt();
+            }
+
+            @Override
+            public void handleError(String error) {
+
+            }
+        });
+
+        //  Get all Posts for topic
+        httpManager.addToQueue(HttpRequest.GET, "/Messages?filter[where][topicId]=" + topicId+
+                "&filter[order]=creationDate%20ASC&filter[include]=user", null, new HttpRequest.HttpRequestListener() {
             @Override
             public void prepareRequest() {
                 progressBar.setVisibility(View.VISIBLE);
@@ -115,9 +139,8 @@ public class TopicActivity extends HttpActivity {
             @Override
             public void handleSuccess(String result) {
                 progressBar.setVisibility(View.GONE);
-                // TODO: handle results
-                UserEnigmator userEnigmator = new UserEnigmator(45, 23, "John", "user", new Date(), "John Doe");
-                posts.add(new Post(userEnigmator, "Cette énigme est très difficile !", new Date()));
+                List<Post> posts = Arrays.asList(gson.fromJson(result, Post[].class));
+                mAdapter.setValues(posts);
                 mAdapter.notifyDataSetChanged();
             }
 

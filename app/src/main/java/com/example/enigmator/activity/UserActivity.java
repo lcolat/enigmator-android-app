@@ -12,15 +12,16 @@ import android.widget.Toast;
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.UserEnigmator;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class UserActivity extends HttpActivity {
     public static final String USER_KEY = "user_key";
     public static final String IS_SELF_KEY = "is_self_key";
 
-    private boolean isFriend;
     private FloatingActionButton button;
+    private boolean isFriend;
 
-    private boolean isSelfProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class UserActivity extends HttpActivity {
 
         Intent intent = getIntent();
         final UserEnigmator user = (UserEnigmator) intent.getSerializableExtra(USER_KEY);
-        isSelfProfile = intent.getBooleanExtra(IS_SELF_KEY, false);
+        boolean isSelfProfile = intent.getBooleanExtra(IS_SELF_KEY, false);
 
         String username = user.getUsername();
         setTitle(username);
@@ -41,18 +42,51 @@ public class UserActivity extends HttpActivity {
             button.setSupportBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
         }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isSelfProfile) {
-                    isFriend = true; // TODO: remove
+        if (isSelfProfile) {
+            button.setImageResource(R.drawable.ic_edit_white_24dp);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: editable form
+                    Toast.makeText(UserActivity.this, "Edit profile", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + user.getId() + "/isFriend",
+                    null, new HttpRequest.HttpRequestListener() {
+                        @Override
+                        public void prepareRequest() {
+                            button.setEnabled(false);
+                        }
+
+                        @Override
+                        public void handleSuccess(String result) {
+                            isFriend = new Gson().fromJson(result, JsonObject.class)
+                                    .get("isFriend").getAsBoolean();
+
+                            button.setEnabled(true);
+
+                            if (isFriend) {
+                                button.setImageResource(R.drawable.ic_chat_white_24dp);
+                            }
+                        }
+
+                        @Override
+                        public void handleError(String error) {
+
+                        }
+                    });
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     if (isFriend) {
                         Intent intent = new Intent(UserActivity.this, ChatActivity.class);
                         intent.putExtra(USER_KEY, user);
                         startActivity(intent);
                     } else {
-                        // TODO: send invite
-                        httpManager.addToQueue(HttpRequest.POST, "/friends", null, new HttpRequest.HttpRequestListener() {
+                        httpManager.addToQueue(HttpRequest.POST, "/UserEnigmators/" + user.getId()
+                                + "/AddAFriend", null, new HttpRequest.HttpRequestListener() {
                             @Override
                             public void prepareRequest() {
                                 button.setEnabled(false);
@@ -62,7 +96,6 @@ public class UserActivity extends HttpActivity {
                             public void handleSuccess(String result) {
                                 button.setEnabled(true);
                                 button.setImageResource(R.drawable.ic_chat_white_24dp);
-                                isFriend = true;
                             }
 
                             @Override
@@ -71,15 +104,8 @@ public class UserActivity extends HttpActivity {
                             }
                         });
                     }
-                } else {
-                    //TODO: editable form
-                    Toast.makeText(UserActivity.this, "Edit profile", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        if (isSelfProfile) {
-            button.setImageResource(R.drawable.ic_edit_white_24dp);
+            });
         }
     }
 

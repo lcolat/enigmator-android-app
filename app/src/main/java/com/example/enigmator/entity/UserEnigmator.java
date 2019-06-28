@@ -19,8 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserEnigmator implements Serializable {
     private int id;
-    private int classement;
-    private String nom;
+    private int rank;
     private String rang;
     private Date inscription_date;
     private String username;

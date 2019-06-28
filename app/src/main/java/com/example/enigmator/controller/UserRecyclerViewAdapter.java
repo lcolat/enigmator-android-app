@@ -37,7 +37,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         UserEnigmator user = mValues.get(position);
         holder.mItem = user;
         holder.mUsername.setText(user.getUsername());
-        holder.mUserRank.setText(holder.mView.getContext().getString(R.string.rank, user.getClassement()));
+        holder.mUserRank.setText(holder.mView.getContext().getString(R.string.rank, user.getRank()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

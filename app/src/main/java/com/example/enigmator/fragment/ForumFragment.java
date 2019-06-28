@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.activity.TopicActivity;
@@ -31,8 +31,10 @@ import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.TopicRecyclerViewAdapter;
 import com.example.enigmator.entity.Topic;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +49,8 @@ public class ForumFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
 
+    private Gson gson;
+
     public ForumFragment() {
         // Required empty public constructor
     }
@@ -54,6 +58,7 @@ public class ForumFragment extends Fragment {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
+        gson = new Gson();
         if (context instanceof UserFragment.OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -75,8 +80,6 @@ public class ForumFragment extends Fragment {
         super.onCreate(savedInstanceState);
         topTopics = new ArrayList<>();
         searchedTopics = new ArrayList<>();
-
-        topTopics.add(new Topic("Une miche pour deux", 2, 432)); //TODO: remove
 
         Locale locale;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
@@ -106,8 +109,7 @@ public class ForumFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                    // TODO: change route
-                    httpManager.addToQueue(HttpRequest.GET, "/topics", null, new HttpRequest.HttpRequestListener() {
+                    httpManager.addToQueue(HttpRequest.GET, "/Topics[where][title]=" + searched, null, new HttpRequest.HttpRequestListener() {
                         @Override
                         public void prepareRequest() {
                             progressBar.setVisibility(View.VISIBLE);
@@ -122,8 +124,7 @@ public class ForumFragment extends Fragment {
                             listTitle.setText(R.string.results);
                             button.setEnabled(true);
 
-                            // TODO: add to searched
-                            searchedTopics.add(new Topic("Searched", 3, 543));
+                            searchedTopics = Arrays.asList(gson.fromJson(result, Topic[].class));
                             adapter.setValues(searchedTopics);
                             adapter.notifyDataSetChanged();
                         }
@@ -184,8 +185,7 @@ public class ForumFragment extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     button.setEnabled(true);
 
-                    // TODO: add topics
-
+                    topTopics = Arrays.asList(gson.fromJson(result, Topic[].class));
                     adapter.setValues(topTopics);
                     adapter.notifyDataSetChanged();
                 }
@@ -194,6 +194,7 @@ public class ForumFragment extends Fragment {
                 public void handleError(String error) {
                     progressBar.setVisibility(View.GONE);
                     button.setEnabled(true);
+                    Log.e(ForumFragment.class.getName(), "Error while getting top topics: " + error);
                 }
             });
         }
