@@ -13,6 +13,7 @@ import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.MessageRecyclerViewAdapter;
 import com.example.enigmator.entity.Message;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 
@@ -64,13 +65,13 @@ public class ChatActivity extends HttpActivity {
                             }
 
                             @Override
-                            public void handleSuccess(String result) {
+                            public void handleSuccess(Response response) {
                                 messages.add(message);
                                 mAdapter.notifyDataSetChanged();
                             }
 
                             @Override
-                            public void handleError(String error) {
+                            public void handleError(Response error) {
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
@@ -89,7 +90,7 @@ public class ChatActivity extends HttpActivity {
             }
 
             @Override
-            public void handleSuccess(String result) {
+            public void handleSuccess(Response response) {
                 // TODO: update message List
                 messages.add(new Message("Hello", new Date()));
 
@@ -97,7 +98,7 @@ public class ChatActivity extends HttpActivity {
             }
 
             @Override
-            public void handleError(String error) {
+            public void handleError(Response error) {
                 mAdapter.notifyDataSetChanged();
             }
         });

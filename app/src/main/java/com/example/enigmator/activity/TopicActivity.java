@@ -16,6 +16,7 @@ import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.PostRecyclerViewAdapter;
 import com.example.enigmator.entity.Post;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -93,13 +94,13 @@ public class TopicActivity extends HttpActivity {
                             public void prepareRequest() {}
 
                             @Override
-                            public void handleSuccess(String result) {
+                            public void handleSuccess(Response response) {
                                 posts.add(post);
                                 mAdapter.notifyDataSetChanged();
                             }
 
                             @Override
-                            public void handleError(String error) {}
+                            public void handleError(Response error) {}
                         });
                     }
                 } else {
@@ -116,14 +117,14 @@ public class TopicActivity extends HttpActivity {
             }
 
             @Override
-            public void handleSuccess(String result) {
+            public void handleSuccess(Response response) {
                 button.setVisibility(View.VISIBLE);
-                enigmaId = gson.fromJson(result, JsonObject.class)
+                enigmaId = gson.fromJson(response.getContent(), JsonObject.class)
                         .get("id").getAsInt();
             }
 
             @Override
-            public void handleError(String error) {
+            public void handleError(Response error) {
 
             }
         });
@@ -137,15 +138,17 @@ public class TopicActivity extends HttpActivity {
             }
 
             @Override
-            public void handleSuccess(String result) {
+            public void handleSuccess(Response response) {
                 progressBar.setVisibility(View.GONE);
-                List<Post> posts = Arrays.asList(gson.fromJson(result, Post[].class));
-                mAdapter.setValues(posts);
-                mAdapter.notifyDataSetChanged();
+                if (response.getStatusCode() != 204) {
+                    List<Post> posts = Arrays.asList(gson.fromJson(response.getContent(), Post[].class));
+                    mAdapter.setValues(posts);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
-            public void handleError(String error) {
+            public void handleError(Response error) {
                 progressBar.setVisibility(View.GONE);
             }
         });

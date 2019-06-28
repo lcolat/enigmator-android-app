@@ -13,7 +13,6 @@
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="login_failed">"Login failed"</string>
 
     <!-- Main Activity -->
     <string name="logo_description">Logo of the application</string>

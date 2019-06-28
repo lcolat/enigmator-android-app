@@ -21,13 +21,13 @@ import com.example.enigmator.activity.UserActivity;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.UserRecyclerViewAdapter;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 import com.example.enigmator.fragment.UserFragment.OnListFragmentInteractionListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,11 +74,6 @@ public class LeaderboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mFriends = new ArrayList<>();
         mAllUsers = new ArrayList<>();
-
-
-        mAllUsers.add(new UserEnigmator(24, 353, "user", new Date(), "John"));
-        mFriends.add(new UserEnigmator(1, 1, "admin", new Date(), "Kalfaa"));
-
         mAdapter = new UserRecyclerViewAdapter(mAllUsers, mListener);
     }
 
@@ -135,19 +130,22 @@ public class LeaderboardFragment extends Fragment {
                 }
 
                 @Override
-                public void handleSuccess(String result) {
+                public void handleSuccess(Response response) {
                     mProgressBar.setVisibility(View.GONE);
-                    mAllUsers = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
+                    if (response.getStatusCode() != 204) {
+                        mAllUsers = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
 
-                    mAdapter.setValues(mAllUsers);
-                    mAdapter.notifyDataSetChanged();
-                    TabLayout.Tab tab = tabLayout.getTabAt(0);
-                    assert tab != null;
-                    tab.select();
+                        mAdapter.setValues(mAllUsers);
+                        mAdapter.notifyDataSetChanged();
+
+                        TabLayout.Tab tab = tabLayout.getTabAt(0);
+                        assert tab != null;
+                        tab.select();
+                    }
                 }
 
                 @Override
-                public void handleError(String error) {
+                public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
                     Log.e(LeaderboardFragment.class.getName(), "Error : " + error);
                 }
@@ -161,9 +159,11 @@ public class LeaderboardFragment extends Fragment {
                 }
 
                 @Override
-                public void handleSuccess(String result) {
-                    mFriends = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
-                    mAdapter.notifyDataSetChanged();
+                public void handleSuccess(Response response) {
+                    if (response.getStatusCode() != 204) {
+                        mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                        mAdapter.notifyDataSetChanged();
+                    }
 
                     TabLayout.Tab tab = tabLayout.getTabAt(1);
                     assert tab != null;
@@ -171,7 +171,7 @@ public class LeaderboardFragment extends Fragment {
                 }
 
                 @Override
-                public void handleError(String error) {
+                public void handleError(Response error) {
                     Log.e(LeaderboardFragment.class.getName(), "Error : " + error);
                 }
             });

@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.enigmator.entity.Response;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -15,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
+public class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     private static final String TAG = HttpAsyncTask.class.getName();
 
     private static final String BASE_URL = "http://35.180.227.54:3000/api";
@@ -39,9 +41,12 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... voids) {
+    protected Response doInBackground(Void... voids) {
+        Log.d(TAG, "Request: " + request.getRoute());
+
         String result;
         HttpURLConnection connection = null;
+        int responseCode = 500;
 
         try {
             // Initialization
@@ -69,7 +74,7 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
                 om.close();
             }
 
-            int responseCode  = connection.getResponseCode();
+            responseCode  = connection.getResponseCode();
             Log.e(TAG, "Code: " + responseCode);
 
             if (responseCode < 400) {
@@ -95,23 +100,20 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
                 connection.disconnect();
             }
         }
-
-        return result;
+        return new Response(responseCode, result);
     }
 
     @Override
-    protected void onCancelled(String str) {
+    protected void onCancelled(Response response) {
         super.onCancelled();
-        request.getListener().handleError(str);
+        request.getListener().handleError(response);
         httpManager.startNext(true);
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        Log.d(TAG, s);
-        if (s != null) {
-            request.getListener().handleSuccess(s);
-        }
+    protected void onPostExecute(Response r) {
+        Log.d(TAG, r.getContent());
+        request.getListener().handleSuccess(r);
         httpManager.startNext(true);
     }
 
