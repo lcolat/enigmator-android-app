@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import com.example.enigmator.activity.TopicActivity;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.TopicRecyclerViewAdapter;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.Topic;
 import com.google.gson.Gson;
 
@@ -109,7 +109,8 @@ public class ForumFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                    httpManager.addToQueue(HttpRequest.GET, "/Topics[where][title]=" + searched, null, new HttpRequest.HttpRequestListener() {
+                    httpManager.addToQueue(HttpRequest.GET, "/Topics?filter={\"where\":{\"title\":{\"like\":\""
+                            + searched + "%\",\"options\":\"i\"}}}", null, new HttpRequest.HttpRequestListener() {
                         @Override
                         public void prepareRequest() {
                             progressBar.setVisibility(View.VISIBLE);
@@ -118,19 +119,21 @@ public class ForumFragment extends Fragment {
                         }
 
                         @Override
-                        public void handleSuccess(String result) {
+                        public void handleSuccess(Response response) {
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
                             listTitle.setText(R.string.results);
                             button.setEnabled(true);
 
-                            searchedTopics = Arrays.asList(gson.fromJson(result, Topic[].class));
-                            adapter.setValues(searchedTopics);
-                            adapter.notifyDataSetChanged();
+                            if (response.getStatusCode() != 204) {
+                                searchedTopics = Arrays.asList(gson.fromJson(response.getContent(), Topic[].class));
+                                adapter.setValues(searchedTopics);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
 
                         @Override
-                        public void handleError(String error) {
+                        public void handleError(Response error) {
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
                             button.setEnabled(true);
@@ -171,7 +174,7 @@ public class ForumFragment extends Fragment {
 
         // TODO: change route
         if (topTopics.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/topics/top", null, new HttpRequest.HttpRequestListener() {
+            /*httpManager.addToQueue(HttpRequest.GET, "/topics/top", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     progressBar.setVisibility(View.VISIBLE);
@@ -180,7 +183,7 @@ public class ForumFragment extends Fragment {
                 }
 
                 @Override
-                public void handleSuccess(String result) {
+                public void handleSuccess(Response response) {
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     button.setEnabled(true);
@@ -191,12 +194,12 @@ public class ForumFragment extends Fragment {
                 }
 
                 @Override
-                public void handleError(String error) {
+                public void handleError(Response error) {
                     progressBar.setVisibility(View.GONE);
                     button.setEnabled(true);
                     Log.e(ForumFragment.class.getName(), "Error while getting top topics: " + error);
                 }
-            });
+            });*/
         }
 
         return v;

@@ -12,11 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
+import com.example.enigmator.entity.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -99,12 +99,12 @@ public class LoginActivity extends HttpActivity {
             }
 
             @Override
-            public void handleSuccess(String result) {
+            public void handleSuccess(Response response) {
                 mProgressBar.setVisibility(View.GONE);
                 mButton.setEnabled(true);
 
                 JsonParser parser = new JsonParser();
-                JsonObject object = parser.parse(result).getAsJsonObject();
+                JsonObject object = parser.parse(response.getContent()).getAsJsonObject();
                 int userId = object.get("userId").getAsInt();
                 String token = object.get("id").getAsString();
 
@@ -119,11 +119,9 @@ public class LoginActivity extends HttpActivity {
             }
 
             @Override
-            public void handleError(String error) {
+            public void handleError(Response error) {
                 mProgressBar.setVisibility(View.GONE);
                 mButton.setEnabled(true);
-
-                Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
                 Log.e(LoginActivity.class.getName(), "Error: " + error);
             }
         });

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 
 public class MainActivity extends HttpActivity {
@@ -52,19 +53,19 @@ public class MainActivity extends HttpActivity {
                             }
 
                             @Override
-                            public void handleSuccess(String result) {
+                            public void handleSuccess(Response response) {
                                 loadingBar.setVisibility(View.GONE);
                                 layout.setVisibility(View.VISIBLE);
 
                                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
-                                editor.putString(PREF_USER, result);
+                                editor.putString(PREF_USER, response.getContent());
                                 editor.apply();
 
                                 setUpButtons();
                             }
 
                             @Override
-                            public void handleError(String error) {
+                            public void handleError(Response error) {
                                 Toast.makeText(MainActivity.this, "Cannot get User", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
@@ -82,6 +83,7 @@ public class MainActivity extends HttpActivity {
         return true;
     }
 
+    // TODO : view invites
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection

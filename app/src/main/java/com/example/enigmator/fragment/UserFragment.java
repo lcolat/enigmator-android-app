@@ -28,6 +28,7 @@ import com.example.enigmator.activity.UserActivity;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.UserRecyclerViewAdapter;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 
@@ -59,7 +60,6 @@ public class UserFragment extends Fragment implements EmptyView {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-        gson = new Gson();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -83,7 +83,7 @@ public class UserFragment extends Fragment implements EmptyView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        gson = new Gson();
         UserEnigmator currentUser = UserEnigmator.getCurrentUser(getContext());
         if (currentUser == null) {
             throw new IllegalStateException("User cannot be null");
@@ -120,7 +120,8 @@ public class UserFragment extends Fragment implements EmptyView {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[where][username]=" + searched,
+                httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter={\"where\":{\"username\":{\"like\":\""
+                                + searched +"%\",\"options\":\"i\"}}}",
                         null, new HttpRequest.HttpRequestListener() {
                     @Override
                     public void prepareRequest() {
@@ -128,15 +129,17 @@ public class UserFragment extends Fragment implements EmptyView {
                     }
 
                     @Override
-                    public void handleSuccess(String result) {
+                    public void handleSuccess(Response response) {
                         button.setEnabled(true);
-                        mOthers = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
+                        if (response.getStatusCode() != 204) {
+                            mOthers = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                        }
                         mOthersAdapter.setValues(mOthers);
                         mOthersAdapter.notifyDataSetChanged();
                     }
 
                     @Override
-                    public void handleError(String error) {
+                    public void handleError(Response error) {
                         button.setEnabled(true);
                         Log.e(UserFragment.class.getName(), "Error: " + error);
                     }
@@ -163,17 +166,20 @@ public class UserFragment extends Fragment implements EmptyView {
                 }
 
                 @Override
-                public void handleSuccess(String result) {
+                public void handleSuccess(Response response) {
                     mProgressBar.setVisibility(View.GONE);
                     mLayout.setVisibility(View.VISIBLE);
 
-                    mFriends = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
+                    if (response.getStatusCode() != 204) {
+                        mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                    }
+
                     mFriendsAdapter.setValues(mFriends);
                     mFriendsAdapter.notifyDataSetChanged();
                 }
 
                 @Override
-                public void handleError(String error) {
+                public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
                     mLayout.setVisibility(View.VISIBLE);
                     Log.e(UserFragment.class.getName(), "Error: " + error);

@@ -2,6 +2,8 @@ package com.example.enigmator.controller;
 
 import android.support.annotation.Nullable;
 
+import com.example.enigmator.entity.Response;
+
 import lombok.Getter;
 
 @Getter
@@ -40,14 +42,14 @@ public class HttpRequest {
 
         /**
          * Tasks to perform to handle the result of a successful HTTP request
-         * @param result  The HTTP response as JSON String
+         * @param response  The HTTP response as a {@link Response}
          */
-        void handleSuccess(String result);
+        void handleSuccess(Response response);
 
         /**
          * Tasks to perform when an error occurs on an HTTP request
-         * @param error  The error as a JSON String
+         * @param error  The error as a {@link Response}
          */
-        void handleError(String error);
+        void handleError(Response error);
     }
 }

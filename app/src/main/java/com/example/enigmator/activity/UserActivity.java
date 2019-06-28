@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpRequest;
+import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -60,8 +61,8 @@ public class UserActivity extends HttpActivity {
                         }
 
                         @Override
-                        public void handleSuccess(String result) {
-                            isFriend = new Gson().fromJson(result, JsonObject.class)
+                        public void handleSuccess(Response response) {
+                            isFriend = new Gson().fromJson(response.getContent(), JsonObject.class)
                                     .get("isFriend").getAsBoolean();
 
                             button.setEnabled(true);
@@ -72,7 +73,7 @@ public class UserActivity extends HttpActivity {
                         }
 
                         @Override
-                        public void handleError(String error) {
+                        public void handleError(Response error) {
 
                         }
                     });
@@ -93,13 +94,13 @@ public class UserActivity extends HttpActivity {
                             }
 
                             @Override
-                            public void handleSuccess(String result) {
+                            public void handleSuccess(Response response) {
                                 button.setEnabled(true);
                                 button.setImageResource(R.drawable.ic_chat_white_24dp);
                             }
 
                             @Override
-                            public void handleError(String error) {
+                            public void handleError(Response error) {
                                 button.setEnabled(true);
                             }
                         });
