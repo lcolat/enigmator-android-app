@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Enigmator</string>
 
+    <string name="empty">Empty</string>
+
     <string name="message_copied">Copied !</string>
     <string name="search">Search</string>
     <string name="results">Results</string>

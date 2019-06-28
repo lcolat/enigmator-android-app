@@ -38,12 +38,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements EmptyView {
     private List<UserEnigmator> mFriends, mOthers;
     private ProgressBar mProgressBar;
     private LinearLayout mLayout;
     private OnListFragmentInteractionListener mListener;
     private UserRecyclerViewAdapter mFriendsAdapter, mOthersAdapter;
+
+    private RecyclerView listFriends;
+    private TextView texteEmpty;
 
     private HttpManager httpManager;
     private int userId;
@@ -98,12 +101,14 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         final EditText searchUser = view.findViewById(R.id.edit_search);
-        RecyclerView friends = view.findViewById(R.id.list_friends);
+        listFriends = view.findViewById(R.id.list_friends);
         RecyclerView others = view.findViewById(R.id.list_search_user);
-        friends.setAdapter(mFriendsAdapter);
-        friends.setLayoutManager(new LinearLayoutManager(getContext()));
+        listFriends.setAdapter(mFriendsAdapter);
+        listFriends.setLayoutManager(new LinearLayoutManager(getContext()));
         others.setAdapter(mOthersAdapter);
         others.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        texteEmpty = view.findViewById(R.id.text_empty);
 
         mLayout = view.findViewById(R.id.layout_user_fragment);
         mProgressBar = view.findViewById(R.id.progress_loading);
@@ -177,6 +182,16 @@ public class UserFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void manageEmpty() {
+        texteEmpty.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void manageNotEmpty() {
+        texteEmpty.setVisibility(View.GONE);
     }
 
     @Override
