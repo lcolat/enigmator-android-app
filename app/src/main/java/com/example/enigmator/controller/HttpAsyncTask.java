@@ -18,7 +18,7 @@ import java.net.URL;
 public class HttpAsyncTask extends AsyncTask<Void, Void, String> {
     private static final String TAG = HttpAsyncTask.class.getName();
 
-    private static final String BASE_URL = "http://3.19.31.245:3000/api";
+    private static final String BASE_URL = "http://35.180.227.54:3000/api";
 
     private static final int READ_TIMEOUT = 10000;
     private static final int CONNECT_TIMEOUT = 15000;
