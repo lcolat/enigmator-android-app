@@ -12,6 +12,7 @@ import com.example.enigmator.R;
 import com.example.enigmator.activity.UserActivity;
 import com.example.enigmator.entity.Post;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.ViewHolder> {
@@ -33,18 +34,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Post post = mValues.get(position);
-        holder.mAuthor.setText(post.getAuthor().getUsername());
+        holder.mAuthor.setText(post.getUser().getUsername());
         holder.mContent.setText(post.getContent());
         holder.mContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), UserActivity.class);
-                intent.putExtra(UserActivity.USER_KEY, post.getAuthor());
+                intent.putExtra(UserActivity.USER_KEY, post.getUser());
                 v.getContext().startActivity(intent);
             }
         });
-        //TODO:
-        // holder.mDate.setText(post.getPostDate());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM HH:mm");
+        holder.mDate.setText(sdf.format(post.getPostDate()));
     }
 
     public void setValues(List<Post> values) {

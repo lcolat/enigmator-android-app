@@ -29,9 +29,10 @@ import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.UserRecyclerViewAdapter;
 import com.example.enigmator.entity.UserEnigmator;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class UserFragment extends Fragment {
 
     private HttpManager httpManager;
     private int userId;
+    private Gson gson;
 
     public UserFragment() {
         // Required empty public constructor
@@ -54,6 +56,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
+        gson = new Gson();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -85,10 +88,6 @@ public class UserFragment extends Fragment {
             userId = currentUser.getId();
         }
 
-        // TODO remove
-        mFriends.add(new UserEnigmator(1, 1, "Theo", "admin", new Date(),
-                "Kalfaa"));
-
         mFriendsAdapter = new UserRecyclerViewAdapter(mFriends, mListener);
         mOthersAdapter = new UserRecyclerViewAdapter(mOthers, mListener);
     }
@@ -116,8 +115,8 @@ public class UserFragment extends Fragment {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                // TODO: search for users, change route
-                httpManager.addToQueue(HttpRequest.POST, "/friends", searched, new HttpRequest.HttpRequestListener() {
+                httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[where][username]=" + searched,
+                        null, new HttpRequest.HttpRequestListener() {
                     @Override
                     public void prepareRequest() {
                         button.setEnabled(false);
@@ -126,8 +125,7 @@ public class UserFragment extends Fragment {
                     @Override
                     public void handleSuccess(String result) {
                         button.setEnabled(true);
-                        // TODO: handle success
-                        mOthers.add(new UserEnigmator(31,1213, "Paul", "user", new Date(), "User Searched"));
+                        mOthers = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
                         mOthersAdapter.setValues(mOthers);
                         mOthersAdapter.notifyDataSetChanged();
                     }
@@ -135,6 +133,7 @@ public class UserFragment extends Fragment {
                     @Override
                     public void handleError(String error) {
                         button.setEnabled(true);
+                        Log.e(UserFragment.class.getName(), "Error: " + error);
                     }
                 });
             }
@@ -151,8 +150,7 @@ public class UserFragment extends Fragment {
         });
 
         if (mFriends.isEmpty()) {
-            // TODO: change route
-            httpManager.addToQueue(HttpRequest.GET, "/users/" + userId + "/friends", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/GetMyFriend", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     mProgressBar.setVisibility(View.VISIBLE);
@@ -164,9 +162,8 @@ public class UserFragment extends Fragment {
                     mProgressBar.setVisibility(View.GONE);
                     mLayout.setVisibility(View.VISIBLE);
 
-                    //TODO: handle results
-                    mFriends.add(new UserEnigmator(31, 345, "Michel", "normal", new Date(),
-                            "ForeverTonight"));
+                    mFriends = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
+                    mFriendsAdapter.setValues(mFriends);
                     mFriendsAdapter.notifyDataSetChanged();
                 }
 

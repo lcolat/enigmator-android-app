@@ -23,8 +23,10 @@ import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.UserRecyclerViewAdapter;
 import com.example.enigmator.entity.UserEnigmator;
 import com.example.enigmator.fragment.UserFragment.OnListFragmentInteractionListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class LeaderboardFragment extends Fragment {
     private UserEnigmator currentUser;
 
     private HttpManager httpManager;
+    private Gson gson;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -47,6 +50,8 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
+
+        gson = new Gson();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -71,9 +76,8 @@ public class LeaderboardFragment extends Fragment {
         mAllUsers = new ArrayList<>();
 
 
-        mAllUsers.add(new UserEnigmator(24, 353, "John", "user", new Date(), "John"));
-        mFriends.add(new UserEnigmator(1, 1, "Theo", "admin", new Date(),
-                "Kalfaa"));
+        mAllUsers.add(new UserEnigmator(24, 353, "user", new Date(), "John"));
+        mFriends.add(new UserEnigmator(1, 1, "admin", new Date(), "Kalfaa"));
 
         mAdapter = new UserRecyclerViewAdapter(mAllUsers, mListener);
     }
@@ -86,7 +90,7 @@ public class LeaderboardFragment extends Fragment {
         leaderboard.setAdapter(mAdapter);
         leaderboard.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        final TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -108,7 +112,7 @@ public class LeaderboardFragment extends Fragment {
         TextView userName = view.findViewById(R.id.text_username);
         TextView userRank = view.findViewById(R.id.text_user_rank);
         userName.setText(currentUser.getUsername());
-        userRank.setText(getString(R.string.rank, currentUser.getClassement()));
+        userRank.setText(getString(R.string.rank, currentUser.getRank()));
         View selfUserItem = view.findViewById(R.id.user_item);
         selfUserItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,9 +126,9 @@ public class LeaderboardFragment extends Fragment {
 
         mProgressBar = view.findViewById(R.id.progress_loading);
 
-        // TODO: get users
         if (mAllUsers.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[order]=rank%20Desc",
+                    null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     mProgressBar.setVisibility(View.VISIBLE);
@@ -133,12 +137,13 @@ public class LeaderboardFragment extends Fragment {
                 @Override
                 public void handleSuccess(String result) {
                     mProgressBar.setVisibility(View.GONE);
-                    //TODO : order by rank ?
-                    Log.d(UserFragment.class.getName(), "Success: " + result);
-                    mAllUsers.add(new UserEnigmator(31, 345, "Michel", "normal", new Date(),
-                            "ForeverTonight"));
+                    mAllUsers = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
+
                     mAdapter.setValues(mAllUsers);
                     mAdapter.notifyDataSetChanged();
+                    TabLayout.Tab tab = tabLayout.getTabAt(0);
+                    assert tab != null;
+                    tab.select();
                 }
 
                 @Override
@@ -149,16 +154,20 @@ public class LeaderboardFragment extends Fragment {
             });
         }
 
-        // TODO get friends
         if (mFriends.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/users/" + currentUser.getId() + "/friends", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/GetMyFriend", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                 }
 
                 @Override
                 public void handleSuccess(String result) {
-                    // TODO: handle results
+                    mFriends = Arrays.asList(gson.fromJson(result, UserEnigmator[].class));
+                    mAdapter.notifyDataSetChanged();
+
+                    TabLayout.Tab tab = tabLayout.getTabAt(1);
+                    assert tab != null;
+                    tab.select();
                 }
 
                 @Override
