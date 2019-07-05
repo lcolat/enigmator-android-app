@@ -35,8 +35,27 @@
         android:id="@+id/list_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_post"
         android:layout_below="@id/btn_open_enigma"
-        android:layout_above="@+id/edit_post"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/empty_text_height"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/no_posts_found"
+        android:textSize="@dimen/list_item_text_size"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/edit_post"
@@ -64,6 +83,7 @@
     <ProgressBar
         android:id="@+id/progress_loading"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>

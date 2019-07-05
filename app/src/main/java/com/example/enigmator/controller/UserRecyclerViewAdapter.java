@@ -60,6 +60,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         mValues = users;
     }
 
+    public boolean isEmpty() {
+        return mValues.isEmpty();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
         private final TextView mUsername;

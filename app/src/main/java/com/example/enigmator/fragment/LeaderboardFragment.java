@@ -40,6 +40,8 @@ public class LeaderboardFragment extends Fragment {
     private List<UserEnigmator> mFriends, mAllUsers;
     private UserEnigmator currentUser;
 
+    private TextView textEmpty;
+
     private HttpManager httpManager;
     private Gson gson;
 
@@ -85,6 +87,8 @@ public class LeaderboardFragment extends Fragment {
         leaderboard.setAdapter(mAdapter);
         leaderboard.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        textEmpty = view.findViewById(R.id.text_empty_ladder);
+
         final TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -94,6 +98,12 @@ public class LeaderboardFragment extends Fragment {
                 } else {
                     mAdapter.setValues(mFriends);
                 }
+                if (mAdapter.isEmpty()) {
+                    textEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    textEmpty.setVisibility(View.GONE);
+                }
+
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -135,19 +145,19 @@ public class LeaderboardFragment extends Fragment {
                     if (response.getStatusCode() != 204) {
                         mAllUsers = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
 
+                        if (mAllUsers.isEmpty()) {
+                            textEmpty.setVisibility(View.VISIBLE);
+                        }
                         mAdapter.setValues(mAllUsers);
                         mAdapter.notifyDataSetChanged();
-
-                        TabLayout.Tab tab = tabLayout.getTabAt(0);
-                        assert tab != null;
-                        tab.select();
                     }
                 }
 
                 @Override
                 public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
-                    Log.e(LeaderboardFragment.class.getName(), "Error : " + error);
+                    textEmpty.setVisibility(View.VISIBLE);
+                    Log.e(LeaderboardFragment.class.getName(), error.toString());
                 }
             });
         }
@@ -164,15 +174,11 @@ public class LeaderboardFragment extends Fragment {
                         mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
                         mAdapter.notifyDataSetChanged();
                     }
-
-                    TabLayout.Tab tab = tabLayout.getTabAt(1);
-                    assert tab != null;
-                    tab.select();
                 }
 
                 @Override
                 public void handleError(Response error) {
-                    Log.e(LeaderboardFragment.class.getName(), "Error : " + error);
+                    Log.e(LeaderboardFragment.class.getName(), error.toString());
                 }
             });
         }

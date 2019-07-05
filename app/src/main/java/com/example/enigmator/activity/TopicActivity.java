@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -59,6 +60,7 @@ public class TopicActivity extends HttpActivity {
 
         TextView topicTitle = findViewById(R.id.text_topic_title);
         topicTitle.setText(title);
+        final TextView textEmpty = findViewById(R.id.text_empty);
 
         posts = new ArrayList<>();
         mAdapter = new PostRecyclerViewAdapter(posts);
@@ -144,12 +146,17 @@ public class TopicActivity extends HttpActivity {
                     List<Post> posts = Arrays.asList(gson.fromJson(response.getContent(), Post[].class));
                     mAdapter.setValues(posts);
                     mAdapter.notifyDataSetChanged();
+                    textEmpty.setVisibility(View.GONE);
+                } else {
+                    textEmpty.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void handleError(Response error) {
                 progressBar.setVisibility(View.GONE);
+                textEmpty.setVisibility(View.VISIBLE);
+                Log.e(TopicActivity.class.getName(), "GetAllPosts" + error.toString());
             }
         });
     }

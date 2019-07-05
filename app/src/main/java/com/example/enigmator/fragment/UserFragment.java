@@ -39,18 +39,16 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserFragment extends Fragment implements EmptyView {
+public class UserFragment extends Fragment {
     private List<UserEnigmator> mFriends, mOthers;
     private ProgressBar mProgressBar;
     private LinearLayout mLayout;
     private OnListFragmentInteractionListener mListener;
     private UserRecyclerViewAdapter mFriendsAdapter, mOthersAdapter;
 
-    private RecyclerView listFriends;
-    private TextView texteEmpty;
+    private TextView textFriendsEmpty, textOthersEmpty;
 
     private HttpManager httpManager;
-    private int userId;
     private Gson gson;
 
     public UserFragment() {
@@ -84,12 +82,6 @@ public class UserFragment extends Fragment implements EmptyView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gson = new Gson();
-        UserEnigmator currentUser = UserEnigmator.getCurrentUser(getContext());
-        if (currentUser == null) {
-            throw new IllegalStateException("User cannot be null");
-        } else {
-            userId = currentUser.getId();
-        }
 
         mFriendsAdapter = new UserRecyclerViewAdapter(mFriends, mListener);
         mOthersAdapter = new UserRecyclerViewAdapter(mOthers, mListener);
@@ -101,14 +93,15 @@ public class UserFragment extends Fragment implements EmptyView {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         final EditText searchUser = view.findViewById(R.id.edit_search);
-        listFriends = view.findViewById(R.id.list_friends);
+        RecyclerView listFriends = view.findViewById(R.id.list_friends);
         RecyclerView others = view.findViewById(R.id.list_search_user);
         listFriends.setAdapter(mFriendsAdapter);
         listFriends.setLayoutManager(new LinearLayoutManager(getContext()));
         others.setAdapter(mOthersAdapter);
         others.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        texteEmpty = view.findViewById(R.id.text_empty);
+        textFriendsEmpty = view.findViewById(R.id.text_friends_empty);
+        textOthersEmpty = view.findViewById(R.id.text_others_empty);
 
         mLayout = view.findViewById(R.id.layout_user_fragment);
         mProgressBar = view.findViewById(R.id.progress_loading);
@@ -133,6 +126,10 @@ public class UserFragment extends Fragment implements EmptyView {
                         button.setEnabled(true);
                         if (response.getStatusCode() != 204) {
                             mOthers = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                            textOthersEmpty.setVisibility(View.GONE);
+                        } else {
+                            mOthers.clear();
+                            textOthersEmpty.setVisibility(View.VISIBLE);
                         }
                         mOthersAdapter.setValues(mOthers);
                         mOthersAdapter.notifyDataSetChanged();
@@ -141,7 +138,8 @@ public class UserFragment extends Fragment implements EmptyView {
                     @Override
                     public void handleError(Response error) {
                         button.setEnabled(true);
-                        Log.e(UserFragment.class.getName(), "Error: " + error);
+                        textOthersEmpty.setVisibility(View.VISIBLE);
+                        Log.e(UserFragment.class.getName(), error.toString());
                     }
                 });
             }
@@ -171,7 +169,10 @@ public class UserFragment extends Fragment implements EmptyView {
                     mLayout.setVisibility(View.VISIBLE);
 
                     if (response.getStatusCode() != 204) {
+                        textFriendsEmpty.setVisibility(View.GONE);
                         mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                    } else {
+                        textFriendsEmpty.setVisibility(View.VISIBLE);
                     }
 
                     mFriendsAdapter.setValues(mFriends);
@@ -182,22 +183,13 @@ public class UserFragment extends Fragment implements EmptyView {
                 public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
                     mLayout.setVisibility(View.VISIBLE);
-                    Log.e(UserFragment.class.getName(), "Error: " + error);
+                    textFriendsEmpty.setVisibility(View.VISIBLE);
+                    Log.e(UserFragment.class.getName(), error.toString());
                 }
             });
         }
 
         return view;
-    }
-
-    @Override
-    public void manageEmpty() {
-        texteEmpty.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void manageNotEmpty() {
-        texteEmpty.setVisibility(View.GONE);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class ForumFragment extends Fragment {
     private TopicRecyclerViewAdapter adapter;
 
     private ImageButton button;
-    private TextView listTitle;
+    private TextView listTitle, textEmpty;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
 
@@ -99,6 +99,7 @@ public class ForumFragment extends Fragment {
         final EditText searchTopic = v.findViewById(R.id.edit_search);
         button = v.findViewById(R.id.btn_search);
         listTitle = v.findViewById(R.id.text_forum_list);
+        textEmpty = v.findViewById(R.id.text_empty);
         recyclerView = v.findViewById(R.id.list_topics);
         progressBar = v.findViewById(R.id.progress_loading);
         button.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +130,9 @@ public class ForumFragment extends Fragment {
                                 searchedTopics = Arrays.asList(gson.fromJson(response.getContent(), Topic[].class));
                                 adapter.setValues(searchedTopics);
                                 adapter.notifyDataSetChanged();
+                                textEmpty.setVisibility(View.GONE);
+                            } else {
+                                textEmpty.setVisibility(View.VISIBLE);
                             }
                         }
 
@@ -136,6 +140,7 @@ public class ForumFragment extends Fragment {
                         public void handleError(Response error) {
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
+                            if (topTopics.isEmpty()) textEmpty.setVisibility(View.VISIBLE);
                             button.setEnabled(true);
                         }
                     });
@@ -187,6 +192,7 @@ public class ForumFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     button.setEnabled(true);
+                    if (response 204) // todo empty
 
                     topTopics = Arrays.asList(gson.fromJson(result, Topic[].class));
                     adapter.setValues(topTopics);
@@ -197,7 +203,8 @@ public class ForumFragment extends Fragment {
                 public void handleError(Response error) {
                     progressBar.setVisibility(View.GONE);
                     button.setEnabled(true);
-                    Log.e(ForumFragment.class.getName(), "Error while getting top topics: " + error);
+                    textEmpty.setVisibility(View.VISIBLE);
+                    Log.e(ForumFragment.class.getName(), "Top topic error. " + error);
                 }
             });*/
         }

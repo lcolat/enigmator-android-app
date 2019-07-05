@@ -122,7 +122,7 @@ public class LoginActivity extends HttpActivity {
             public void handleError(Response error) {
                 mProgressBar.setVisibility(View.GONE);
                 mButton.setEnabled(true);
-                Log.e(LoginActivity.class.getName(), "Error: " + error);
+                Log.e(LoginActivity.class.getName(), error.toString());
             }
         });
 
