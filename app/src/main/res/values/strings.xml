@@ -9,10 +9,9 @@
     <string name="dialog_no_connection_message">You must provide a valid Internet connection</string>
 
     <!-- Login Activity -->
-    <string name="title_activity_login">Sign in</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
 
     <!-- Main Activity -->
     <string name="logo_description">Logo of the application</string>

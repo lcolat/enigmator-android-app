@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
+class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     private static final String TAG = HttpAsyncTask.class.getName();
 
     private static final String BASE_URL = "http://35.180.227.54:3000/api";
@@ -27,7 +27,7 @@ public class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
 
     private final HttpManager httpManager;
     private final HttpRequest request;
-    private String token;
+    private final String token;
 
     HttpAsyncTask(HttpManager httpManager, @Nullable String token, HttpRequest request) {
         this.httpManager = httpManager;

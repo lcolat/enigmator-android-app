@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.example.enigmator.R;
 
 public class CategoriesFragmentAdapter extends FragmentPagerAdapter {
-    private Context context;
+    private final Context context;
 
     public CategoriesFragmentAdapter(FragmentManager fm, Context context) {
         super(fm);

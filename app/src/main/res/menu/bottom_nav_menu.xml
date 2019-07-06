@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/navigation_enigma"
-        android:icon="@drawable/ic_games_puple_24dp"
+        android:icon="@drawable/ic_games_purple_24dp"
         android:title="@string/enigma"
         app:showAsAction="always"/>
 

@@ -73,7 +73,7 @@ public class TopicActivity extends HttpActivity {
             @Override
             public void onClick(View v) {
                 /*TODO show enigma
-                Intent enigmaIntent = new Intent(TopicActivity.this, EnigmaActitivy.class);
+                Intent enigmaIntent = new Intent(TopicActivity.this, EnigmaActivity.class);
                 enigmaIntent.putExtra(, enigmaId);
                 startActivity(enigmaIntent);*/
             }

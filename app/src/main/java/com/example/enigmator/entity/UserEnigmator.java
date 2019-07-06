@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.example.enigmator.activity.MainActivity;
+import com.example.enigmator.activity.CategoriesActivity;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -27,7 +27,7 @@ public class UserEnigmator implements Serializable {
     public static UserEnigmator getCurrentUser(Context context) {
         Gson gson = new Gson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String json = prefs.getString(MainActivity.PREF_USER, null);
+        String json = prefs.getString(CategoriesActivity.PREF_USER, null);
         return json == null ? null : gson.fromJson(json, UserEnigmator.class);
     }
 }

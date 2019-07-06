@@ -16,7 +16,7 @@ import com.example.enigmator.controller.HttpManager;
  * This class handles network stuff.
  */
 public abstract class HttpActivity extends AppCompatActivity {
-    protected HttpManager httpManager;
+    HttpManager httpManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public abstract class HttpActivity extends AppCompatActivity {
         }
     }
 
-    protected AlertDialog buildNoConnectionErrorDialog(@Nullable DialogInterface.OnClickListener listener) {
+    AlertDialog buildNoConnectionErrorDialog(@Nullable DialogInterface.OnClickListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_no_connection_title);
         builder.setMessage(R.string.dialog_no_connection_message);
@@ -40,7 +40,7 @@ public abstract class HttpActivity extends AppCompatActivity {
         return builder.create();
     }
 
-    protected boolean isInternetConnected() {
+    boolean isInternetConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
