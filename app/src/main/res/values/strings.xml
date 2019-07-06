@@ -14,7 +14,6 @@
     <string name="action_sign_in">Sign in</string>
 
     <!-- Main Activity -->
-    <string name="logo_description">Logo of the application</string>
     <string name="enigma">Enigmas</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="forum">Forum</string>
@@ -35,6 +34,7 @@
     <string name="send_message_hint">Enter message here</string>
     <string name="no_friends_found">No friends found</string>
     <string name="no_users_found">No users found</string>
+    <string name="invite_sent">Friend invite sent !</string>
 
     <!-- Leaderboard -->
     <string name="tab_overall">Overall</string>
