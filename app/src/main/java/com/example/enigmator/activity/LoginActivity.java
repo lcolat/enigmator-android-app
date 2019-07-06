@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
@@ -27,7 +28,6 @@ import lombok.AllArgsConstructor;
 
 public class LoginActivity extends HttpActivity {
     private static final String PREF_USERNAME = "pref_username";
-    private static final String PREF_USER_ID = "pref_user_id";
 
     private ProgressBar mProgressBar;
     private Button mButton;
@@ -69,23 +69,24 @@ public class LoginActivity extends HttpActivity {
         });
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = prefs.getString(PREF_USERNAME, null);
-        String userToken = prefs.getString(HttpManager.PREF_USER_TOKEN, null);
-        int userId = prefs.getInt(PREF_USER_ID, -1);
 
-        if (username != null) {
-            editUsername.setText(username);
-        }
+
+        String userToken = prefs.getString(HttpManager.PREF_USER_TOKEN, null);
+        String user = prefs.getString(CategoriesActivity.PREF_USER, null);
 
         // TODO: check internet before ?
-        if (userToken != null && userId > -1) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(MainActivity.USER_ID_KEY, userId);
+        if (userToken != null && user != null) {
+            Intent intent = new Intent(this, CategoriesActivity.class);
             startActivity(intent);
+        } else {
+            String username = prefs.getString(PREF_USERNAME, null);
+            if (username != null) {
+                editUsername.setText(username);
+            }
         }
     }
 
-    // TODO: Fix: login fails on first attempt after disconnection
+    // TODO: Fix?: login fails on first attempt after disconnection
     private void login(String username, String password) {
         Credentials credentials = new Credentials(username, password);
         Gson gson = new Gson();
@@ -110,12 +111,33 @@ public class LoginActivity extends HttpActivity {
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
                 editor.putString(HttpManager.PREF_USER_TOKEN, token);
-                editor.putInt(PREF_USER_ID, userId);
                 editor.apply();
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra(MainActivity.USER_ID_KEY, userId);
-                startActivity(intent);
+                httpManager.addToQueue(HttpRequest.GET, "/userEnigmators/" + userId, null,
+                        new HttpRequest.HttpRequestListener() {
+                            @Override
+                            public void prepareRequest() {
+                                mProgressBar.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void handleSuccess(Response response) {
+                                mProgressBar.setVisibility(View.GONE);
+
+                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+                                editor.putString(CategoriesActivity.PREF_USER, response.getContent());
+                                editor.apply();
+
+                                Intent intent = new Intent(LoginActivity.this, CategoriesActivity.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void handleError(Response error) {
+                                mProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(LoginActivity.this, "Couldn't get User", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
 
             @Override

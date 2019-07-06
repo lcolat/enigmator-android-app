@@ -26,6 +26,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:inputType="textCapSentences|textMultiLine"
+        android:hint="@string/send_message_hint"
         android:maxLines="3"
         android:imeOptions="flagNoEnterAction"
         android:layout_toStartOf="@+id/btn_send_message"

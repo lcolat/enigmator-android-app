@@ -1,18 +1,26 @@
 package com.example.enigmator.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.enigmator.R;
+import com.example.enigmator.controller.HttpManager;
+import com.example.enigmator.entity.UserEnigmator;
 import com.example.enigmator.fragment.CategoriesFragmentAdapter;
 import com.example.enigmator.fragment.NonSwipeableViewPager;
 
 public class CategoriesActivity extends AppCompatActivity {
-    static final String INITIAL_FRAGMENT_KEY = "initial_fragment_key";
+    public static final String PREF_USER = "pref_user";
+    private static final String INITIAL_FRAGMENT_KEY = "initial_fragment_key";
 
     private CategoriesFragmentAdapter fragmentAdapter;
     private NonSwipeableViewPager viewPager;
@@ -63,10 +71,41 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_profile:
+                Intent intent = new Intent(this, UserActivity.class);
+                intent.putExtra(UserActivity.USER_KEY, UserEnigmator.getCurrentUser(this));
+                intent.putExtra(UserActivity.IS_SELF_KEY, true);
+                startActivity(intent);
+                return true;
+            case R.id.menu_settings:
+                // TODO : start Settings activity
+                return true;
+            case R.id.menu_disconnect:
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                editor.remove(HttpManager.PREF_USER_TOKEN);
+                editor.remove(PREF_USER);
+                editor.apply();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }

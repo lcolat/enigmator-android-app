@@ -53,6 +53,7 @@ public class UserActivity extends HttpActivity {
                 }
             });
         } else {
+            button.hide();
             httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + user.getId() + "/isFriend",
                     null, new HttpRequest.HttpRequestListener() {
                         @Override
@@ -65,10 +66,9 @@ public class UserActivity extends HttpActivity {
                             isFriend = new Gson().fromJson(response.getContent(), JsonObject.class)
                                     .get("isFriend").getAsBoolean();
 
-                            button.setEnabled(true);
-
-                            if (isFriend) {
-                                button.setImageResource(R.drawable.ic_chat_white_24dp);
+                            if (!isFriend) {
+                                button.show();
+                                button.setEnabled(true);
                             }
                         }
 
@@ -81,30 +81,24 @@ public class UserActivity extends HttpActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isFriend) {
-                        Intent intent = new Intent(UserActivity.this, ChatActivity.class);
-                        intent.putExtra(USER_KEY, user);
-                        startActivity(intent);
-                    } else {
-                        httpManager.addToQueue(HttpRequest.POST, "/UserEnigmators/" + user.getId()
-                                + "/AddAFriend", null, new HttpRequest.HttpRequestListener() {
-                            @Override
-                            public void prepareRequest() {
-                                button.setEnabled(false);
-                            }
+                    httpManager.addToQueue(HttpRequest.POST, "/UserEnigmators/" + user.getId()
+                            + "/AddAFriend", null, new HttpRequest.HttpRequestListener() {
+                        @Override
+                        public void prepareRequest() {
+                            button.setEnabled(false);
+                        }
 
-                            @Override
-                            public void handleSuccess(Response response) {
-                                button.setEnabled(true);
-                                button.setImageResource(R.drawable.ic_chat_white_24dp);
-                            }
+                        @Override
+                        public void handleSuccess(Response response) {
+                            button.hide();
+                            Toast.makeText(UserActivity.this, R.string.invite_sent, Toast.LENGTH_SHORT).show();
+                        }
 
-                            @Override
-                            public void handleError(Response error) {
-                                button.setEnabled(true);
-                            }
-                        });
-                    }
+                        @Override
+                        public void handleError(Response error) {
+                            button.setEnabled(true);
+                        }
+                    });
                 }
             });
         }
