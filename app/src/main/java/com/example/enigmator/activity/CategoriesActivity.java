@@ -90,7 +90,8 @@ public class CategoriesActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_settings:
-                // TODO : start Settings activity
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 return true;
             case R.id.menu_disconnect:
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();

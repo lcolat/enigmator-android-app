@@ -24,11 +24,12 @@
         <activity
             android:name=".activity.CategoriesActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activity.SettingsActivity"
+            android:parentActivityName=".activity.CategoriesActivity" />
         <activity
             android:name=".activity.TopicActivity"
-            android:parentActivityName=".activity.CategoriesActivity"/>
+            android:parentActivityName=".activity.CategoriesActivity" />
         <activity
             android:name=".activity.ChatActivity"
             android:parentActivityName=".activity.UserActivity" />
@@ -36,4 +37,5 @@
             android:name=".activity.UserActivity"
             android:parentActivityName=".activity.CategoriesActivity" />
     </application>
+
 </manifest>

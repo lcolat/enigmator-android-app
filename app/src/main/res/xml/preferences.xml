@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/privacy_category">
+
+        <Preference
+            android:key="gdpr"
+            android:title="@string/gdpr_title"
+            android:summary="@string/gdpr_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

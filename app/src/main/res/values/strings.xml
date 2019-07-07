@@ -47,4 +47,12 @@
     <string name="icon_open_in_new_description">Open Enigma in new window</string>
     <string name="no_topics_found">No topics found</string>
     <string name="no_posts_found">No posts found</string>
+
+    <!-- Settings -->
+    <string name="privacy_category">Privacy</string>
+    <string name="gdpr_title">Collect User data</string>
+    <string name="gdpr_summary">Obtain all your private data by email</string>
+    <string name="gdpr_dialog_title">Data Privacy</string>
+    <string name="gdpr_dialog_message">You are about to collect all your data (by email) in respect of GDPR policy.</string>
+    <string name="gdpr_toast_success">Request has been made</string>
 </resources>
