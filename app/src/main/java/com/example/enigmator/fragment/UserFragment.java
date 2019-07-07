@@ -63,7 +63,7 @@ public class UserFragment extends Fragment {
         } else {
             mListener = new OnListFragmentInteractionListener() {
                 @Override
-                public void onListFragmentInteraction(View view, UserEnigmator user) {
+                public void onListFragmentInteraction(UserEnigmator user) {
                     Intent intent = new Intent(getContext(), UserActivity.class);
                     intent.putExtra(UserActivity.USER_KEY, user);
                     startActivity(intent);
@@ -214,6 +214,6 @@ public class UserFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(View view, UserEnigmator user);
+        void onListFragmentInteraction(UserEnigmator user);
     }
 }

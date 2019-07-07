@@ -65,7 +65,7 @@ public class ForumFragment extends Fragment {
         } else {
             mListener = new OnListFragmentInteractionListener() {
                 @Override
-                public void onListFragmentInteraction(View view, Topic topic) {
+                public void onListFragmentInteraction(Topic topic) {
                     Intent intent = new Intent(getContext(), TopicActivity.class);
                     intent.putExtra(TopicActivity.TOPIC_ID_KEY, topic.getId());
                     intent.putExtra(TopicActivity.TOPIC_TITLE_KEY, topic.getEnigmaTitle());
@@ -238,6 +238,6 @@ public class ForumFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(View view, Topic topic);
+        void onListFragmentInteraction(Topic topic);
     }
 }

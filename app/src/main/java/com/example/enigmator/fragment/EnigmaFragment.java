@@ -3,9 +3,12 @@ package com.example.enigmator.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.enigmator.R;
+import com.example.enigmator.activity.EnigmaCreationActivity;
 import com.example.enigmator.controller.EnigmaRecyclerViewAdapter;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
@@ -65,7 +69,7 @@ public class EnigmaFragment extends Fragment {
         } else {
             mListener = new EnigmaFragment.OnListFragmentInteractionListener() {
                 @Override
-                public void onListFragmentInteraction(View view, Enigma enigma) {
+                public void onListFragmentInteraction(Enigma enigma) {
                     // TODO: startEnigma activity
                    /* Intent intent = new Intent(getContext(), EnigmaActivity.class);
                     intent.putExtra(EnigmaActivity.ENIGMA_ID_KEY, enigma.getId());
@@ -114,6 +118,18 @@ public class EnigmaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sortEnigmas(SortType.RANDOM);
+            }
+        });
+
+        FloatingActionButton btnAdd = view.findViewById(R.id.btn_add_enigma);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            btnAdd.setSupportBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+        }
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EnigmaCreationActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -209,7 +225,7 @@ public class EnigmaFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(View view, Enigma enigma);
+        void onListFragmentInteraction(Enigma enigma);
     }
 
 }
