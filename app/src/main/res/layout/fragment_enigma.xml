@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.EnigmaFragment"
-    android:padding="@dimen/app_padding">
+    tools:context=".fragment.EnigmaFragment">
 
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:weightSum="3"
         android:orientation="horizontal"
         android:layout_marginBottom="8dp">
 
@@ -40,6 +38,16 @@
             style="?android:attr/buttonBarButtonStyle"
             android:text="@string/btn_sort_random"/>
 
+        <Button
+            android:id="@+id/btn_validate_enigma"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="@string/btn_validate" />
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -47,7 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_buttons"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/app_padding"/>
 
     <ProgressBar
         android:id="@+id/progress_loading"
@@ -55,7 +64,7 @@
         android:visibility="visible"
         tools:visibility="visible"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/text_empty"

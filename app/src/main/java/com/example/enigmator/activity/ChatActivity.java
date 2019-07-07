@@ -15,7 +15,6 @@ import com.example.enigmator.controller.MessageRecyclerViewAdapter;
 import com.example.enigmator.entity.Message;
 import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +24,6 @@ import java.util.List;
 public class ChatActivity extends HttpActivity {
     private List<Message> messages;
     private MessageRecyclerViewAdapter mAdapter;
-    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +34,6 @@ public class ChatActivity extends HttpActivity {
         setTitle(user.getUsername());
 
         messages = new ArrayList<>();
-        gson = new Gson();
 
         RecyclerView recyclerView = findViewById(R.id.list_messages);
         mAdapter = new MessageRecyclerViewAdapter(messages,

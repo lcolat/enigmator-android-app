@@ -89,7 +89,6 @@ public class LoginActivity extends HttpActivity {
     // TODO: Fix?: login fails on first attempt after disconnection
     private void login(String username, String password) {
         Credentials credentials = new Credentials(username, password);
-        Gson gson = new Gson();
         String body = gson.toJson(credentials);
 
         httpManager.addToQueue(HttpRequest.POST, "/UserEnigmators/login", body, new HttpRequest.HttpRequestListener() {

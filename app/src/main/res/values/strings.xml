@@ -40,8 +40,10 @@
     <string name="btn_sort_easy">Easiest</string>
     <string name="btn_sort_hard">Hardest</string>
     <string name="btn_sort_random">Random</string>
+    <string name="btn_validate">Validate</string>
     <string name="no_enigmas_found">No enigmas found</string>
     <string name="enigma_score">%d pts</string>
+    <string name="btn_reject">Reject</string>
 
     <!-- Leaderboard -->
     <string name="tab_overall">Overall</string>

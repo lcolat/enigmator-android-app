@@ -11,17 +11,20 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
+import com.google.gson.Gson;
 
 /**
  * This class handles network stuff.
  */
 public abstract class HttpActivity extends AppCompatActivity {
     HttpManager httpManager;
+    Gson gson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         httpManager = new HttpManager(this);
+        gson = new Gson();
     }
 
     @Override

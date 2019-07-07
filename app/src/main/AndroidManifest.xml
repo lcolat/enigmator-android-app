@@ -14,8 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.EnigmaCreationActivity"
+        <activity android:name=".activity.EnigmaActivity"
             android:parentActivityName=".activity.CategoriesActivity"/>
+        <activity
+            android:name=".activity.EnigmaCreationActivity"
+            android:parentActivityName=".activity.CategoriesActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

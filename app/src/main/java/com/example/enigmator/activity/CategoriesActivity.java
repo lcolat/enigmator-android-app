@@ -113,6 +113,11 @@ public class CategoriesActivity extends HttpActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onBackPressed() {
         moveTaskToBack(true);
     }

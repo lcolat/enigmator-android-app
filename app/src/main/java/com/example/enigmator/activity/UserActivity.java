@@ -13,7 +13,6 @@ import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class UserActivity extends HttpActivity {
@@ -63,7 +62,7 @@ public class UserActivity extends HttpActivity {
 
                         @Override
                         public void handleSuccess(Response response) {
-                            isFriend = new Gson().fromJson(response.getContent(), JsonObject.class)
+                            isFriend = gson.fromJson(response.getContent(), JsonObject.class)
                                     .get("isFriend").getAsBoolean();
 
                             if (!isFriend) {

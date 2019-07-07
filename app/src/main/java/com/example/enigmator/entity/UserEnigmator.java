@@ -18,6 +18,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserEnigmator implements Serializable {
+    private static final String VALIDATOR_RANK = "validator";
+
     private int id;
     private int rank;
     private String rang;
@@ -29,5 +31,10 @@ public class UserEnigmator implements Serializable {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String json = prefs.getString(CategoriesActivity.PREF_USER, null);
         return json == null ? null : gson.fromJson(json, UserEnigmator.class);
+    }
+
+    public boolean isValidator() {
+        return true; // TODO: remove
+        //return VALIDATOR_RANK.equals(rang);
     }
 }

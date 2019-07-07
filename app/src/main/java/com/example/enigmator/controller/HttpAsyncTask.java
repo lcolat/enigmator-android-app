@@ -37,7 +37,9 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
 
     @Override
     protected void onPreExecute() {
-        request.getListener().prepareRequest();
+        if (request.getListener() != null) {
+            request.getListener().prepareRequest();
+        }
     }
 
     @Override
@@ -106,14 +108,18 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     @Override
     protected void onCancelled(Response response) {
         super.onCancelled();
-        request.getListener().handleError(response);
+        if (request.getListener() != null) {
+            request.getListener().handleError(response);
+        }
         httpManager.startNext(true);
     }
 
     @Override
     protected void onPostExecute(Response r) {
         Log.d(TAG, r.getContent());
-        request.getListener().handleSuccess(r);
+        if (request.getListener() != null) {
+            request.getListener().handleSuccess(r);
+        }
         httpManager.startNext(true);
     }
 

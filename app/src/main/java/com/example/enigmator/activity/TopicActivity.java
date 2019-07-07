@@ -35,7 +35,6 @@ public class TopicActivity extends HttpActivity {
     private List<Post> posts;
     private PostRecyclerViewAdapter mAdapter;
     private UserEnigmator currentUser;
-    private Gson gson;
 
     private int enigmaId;
 
@@ -45,8 +44,6 @@ public class TopicActivity extends HttpActivity {
         setContentView(R.layout.activity_topic);
 
         currentUser = UserEnigmator.getCurrentUser(this);
-
-        gson = new Gson();
 
         final Intent intent = getIntent();
         final int topicId = intent.getIntExtra(TOPIC_ID_KEY, -1);
@@ -72,10 +69,9 @@ public class TopicActivity extends HttpActivity {
         btnOpenEnigma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*TODO show enigma
                 Intent enigmaIntent = new Intent(TopicActivity.this, EnigmaActivity.class);
-                enigmaIntent.putExtra(, enigmaId);
-                startActivity(enigmaIntent);*/
+                enigmaIntent.putExtra(EnigmaActivity.ENIGMA_ID_KEY, enigmaId);
+                startActivity(enigmaIntent);
             }
         });
 

@@ -11,6 +11,7 @@ public class HttpRequest {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PUT = "PUT";
+    public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
 
     private final String route;
@@ -18,7 +19,7 @@ public class HttpRequest {
     private String requestBody;
     private final HttpRequestListener listener;
 
-    public HttpRequest(String method, String route, @Nullable String requestBody, HttpRequestListener listener) {
+    public HttpRequest(String method, String route, @Nullable String requestBody, @Nullable HttpRequestListener listener) {
         this.route = route;
         this.method = method;
         this.listener = listener;
@@ -29,7 +30,7 @@ public class HttpRequest {
            } else {
                this.requestBody = requestBody;
            }
-        } else if (!GET.equals(method) && !DELETE.equals(method)) {
+        } else if (!GET.equals(method) && !DELETE.equals(method) && !PATCH.equals(method)) {
             throw new UnsupportedOperationException("HTTP Method '" + method + "' is not allowed.");
         }
     }
