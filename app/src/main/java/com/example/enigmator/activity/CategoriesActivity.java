@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +17,7 @@ import com.example.enigmator.entity.UserEnigmator;
 import com.example.enigmator.fragment.CategoriesFragmentAdapter;
 import com.example.enigmator.fragment.NonSwipeableViewPager;
 
-public class CategoriesActivity extends AppCompatActivity {
+public class CategoriesActivity extends HttpActivity {
     public static final String PREF_USER = "pref_user";
     private static final String INITIAL_FRAGMENT_KEY = "initial_fragment_key";
 
@@ -43,6 +42,14 @@ public class CategoriesActivity extends AppCompatActivity {
 
         int initialFragment = getIntent().getIntExtra(INITIAL_FRAGMENT_KEY, R.id.navigation_enigma);
         navView.setSelectedItemId(initialFragment);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isInternetConnected()) {
+            buildNoConnectionErrorDialog(null).show();
+        }
     }
 
     private boolean updateMainFragment(@IdRes int itemId) {

@@ -12,11 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Enigma implements Serializable {
     private int id;
+    private String name;
     private String question;
     private int likes;
     private Date creationDate;
     private boolean status;
-    private int UserID;
     private int scoreReward;
+    private int UserID;
     private int topicId;
 }

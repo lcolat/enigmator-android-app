@@ -113,8 +113,7 @@ public class UserFragment extends Fragment {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter={\"where\":{\"username\":{\"like\":\""
-                                + searched +"%\",\"options\":\"i\"}}}",
+                httpManager.addToQueue(HttpRequest.GET, "UserEnigmators?filter[where][username][like]=" + searched +"%",
                         null, new HttpRequest.HttpRequestListener() {
                     @Override
                     public void prepareRequest() {

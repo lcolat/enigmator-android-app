@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,6 @@ public class ForumFragment extends Fragment {
         }
         adapter = new TopicRecyclerViewAdapter(topTopics, mListener, locale);
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -177,9 +177,9 @@ public class ForumFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        // TODO: change route
         if (topTopics.isEmpty()) {
-            /*httpManager.addToQueue(HttpRequest.GET, "/topics/top", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(HttpRequest.GET, "/api/Topics?filter[order]=messagesCount%20Desc",
+                    null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     progressBar.setVisibility(View.VISIBLE);
@@ -192,10 +192,13 @@ public class ForumFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     button.setEnabled(true);
-                    if (response 204) // todo empty
-
-                    topTopics = Arrays.asList(gson.fromJson(result, Topic[].class));
-                    adapter.setValues(topTopics);
+                    if (response.getStatusCode() != 204) {
+                        topTopics = Arrays.asList(gson.fromJson(response.getContent(), Topic[].class));
+                        adapter.setValues(topTopics);
+                        textEmpty.setVisibility(View.GONE);
+                    } else {
+                        textEmpty.setVisibility(View.VISIBLE);
+                    }
                     adapter.notifyDataSetChanged();
                 }
 
@@ -206,7 +209,7 @@ public class ForumFragment extends Fragment {
                     textEmpty.setVisibility(View.VISIBLE);
                     Log.e(ForumFragment.class.getName(), "Top topic error. " + error);
                 }
-            });*/
+            });
         }
 
         return v;
