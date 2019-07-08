@@ -66,10 +66,10 @@
                     android:textSize="@dimen/list_category"/>
 
                 <TextView
-                    android:id="@+id/text_user_rank"
+                    android:id="@+id/text_user_score"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_rank"
+                    android:text="@string/text_score"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/list_item_text_size"/>
@@ -140,10 +140,10 @@
                     android:textSize="@dimen/list_category" />
 
                 <TextView
-                    android:id="@+id/text_self_user_rank"
+                    android:id="@+id/text_self_user_score"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_rank"
+                    android:text="@string/text_score"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/list_item_text_size"/>

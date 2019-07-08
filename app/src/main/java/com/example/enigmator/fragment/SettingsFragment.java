@@ -31,7 +31,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
-                        // TODO: change route
+                        // TODO: change route : get gdpr
                         /*
                         httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
                             @Override

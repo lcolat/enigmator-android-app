@@ -59,8 +59,8 @@ public class UserActivity extends HttpActivity {
             btnCompare.setSupportBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
         }
 
-        TextView textRank = findViewById(R.id.text_user_rank);
-        textRank.setText(getString(R.string.text_rank, user.getRank()));
+        TextView textScore = findViewById(R.id.text_user_score);
+        textScore.setText(getString(R.string.text_score, user.getScore()));
 
         final TextView textEasy = findViewById(R.id.text_easy_solved);
         final TextView textMedium = findViewById(R.id.text_medium_solved);
@@ -68,8 +68,7 @@ public class UserActivity extends HttpActivity {
         final TextView textExtreme = findViewById(R.id.text_extreme_solved);
         final TextView textTotal = findViewById(R.id.text_total_solved);
 
-        // TODO: Change route : get user statistics
-        /*httpManager.addToQueue(HttpRequest.GET, "Enigmas/" + user.getId(), null, new HttpRequest.HttpRequestListener() {
+        httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + user.getId() + "/GetEnigmeDone", null, new HttpRequest.HttpRequestListener() {
             @Override
             public void prepareRequest() {
                 progressLoading.setVisibility(View.VISIBLE);
@@ -91,22 +90,21 @@ public class UserActivity extends HttpActivity {
             public void handleError(Response error) {
                 progressLoading.setVisibility(View.GONE);
             }
-        });*/
+        });
 
         if (isSelfProfile) {
             btnCompare.hide();
         } else {
-            TextView textSelfRank = findViewById(R.id.text_self_user_rank);
-            textSelfRank.setText(getString(R.string.text_rank, currentUser.getRank()));
-            
+            TextView textSelfScore = findViewById(R.id.text_self_user_score);
+            textSelfScore.setText(getString(R.string.text_score, currentUser.getScore()));
+
             final TextView textSelfEasy = findViewById(R.id.text_self_easy_solved);
             final TextView textSelfMedium = findViewById(R.id.text_self_medium_solved);
             final TextView textSelfHard = findViewById(R.id.text_self_hard_solved);
             final TextView textSelfExtreme = findViewById(R.id.text_self_extreme_solved);
             final TextView textSelfTotal = findViewById(R.id.text_self_total_solved);
 
-            // TODO: Change route: get self info
-            /*httpManager.addToQueue(HttpRequest.GET, "/Enigmas", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + currentUser.getId() + "/GetEnigmeDone", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     btnCompare.setEnabled(false);
@@ -128,7 +126,7 @@ public class UserActivity extends HttpActivity {
                 public void handleError(Response error) {
 
                 }
-            }); */
+            });
 
             httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + user.getId() + "/isFriend",
                     null, new HttpRequest.HttpRequestListener() {

@@ -3,6 +3,7 @@ package com.example.enigmator.activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,8 +27,10 @@ public class EnigmaCreationActivity extends HttpActivity {
 
         final TextView textMedia = findViewById(R.id.text_media_chosen);
         ImageButton btnMedia = findViewById(R.id.btn_add_media);
+        final EditText editName = findViewById(R.id.edit_name);
         final EditText editQuestion = findViewById(R.id.edit_question);
         final EditText editAnswer = findViewById(R.id.edit_answer);
+        final EditText editScore = findViewById(R.id.edit_score);
         final Button btnSubmit = findViewById(R.id.btn_submit);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -35,26 +38,31 @@ public class EnigmaCreationActivity extends HttpActivity {
             public void onClick(View v) {
                 String answer = editAnswer.getText().toString();
                 String question = editQuestion.getText().toString();
+                String name = editName.getText().toString();
+                int score = Integer.parseInt(editScore.getText().toString());
 
-                if (answer.isEmpty()) {
-                    Toast.makeText(EnigmaCreationActivity.this, R.string.toast_answer_empty, Toast.LENGTH_SHORT).show();
-                } else if (question.isEmpty() && textMedia.getVisibility() == View.GONE) {
-                    Toast.makeText(EnigmaCreationActivity.this, R.string.toast_no_question, Toast.LENGTH_SHORT).show();
+                if (answer.isEmpty() || name.isEmpty() || score < Enigma.MIN_SCORE || score > Enigma.MAX_SCORE ) {
+                    Toast.makeText(EnigmaCreationActivity.this, R.string.toast_invalid_form, Toast.LENGTH_SHORT).show();
                 } else {
                     final Enigma enigma = new Enigma();
                     enigma.setAnswer(answer);
+                    enigma.setScoreReward(score);
+                    enigma.setName(name);
+
                     if (!question.isEmpty()) {
                         enigma.setQuestion(question);
                     } else {
-                        //TODO: post media
+                        //TODO: post media and show media
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(EnigmaCreationActivity.this);
+                    builder.setTitle(R.string.enigma_creation);
+                    builder.setMessage(R.string.enigma_dialog_message);
                     builder.setNegativeButton(android.R.string.cancel, null);
                     builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            httpManager.addToQueue(POST, "/Enigmes", gson.toJson(enigma), new HttpRequest.HttpRequestListener() {
+                            httpManager.addToQueue(POST, "/Enigmes/CreateEnigme", gson.toJson(enigma), new HttpRequest.HttpRequestListener() {
                                 @Override
                                 public void prepareRequest() {
                                     btnSubmit.setEnabled(false);
@@ -69,10 +77,13 @@ public class EnigmaCreationActivity extends HttpActivity {
                                 @Override
                                 public void handleError(Response error) {
                                     btnSubmit.setEnabled(true);
+                                    Log.e(EnigmaCreationActivity.class.getName(), "/Enigmes/CreateEnigme : " + gson.toJson(enigma));
+                                    Log.e(EnigmaCreationActivity.class.getName(), ": " + error.toString());
                                 }
                             });
                         }
                     });
+                    builder.create().show();
                 }
             }
         });

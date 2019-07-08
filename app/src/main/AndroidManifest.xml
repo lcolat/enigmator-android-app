@@ -19,6 +19,7 @@
         <activity
             android:name=".activity.EnigmaCreationActivity"
             android:label="@string/enigma_creation"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:parentActivityName=".activity.CategoriesActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>

@@ -160,8 +160,6 @@ public class EnigmaFragment extends Fragment {
                 public void handleSuccess(Response response) {
                     progressBar.setVisibility(View.GONE);
 
-                    System.out.println(response.getContent());
-
                     if (response.getStatusCode() != 204) {
                         enigmas = Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class));
                         adapter.setValues(enigmas);
@@ -196,7 +194,6 @@ public class EnigmaFragment extends Fragment {
                 }
             });
 
-            // TODO: change route
             httpManager.addToQueue(GET, "Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
@@ -268,8 +265,6 @@ public class EnigmaFragment extends Fragment {
     private void sortEnigmas(SortType sortType) {
         resetButtonsColor();
         textEmpty.setVisibility(enigmas.isEmpty() ? View.VISIBLE : View.GONE);
-
-        System.out.println("Empty: " + enigmas.isEmpty());
 
         switch (sortType) {
             case EASIEST:
