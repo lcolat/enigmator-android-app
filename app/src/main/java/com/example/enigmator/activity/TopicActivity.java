@@ -19,7 +19,6 @@ import com.example.enigmator.controller.PostRecyclerViewAdapter;
 import com.example.enigmator.entity.Post;
 import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;

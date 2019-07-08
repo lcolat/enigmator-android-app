@@ -30,46 +30,221 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars[0]" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/statistics"
-            android:textSize="@dimen/list_category"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:orientation="horizontal"
+            android:baselineAligned="true">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_statistics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/text_statistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/statistics"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/list_category"/>
+
+                <TextView
+                    android:id="@+id/text_user_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rank"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_easy_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/easy_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_medium_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/medium_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_hard_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hard_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_extreme_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/extreme_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_total_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_compare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/text_me"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/me"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/list_category" />
+
+                <TextView
+                    android:id="@+id/text_self_user_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rank"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_easy_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/easy_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_medium_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/medium_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_hard_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hard_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_extreme_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/extreme_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_total_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/list_item_text_size"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_user_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_compare"
+        app:srcCompat="@drawable/ic_person_add_white_24dp"
+        tools:ignore="UnusedAttribute"
+        tools:visibility="visible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_compare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add_white_24dp"
+        app:srcCompat="@drawable/ic_compare_white_24dp"
         tools:ignore="UnusedAttribute" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>

@@ -11,6 +11,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Enigma implements Serializable {
+    public static final int MEDIUM_THRESHOLD = 25;
+    public static final int HARD_THRESHOLD = 50;
+    public static final int EXTREME_THRESHOLD = 75;
+
     private int id;
     private String name;
     private String question;

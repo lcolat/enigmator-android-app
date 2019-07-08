@@ -124,7 +124,6 @@ public class LeaderboardFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), UserActivity.class);
                 intent.putExtra(UserActivity.USER_KEY, currentUser);
-                intent.putExtra(UserActivity.IS_SELF_KEY, true);
                 startActivity(intent);
             }
         });

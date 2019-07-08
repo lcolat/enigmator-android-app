@@ -35,6 +35,12 @@
     <string name="no_friends_found">No friends found</string>
     <string name="no_users_found">No users found</string>
     <string name="invite_sent">Friend invite sent !</string>
+    <string name="text_rank">Rank : %d</string>
+    <string name="easy_solved">Easy solved : %d</string>
+    <string name="medium_solved">Medium solved : %d</string>
+    <string name="hard_solved">Hard solved : %d</string>
+    <string name="extreme_solved">Extreme solved : %d</string>
+    <string name="total_solved">Total solved : %d</string>
 
     <!-- Enigma -->
     <string name="btn_sort_easy">Easiest</string>

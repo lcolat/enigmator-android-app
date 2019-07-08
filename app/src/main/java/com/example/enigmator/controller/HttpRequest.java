@@ -16,21 +16,16 @@ public class HttpRequest {
 
     private final String route;
     private final String method;
-    private String requestBody;
+    private final String requestBody;
     private final HttpRequestListener listener;
 
     public HttpRequest(String method, String route, @Nullable String requestBody, @Nullable HttpRequestListener listener) {
         this.route = route;
         this.method = method;
         this.listener = listener;
+        this.requestBody = requestBody;
 
-        if (POST.equals(method) || PUT.equals(method)) {
-           if (requestBody == null) {
-               throw new IllegalArgumentException("Cannot perform Post or Put without a Request Body");
-           } else {
-               this.requestBody = requestBody;
-           }
-        } else if (!GET.equals(method) && !DELETE.equals(method) && !PATCH.equals(method)) {
+        if (!GET.equals(method) && !POST.equals(method) && !PUT.equals(method) && !DELETE.equals(method) && !PATCH.equals(method)) {
             throw new UnsupportedOperationException("HTTP Method '" + method + "' is not allowed.");
         }
     }

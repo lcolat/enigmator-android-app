@@ -76,7 +76,6 @@ public class EnigmaActivity extends AppCompatActivity {
 
         // TODO: other setup
 
-
         // Validator setup
         boolean isValidator = UserEnigmator.getCurrentUser(this).isValidator();
         if (isValidator) {
@@ -93,7 +92,6 @@ public class EnigmaActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // TODO: POST Rejection
-
 
                     intent.putExtra(VALIDATION_STATUS_KEY, false);
                     setResult(Activity.RESULT_OK, intent);

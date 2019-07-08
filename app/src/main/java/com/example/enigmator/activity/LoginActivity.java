@@ -18,7 +18,6 @@ import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Response;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

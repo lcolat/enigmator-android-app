@@ -93,7 +93,6 @@ public class CategoriesActivity extends HttpActivity {
             case R.id.menu_profile:
                 Intent intent = new Intent(this, UserActivity.class);
                 intent.putExtra(UserActivity.USER_KEY, UserEnigmator.getCurrentUser(this));
-                intent.putExtra(UserActivity.IS_SELF_KEY, true);
                 startActivity(intent);
                 return true;
             case R.id.menu_settings:
