@@ -44,6 +44,8 @@ import static com.example.enigmator.controller.HttpRequest.GET;
  * A simple {@link Fragment} subclass.
  */
 public class EnigmaFragment extends Fragment {
+    private static final String TAG = EnigmaFragment.class.getName();
+
     private static final int REQUEST_CODE = 87;
 
     private List<Enigma> enigmas, waitingValidation;
@@ -175,7 +177,8 @@ public class EnigmaFragment extends Fragment {
                 public void handleError(Response error) {
                     progressBar.setVisibility(View.GONE);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(EnigmaFragment.class.getName(), "Enigmas error. " + error);
+                    Log.e(TAG, "/UserEnigmators/" + userId + "/GetEnigmeNotDone");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
@@ -215,6 +218,8 @@ public class EnigmaFragment extends Fragment {
                 public void handleError(Response error) {
                     recyclerView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
+                    Log.e(TAG, "Enigmes?filter[where][status]=false");
+                    Log.e(TAG, error.toString());
                 }
             });
         }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,6 +19,8 @@ import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.Gson;
 
 public class EnigmaActivity extends AppCompatActivity {
+    private static final String TAG = EnigmaActivity.class.getName();
+
     public static final String ENIGMA_ID_KEY = "enigma_id_key";
     public static final String ENIGMA_KEY = "enigma_key";
     public static final String VALIDATION_STATUS_KEY = "validation_status_key";
@@ -43,7 +46,7 @@ public class EnigmaActivity extends AppCompatActivity {
             enigma = gson.fromJson(enigmaJson, Enigma.class);
             setupScreen();
         } else {
-            int id = intent.getIntExtra(ENIGMA_ID_KEY, -1);
+            final int id = intent.getIntExtra(ENIGMA_ID_KEY, -1);
             if (id < 0) {
                 finish();
             } else {
@@ -64,6 +67,8 @@ public class EnigmaActivity extends AppCompatActivity {
                     @Override
                     public void handleError(Response error) {
                         progressLoading.setVisibility(View.GONE);
+                        Log.e(TAG, "/Enigmes/" + id);
+                        Log.e(TAG, error.toString());
                         finish();
                     }
                 });

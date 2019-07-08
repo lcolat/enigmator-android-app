@@ -26,6 +26,8 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 
 public class LoginActivity extends HttpActivity {
+    private static final String TAG = LoginActivity.class.getName();
+
     private static final String PREF_USERNAME = "pref_username";
 
     private ProgressBar mProgressBar;
@@ -88,7 +90,7 @@ public class LoginActivity extends HttpActivity {
     // TODO: Fix?: login fails on first attempt after disconnection
     private void login(String username, String password) {
         Credentials credentials = new Credentials(username, password);
-        String body = gson.toJson(credentials);
+        final String body = gson.toJson(credentials);
 
         httpManager.addToQueue(HttpRequest.POST, "/UserEnigmators/login", body, new HttpRequest.HttpRequestListener() {
             @Override
@@ -104,14 +106,14 @@ public class LoginActivity extends HttpActivity {
 
                 JsonParser parser = new JsonParser();
                 JsonObject object = parser.parse(response.getContent()).getAsJsonObject();
-                int userId = object.get("userId").getAsInt();
+                final int userId = object.get("userId").getAsInt();
                 String token = object.get("id").getAsString();
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
                 editor.putString(HttpManager.PREF_USER_TOKEN, token);
                 editor.apply();
 
-                httpManager.addToQueue(HttpRequest.GET, "/userEnigmators/" + userId, null,
+                httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + userId, null,
                         new HttpRequest.HttpRequestListener() {
                             @Override
                             public void prepareRequest() {
@@ -134,6 +136,8 @@ public class LoginActivity extends HttpActivity {
                             public void handleError(Response error) {
                                 mProgressBar.setVisibility(View.GONE);
                                 Toast.makeText(LoginActivity.this, "Couldn't get User", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "/UserEnigmators/" + userId);
+                                Log.e(TAG, error.toString());
                             }
                         });
             }
@@ -142,7 +146,8 @@ public class LoginActivity extends HttpActivity {
             public void handleError(Response error) {
                 mProgressBar.setVisibility(View.GONE);
                 mButton.setEnabled(true);
-                Log.e(LoginActivity.class.getName(), error.toString());
+                Log.e(TAG, "/UserEnigmators/login : " + body);
+                Log.e(TAG, error.toString());
             }
         });
 

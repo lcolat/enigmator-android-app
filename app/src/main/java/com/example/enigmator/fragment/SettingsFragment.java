@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
@@ -13,6 +14,8 @@ import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+    private static final String TAG = SettingsFragment.class.getName();
+
     private HttpManager httpManager;
 
     @Override
@@ -32,8 +35,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         // TODO: change route : get gdpr
-                        /*
-                        httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
+                        /*httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
                             @Override
                             public void prepareRequest() { }
 
@@ -45,6 +47,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             @Override
                             public void handleError(Response error) {
                                 Toast.makeText(getContext(), "Gdpr failed", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, );
+                                Log.e(TAG, error.toString());
                             }
                         });*/
                     }

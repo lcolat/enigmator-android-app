@@ -36,6 +36,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class LeaderboardFragment extends Fragment {
+    private static final String TAG = LeaderboardFragment.class.getName();
+
     private OnListFragmentInteractionListener mListener;
     private ProgressBar mProgressBar;
     private UserRecyclerViewAdapter mAdapter;
@@ -166,7 +168,8 @@ public class LeaderboardFragment extends Fragment {
                 public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(LeaderboardFragment.class.getName(), error.toString());
+                    Log.e(TAG, "/UserEnigmators?filter[order]=rank%20Desc");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
@@ -194,7 +197,8 @@ public class LeaderboardFragment extends Fragment {
 
                 @Override
                 public void handleError(Response error) {
-                    Log.e(LeaderboardFragment.class.getName(), error.toString());
+                    Log.e(TAG, "/UserEnigmators/GetMyFriend");
+                    Log.e(TAG, error.toString());
                 }
             });
         }

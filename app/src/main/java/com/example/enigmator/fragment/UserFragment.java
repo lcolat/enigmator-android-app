@@ -40,6 +40,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class UserFragment extends Fragment {
+    private static final String TAG = UserFragment.class.getName();
+
     private List<UserEnigmator> mFriends, mOthers;
     private ProgressBar mProgressBar;
     private LinearLayout mLayout;
@@ -138,7 +140,8 @@ public class UserFragment extends Fragment {
                     public void handleError(Response error) {
                         button.setEnabled(true);
                         textOthersEmpty.setVisibility(View.VISIBLE);
-                        Log.e(UserFragment.class.getName(), error.toString());
+                        Log.e(TAG,"UserEnigmators?filter[where][username][like]=" + searched +"%");
+                        Log.e(TAG, error.toString());
                     }
                 });
             }
@@ -183,7 +186,8 @@ public class UserFragment extends Fragment {
                     mProgressBar.setVisibility(View.GONE);
                     mLayout.setVisibility(View.VISIBLE);
                     textFriendsEmpty.setVisibility(View.VISIBLE);
-                    Log.e(UserFragment.class.getName(), error.toString());
+                    Log.e(TAG, "/UserEnigmators/GetMyFriend");
+                    Log.e(TAG, error.toString());
                 }
             });
         }

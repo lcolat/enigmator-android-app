@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -25,11 +26,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserActivity extends HttpActivity {
+    private static final String TAG = UserActivity.class.getName();
+
     public static final String USER_KEY = "user_key";
 
     private FloatingActionButton btnCompare, btnAddUser;
     private ProgressBar progressLoading;
     private LinearLayout layoutCompare;
+
+    private UserEnigmator currentUser;
 
     private boolean isFriend, isComparing;
 
@@ -40,7 +45,7 @@ public class UserActivity extends HttpActivity {
 
         Intent intent = getIntent();
         final UserEnigmator user = (UserEnigmator) intent.getSerializableExtra(USER_KEY);
-        UserEnigmator currentUser = UserEnigmator.getCurrentUser(this);
+        currentUser = UserEnigmator.getCurrentUser(this);
         assert currentUser != null;
         boolean isSelfProfile = user.getId() == currentUser.getId();
 
@@ -89,6 +94,8 @@ public class UserActivity extends HttpActivity {
             @Override
             public void handleError(Response error) {
                 progressLoading.setVisibility(View.GONE);
+                Log.e(TAG, "/UserEnigmators/" + user.getId() + "/GetEnigmeDone");
+                Log.e(TAG, error.toString());
             }
         });
 
@@ -124,7 +131,8 @@ public class UserActivity extends HttpActivity {
 
                 @Override
                 public void handleError(Response error) {
-
+                    Log.e(TAG, "/UserEnigmators/" + currentUser.getId() + "/GetEnigmeDone");
+                    Log.e(TAG, error.toString());
                 }
             });
 
@@ -148,7 +156,8 @@ public class UserActivity extends HttpActivity {
 
                         @Override
                         public void handleError(Response error) {
-
+                            Log.e(TAG, "/UserEnigmators/" + user.getId() + "/isFriend");
+                            Log.e(TAG, error.toString());
                         }
                     });
 
@@ -181,6 +190,8 @@ public class UserActivity extends HttpActivity {
                         @Override
                         public void handleError(Response error) {
                             btnAddUser.setEnabled(true);
+                            Log.e(TAG, "/UserEnigmators/" + user.getId());
+                            Log.e(TAG, error.toString());
                         }
                     });
                 }

@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class ForumFragment extends Fragment {
+    private static final String TAG = ForumFragment.class.getName();
+
     private OnListFragmentInteractionListener mListener;
     private HttpManager httpManager;
     private List<Topic> topTopics, searchedTopics;
@@ -105,7 +107,7 @@ public class ForumFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searched = searchTopic.getText().toString();
+                final String searched = searchTopic.getText().toString();
                 if (searched.length() > 0) {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -142,6 +144,9 @@ public class ForumFragment extends Fragment {
                             recyclerView.setVisibility(View.VISIBLE);
                             if (topTopics.isEmpty()) textEmpty.setVisibility(View.VISIBLE);
                             button.setEnabled(true);
+                            Log.e(TAG, "/Topics?filter={\"where\":{\"title\":{\"like\":\""
+                                    + searched + "%\",\"options\":\"i\"}}}");
+                            Log.e(TAG, error.toString());
                         }
                     });
                 }
@@ -207,7 +212,8 @@ public class ForumFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     button.setEnabled(true);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(ForumFragment.class.getName(), "Top topic error. " + error);
+                    Log.e(TAG, "/api/Topics?filter[order]=messagesCount%20Desc");
+                    Log.e(TAG, error.toString());
                 }
             });
         }

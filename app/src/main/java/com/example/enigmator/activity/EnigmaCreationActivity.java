@@ -19,6 +19,7 @@ import com.example.enigmator.entity.Response;
 import static com.example.enigmator.controller.HttpRequest.POST;
 
 public class EnigmaCreationActivity extends HttpActivity {
+    private static final String TAG = EnigmaCreationActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +78,8 @@ public class EnigmaCreationActivity extends HttpActivity {
                                 @Override
                                 public void handleError(Response error) {
                                     btnSubmit.setEnabled(true);
-                                    Log.e(EnigmaCreationActivity.class.getName(), "/Enigmes/CreateEnigme : " + gson.toJson(enigma));
-                                    Log.e(EnigmaCreationActivity.class.getName(), ": " + error.toString());
+                                    Log.e(TAG, "/Enigmes/CreateEnigme : " + gson.toJson(enigma));
+                                    Log.e(TAG, error.toString());
                                 }
                             });
                         }
