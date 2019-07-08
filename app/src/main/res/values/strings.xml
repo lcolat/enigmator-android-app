@@ -4,6 +4,8 @@
     <string name="message_copied">Copied !</string>
     <string name="search">Search</string>
     <string name="results">Results</string>
+    <string name="or">OR</string>
+    <string name="submit">Submit</string>
 
     <string name="dialog_no_connection_title">No Internet Connection</string>
     <string name="dialog_no_connection_message">You must provide a valid Internet connection</string>
@@ -50,6 +52,18 @@
     <string name="no_enigmas_found">No enigmas found</string>
     <string name="enigma_score">%d pts</string>
     <string name="btn_reject">Reject</string>
+
+    <!-- Enigma Creation Activity -->
+    <string name="enigma_creation">Enigma Creation</string>
+    <string name="question_type_choice">Choose a question type</string>
+    <string name="media_question">Media Question</string>
+    <string name="input_question">Input Question</string>
+    <string name="answer_type">Set the answer</string>
+    <string name="answer_case_sensitive">Answer (Case sensitive)</string>
+    <string name="image_gallery_description">Open Gallery</string>
+    <string name="toast_answer_empty">Answer cannot be empty</string>
+    <string name="toast_no_question">Please provide a question</string>
+    <string name="enigma_submitted">Enigma submitted !</string>
 
     <!-- Leaderboard -->
     <string name="tab_overall">Overall</string>
