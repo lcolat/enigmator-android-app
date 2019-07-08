@@ -64,4 +64,9 @@
     <string name="gdpr_dialog_title">Data Privacy</string>
     <string name="gdpr_dialog_message">You are about to collect all your data (by email) in respect of GDPR policy.</string>
     <string name="gdpr_toast_success">Request has been made</string>
+    <string name="user">User</string>
+    <string name="password_title">Change Password</string>
+    <string name="password_summary">Modify your password</string>
+    <string name="new_password">New password</string>
+
 </resources>

@@ -25,8 +25,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         gdprPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                assert getContext() != null;
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(preference.getContext());
                 builder.setTitle(R.string.gdpr_dialog_title);
                 builder.setMessage(R.string.gdpr_dialog_message);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -51,6 +50,22 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                 });
                 builder.create().show();
+                return true;
+            }
+        });
+
+        Preference passwordPref = findPreference("password");
+        passwordPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(EditDialogFragment.STRING_RESOURCE, R.string.new_password);
+                EditDialogFragment dialogFragment = new EditDialogFragment();
+                dialogFragment.setArguments(bundle);
+
+                assert getFragmentManager() != null;
+                dialogFragment.show(getFragmentManager(), EditDialogFragment.class.getName());
+
                 return true;
             }
         });

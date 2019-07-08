@@ -2,12 +2,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="@string/user">
+
+        <Preference
+            android:key="password"
+            android:title="@string/password_title"
+            android:summary="@string/password_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/privacy_category">
 
         <Preference
             android:key="gdpr"
             android:title="@string/gdpr_title"
-            android:summary="@string/gdpr_summary"/>
+            android:summary="@string/gdpr_summary" />
 
     </PreferenceCategory>
 
