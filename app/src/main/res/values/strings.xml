@@ -32,6 +32,7 @@
     <string name="profile_picture_description">Avatar picture</string>
     <string name="send_icon_description">Send icon</string>
     <string name="send_message_hint">Enter message here</string>
+    <string name="text_enigma_response_field">Write answer here</string>
     <string name="no_friends_found">No friends found</string>
     <string name="no_users_found">No users found</string>
     <string name="invite_sent">Friend invite sent !</string>
@@ -64,4 +65,7 @@
     <string name="gdpr_dialog_title">Data Privacy</string>
     <string name="gdpr_dialog_message">You are about to collect all your data (by email) in respect of GDPR policy.</string>
     <string name="gdpr_toast_success">Request has been made</string>
+    <string name="enigma_name">Enigma Name</string>
+    <string name="image_enigma">Image enigma</string>
+    <string name="enigma_question">Question</string>
 </resources>
