@@ -149,7 +149,8 @@ public class EnigmaFragment extends Fragment {
         });
 
         if (enigmas.isEmpty()) {
-            httpManager.addToQueue(GET, "/UserEnigmators/" + userId + "/GetEnigmeNotDone",
+            //httpManager.addToQueue(GET, "/UserEnigmators/" + userId + "/GetEnigmeNotDone",
+            httpManager.addToQueue(GET, "/Enigmes?filter={\"where\":{\"status\":\"true\"}}",
                     null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
@@ -197,7 +198,9 @@ public class EnigmaFragment extends Fragment {
             });
 
             // TODO: change route
-            httpManager.addToQueue(GET, "Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
+            //httpManager.addToQueue(GET, "/Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(GET, "/Enigmes?filter={\"where\":{\"status\":\"false\"}}", null,
+                    new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     recyclerView.setVisibility(View.GONE);

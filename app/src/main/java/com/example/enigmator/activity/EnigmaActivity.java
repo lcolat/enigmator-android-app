@@ -18,8 +18,10 @@ import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Enigma;
 import com.example.enigmator.entity.Response;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.io.InputStream;
 
 public class EnigmaActivity extends AppCompatActivity {
@@ -119,6 +121,7 @@ public class EnigmaActivity extends AppCompatActivity {
             });
         }
         else {
+            System.out.println("enigma.getId()=" + enigma.getId());
             HttpRequestGenerator httpRequestGenerator = new HttpRequestGenerator(this);
             httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
                     new HttpRequest.HttpRequestListener() {
@@ -129,11 +132,14 @@ public class EnigmaActivity extends AppCompatActivity {
 
                 @Override
                 public void handleSuccess(Response response) {
-                    String enigmaType = gson.fromJson(response.getContent(), JsonObject.class).
-                            get("type").getAsString();
+                    System.out.println("AVANT LE PARSQING MES COUILLES");
+                    String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
+                            get(0).getAsJsonObject().get("type").getAsString();
+
                     if(!enigmaType.equalsIgnoreCase("text")) {
                         downloadMedia(enigmaType,
-                                gson.fromJson(response.getContent(), JsonObject.class).get("filename").toString());
+                                gson.fromJson(response.getContent(), JsonObject.class).
+                                        get("filename").toString());
                     }
                     progressLoading.setVisibility(View.GONE);
                 }
@@ -158,6 +164,10 @@ public class EnigmaActivity extends AppCompatActivity {
 
                     @Override
                     public void handleSuccess(Response response) {
+                        File cacheDir = getCacheDir();
+
+//                        cacheDir
+
                         switch (enigmaType.toLowerCase()) {
                             case "picture":
 
