@@ -1,16 +1,25 @@
 package com.example.enigmator.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.enigmator.controller.DownloadFileFromURL;
+import com.example.enigmator.controller.HttpRequest.HttpRequestListener;
+import com.example.enigmator.entity.StoreMedia;
 import com.example.enigmator.utils.HttpRequestGenerator;
 import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
@@ -21,8 +30,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.io.File;
-import java.io.InputStream;
+import java.net.URI;
+
 
 public class EnigmaActivity extends AppCompatActivity {
     private static final String TAG = TopicActivity.class.getName();
@@ -56,7 +65,7 @@ public class EnigmaActivity extends AppCompatActivity {
             if (id < 0) {
                 finish();
             } else {
-                httpManager.addToQueue(HttpRequest.GET, "/Enigmes/" + id, null, new HttpRequest.HttpRequestListener() {
+                httpManager.addToQueue(HttpRequest.GET, "/Enigmes/" + id, null, new HttpRequestListener() {
                     @Override
                     public void prepareRequest() {
                         progressLoading.setVisibility(View.VISIBLE);
@@ -124,7 +133,7 @@ public class EnigmaActivity extends AppCompatActivity {
             System.out.println("enigma.getId()=" + enigma.getId());
             HttpRequestGenerator httpRequestGenerator = new HttpRequestGenerator(this);
             httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
-                    new HttpRequest.HttpRequestListener() {
+                    new HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     progressLoading.setVisibility(View.VISIBLE);
@@ -132,14 +141,15 @@ public class EnigmaActivity extends AppCompatActivity {
 
                 @Override
                 public void handleSuccess(Response response) {
-                    System.out.println("AVANT LE PARSQING MES COUILLES");
+                    findViewById(R.id.layout_validator_buttons).setVisibility(View.VISIBLE);
                     String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
                             get(0).getAsJsonObject().get("type").getAsString();
+                    System.out.println("enigmaType=" + enigmaType);
 
                     if(!enigmaType.equalsIgnoreCase("text")) {
                         downloadMedia(enigmaType,
-                                gson.fromJson(response.getContent(), JsonObject.class).
-                                        get("filename").toString());
+                                gson.fromJson(response.getContent(), JsonArray.class).get(0)
+                                        .getAsJsonObject().get("filename").getAsString());
                     }
                     progressLoading.setVisibility(View.GONE);
                 }
@@ -155,39 +165,38 @@ public class EnigmaActivity extends AppCompatActivity {
     }
 
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
-        HttpRequestGenerator httpRequestGenerator = new HttpRequestGenerator(this);
-        httpRequestGenerator.downloadMediaOfEnigma(fileNameMedia,
-                new HttpRequest.HttpRequestListener() {
 
-                    @Override
-                    public void prepareRequest() { }
+        //final Context context = this;
+        new DownloadFileFromURL( new HttpRequestListener() {
 
-                    @Override
-                    public void handleSuccess(Response response) {
-                        File cacheDir = getCacheDir();
+            @Override
+            public void prepareRequest() { }
 
-//                        cacheDir
+            @Override
+            public void handleSuccess(Response response) {
+                System.out.println("response.getContent()=" + response.getContent());
+                switch (enigmaType.toLowerCase()) {
+                    case "image":
+                        Bitmap bitmap = BitmapFactory.decodeFile(response.getContent());
+                        ImageView imageView = findViewById(R.id.image_view);
+                        imageView.setImageBitmap(bitmap);
+                        imageView.setVisibility(View.VISIBLE);
+                        break;
 
-                        switch (enigmaType.toLowerCase()) {
-                            case "picture":
+                    case "video":
 
-                                break;
-                            case "sound":
+                        break;
 
-                                break;
-                            case "video":
+                    case "sound":
 
-                                break;
-                        }
-                    }
+                        break;
+                }
+            }
 
-                    @Override
-                    public void handleError(Response error) {
-                        progressLoading.setVisibility(View.GONE);
-                        Log.e(TAG, "DownloadMedia" + error.toString());
-                        finish();
-                    }
-                });
+            @Override
+            public void handleError(Response error) {}
+        } ).execute(new StoreMedia(fileNameMedia, this, enigmaType));
+
     }
 
 
