@@ -25,6 +25,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static com.example.enigmator.controller.HttpRequest.POST;
 
@@ -150,12 +154,40 @@ public class EnigmaCreationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                //TODO CC DIEGO
                 Uri uri = data.getData();
+
                 assert uri != null;
                 String filename = getFileName(uri);
-                chosenMedia = uri.getPath() + "/" + filename;
 
+                System.out.println(data);
                 String extension = filename.substring(filename.indexOf(".") + 1);
+
+
+                System.out.println("oui");
+                String path_temp = this.getCacheDir()+filename;
+                System.out.println(path_temp);
+                File file = new File(this.getCacheDir()+filename);
+                System.out.println(file.exists());
+                byte[] buffer = new byte[1024];
+                int len = 0;
+                try {
+                    FileOutputStream fos = new FileOutputStream(file);
+                    InputStream is = this.getContentResolver().openInputStream(uri);
+                    len = is.read(buffer);
+                    while (len != -1) {
+                        fos.write(buffer, 0, len);
+                        len = is.read(buffer);
+                    }
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    System.out.println("oui");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("non");
+
 
                 if ("jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)
                         || "png".equalsIgnoreCase(extension)) {
@@ -163,7 +195,7 @@ public class EnigmaCreationActivity extends AppCompatActivity {
                 } else {
                     mediaType = HttpRequest.MEDIA_VIDEO;
                 }
-
+                chosenMedia = path_temp;
                 textMedia.setText(filename);
                 textMedia.setVisibility(View.VISIBLE);
             }
