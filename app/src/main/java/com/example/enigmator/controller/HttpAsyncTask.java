@@ -77,7 +77,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
             }
 
             responseCode  = connection.getResponseCode();
-            Log.e(TAG, "Code: " + responseCode);
+            Log.e(TAG, "StatusCode: " + responseCode + ". Request: " + request.getRoute());
 
             if (responseCode < 400) {
                 // Read data

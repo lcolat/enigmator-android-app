@@ -61,11 +61,13 @@ public class EnigmaFragment extends Fragment {
 
     private boolean isValidator;
     private int userId;
+    private SortType lastSort;
 
     private enum SortType {
         EASIEST,
         HARDEST,
-        RANDOM
+        RANDOM,
+        VALIDATE
     }
 
     public EnigmaFragment() {
@@ -100,8 +102,10 @@ public class EnigmaFragment extends Fragment {
 
         UserEnigmator user = UserEnigmator.getCurrentUser(getContext());
         assert user != null;
-        isValidator = user.isValidator();
+        //TODO:
+        isValidator = true;//user.isValidator();
         userId = user.getId();
+        lastSort = SortType.EASIEST;
     }
 
     @Override
@@ -137,6 +141,22 @@ public class EnigmaFragment extends Fragment {
                 sortEnigmas(SortType.RANDOM);
             }
         });
+
+        // Restore select button color
+        switch (lastSort) {
+            case EASIEST:
+                btnEasy.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case HARDEST:
+                btnHard.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case RANDOM:
+                btnRandom.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case VALIDATE:
+                btnValidate.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+        }
 
         FloatingActionButton btnAdd = view.findViewById(R.id.btn_add_enigma);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -194,10 +214,11 @@ public class EnigmaFragment extends Fragment {
 
                     adapter.setValues(waitingValidation);
                     adapter.notifyDataSetChanged();
+                    lastSort = SortType.VALIDATE;
                 }
             });
 
-            httpManager.addToQueue(GET, "Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(GET, "/Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     recyclerView.setVisibility(View.GONE);
@@ -295,6 +316,7 @@ public class EnigmaFragment extends Fragment {
                 Collections.shuffle(enigmas);
                 break;
         }
+        lastSort = sortType;
         adapter.setValues(enigmas);
         adapter.notifyDataSetChanged();
     }

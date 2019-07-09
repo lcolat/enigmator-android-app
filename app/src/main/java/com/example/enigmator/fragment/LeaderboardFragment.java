@@ -119,7 +119,7 @@ public class LeaderboardFragment extends Fragment {
         });
 
         TextView userName = view.findViewById(R.id.text_username);
-        final TextView userRank = view.findViewById(R.id.text_user_score);
+        final TextView userScore = view.findViewById(R.id.text_user_score);
         userName.setText(currentUser.getUsername());
 
         View selfUserItem = view.findViewById(R.id.user_item);
@@ -135,7 +135,7 @@ public class LeaderboardFragment extends Fragment {
         mProgressBar = view.findViewById(R.id.progress_loading);
 
         if (mAllUsers.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[order]=rank%20Desc",
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[order]=score%20Desc",
                     null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
@@ -154,7 +154,7 @@ public class LeaderboardFragment extends Fragment {
 
                         for (int i = 0; i < mAllUsers.size(); i++) {
                             if (mAllUsers.get(i).getId() == currentUser.getId()) {
-                                userRank.setText(getString(R.string.rank, i + 1));
+                                userScore.setText(getString(R.string.rank, i + 1));
                                 break;
                             }
                         }
@@ -168,7 +168,7 @@ public class LeaderboardFragment extends Fragment {
                 public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "/UserEnigmators?filter[order]=rank%20Desc");
+                    Log.e(TAG, "/UserEnigmators?filter[order]=score%20Desc");
                     Log.e(TAG, error.toString());
                 }
             });

@@ -1,7 +1,9 @@
 package com.example.enigmator.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -19,20 +21,33 @@ import com.example.enigmator.entity.Response;
 import static com.example.enigmator.controller.HttpRequest.POST;
 
 public class EnigmaCreationActivity extends HttpActivity {
+    private static final int REQUEST_CODE = 43;
+
     private static final String TAG = EnigmaCreationActivity.class.getName();
+
+    private TextView textMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enigma_creation);
 
-        final TextView textMedia = findViewById(R.id.text_media_chosen);
+        textMedia = findViewById(R.id.text_media_chosen);
         ImageButton btnMedia = findViewById(R.id.btn_add_media);
         final EditText editName = findViewById(R.id.edit_name);
         final EditText editQuestion = findViewById(R.id.edit_question);
         final EditText editAnswer = findViewById(R.id.edit_answer);
         final EditText editScore = findViewById(R.id.edit_score);
         final Button btnSubmit = findViewById(R.id.btn_submit);
+
+        btnMedia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mediaChooser = new Intent(Intent.ACTION_GET_CONTENT);
+                mediaChooser.setType("video/*, image/*");
+                startActivityForResult(mediaChooser, REQUEST_CODE);
+            }
+        });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,5 +103,15 @@ public class EnigmaCreationActivity extends HttpActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // TODO: get chosen media
+
+            }
+        }
     }
 }

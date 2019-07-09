@@ -70,7 +70,7 @@ public class ForumFragment extends Fragment {
                 public void onListFragmentInteraction(Topic topic) {
                     Intent intent = new Intent(getContext(), TopicActivity.class);
                     intent.putExtra(TopicActivity.TOPIC_ID_KEY, topic.getId());
-                    intent.putExtra(TopicActivity.TOPIC_TITLE_KEY, topic.getEnigmaTitle());
+                    intent.putExtra(TopicActivity.TOPIC_TITLE_KEY, topic.getTitle());
                     startActivity(intent);
                 }
             };
@@ -183,7 +183,7 @@ public class ForumFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         if (topTopics.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/api/Topics?filter[order]=messagesCount%20Desc",
+            httpManager.addToQueue(HttpRequest.GET, "/Topics?filter[order]=messagesCount%20Desc",
                     null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
@@ -212,7 +212,7 @@ public class ForumFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     button.setEnabled(true);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "/api/Topics?filter[order]=messagesCount%20Desc");
+                    Log.e(TAG, "/Topics?filter[order]=messagesCount%20Desc");
                     Log.e(TAG, error.toString());
                 }
             });
