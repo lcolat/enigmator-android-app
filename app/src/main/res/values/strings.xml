@@ -4,7 +4,6 @@
     <string name="message_copied">Copied !</string>
     <string name="search">Search</string>
     <string name="results">Results</string>
-    <string name="or">OR</string>
     <string name="submit">Submit</string>
 
     <string name="dialog_no_connection_title">No Internet Connection</string>
@@ -55,9 +54,8 @@
 
     <!-- Enigma Creation Activity -->
     <string name="enigma_creation">Enigma Creation</string>
-    <string name="question_type_choice">Choose a question type</string>
-    <string name="media_question">Media Question</string>
-    <string name="input_question">Input Question</string>
+    <string name="media_question">Media (Optional)</string>
+    <string name="question">Question</string>
     <string name="answer_case_sensitive">Answer (Case sensitive)</string>
     <string name="enigma_score_input">Enigma Score</string>
     <string name="hint_enigma_score">Between 0 and 100</string>
@@ -65,7 +63,7 @@
     <string name="toast_invalid_form">Incorrect values or missing fields</string>
     <string name="enigma_submitted">Enigma submitted !</string>
     <string name="enigma_name">Enigma Name</string>
-    <string name="enigma_dialog_message">Caution. The answer is case sensitive. If you set a an Input Question, it will be used as the Enigma question, ignoring the Media.</string>
+    <string name="enigma_dialog_message">Warning. The answer is case sensitive.</string>
 
     <!-- Leaderboard -->
     <string name="tab_overall">Overall</string>

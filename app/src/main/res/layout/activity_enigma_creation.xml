@@ -58,6 +58,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:hint="@string/hint_enigma_score"
         android:maxLength="3"
         android:imeOptions="actionNext"
         android:inputType="numberSigned" />
@@ -70,14 +71,18 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/question_type_choice"
+        android:text="@string/question"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/list_category" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp">
 
         <TextView
             android:id="@+id/text_question_media"
@@ -87,7 +92,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="@string/media_question"
+            android:gravity="center_vertical"
             android:textColor="@color/black"
+            android:layout_alignBottom="@+id/btn_add_media"
+            android:layout_alignTop="@+id/btn_add_media"
             android:textSize="@dimen/list_item_text_size"/>
 
         <ImageButton
@@ -99,8 +107,7 @@
             android:contentDescription="@string/image_gallery_description"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/text_question_media"
-            android:layout_toEndOf="@id/text_question_media"
-            android:layout_alignBottom="@id/text_question_media"/>
+            android:layout_toEndOf="@id/text_question_media"/>
 
         <TextView
             android:id="@+id/text_media_chosen"
@@ -117,24 +124,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/list_item_text_size"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/or" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:labelFor="@+id/edit_question"
-        android:text="@string/input_question"
+        android:text="@string/question"
         android:textColor="@color/black"
         android:textSize="@dimen/list_item_text_size" />
 
