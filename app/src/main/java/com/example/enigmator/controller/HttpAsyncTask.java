@@ -1,6 +1,7 @@
 package com.example.enigmator.controller;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -16,6 +17,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     private static final String TAG = HttpAsyncTask.class.getName();
@@ -69,10 +72,18 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
             if (requestBody != null) {
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 connection.setDoOutput(true);
-                connection.setFixedLengthStreamingMode(requestBody.length());
+                byte[] output;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    output = requestBody.getBytes(UTF_8);
+                } else {
+                    //noinspection CharsetObjectCanBeUsed
+                    output = requestBody.getBytes("UTF-8");
+                }
+                connection.setFixedLengthStreamingMode(output.length);
 
                 OutputStream om = new BufferedOutputStream(connection.getOutputStream());
-                om.write(requestBody.getBytes());
+                om.write(output);
+                om.flush();
                 om.close();
             }
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,23 +15,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
+import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Enigma;
 import com.example.enigmator.entity.Response;
+import com.google.gson.Gson;
 
 import static com.example.enigmator.controller.HttpRequest.POST;
 
-public class EnigmaCreationActivity extends HttpActivity {
+public class EnigmaCreationActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 43;
 
     private static final String TAG = EnigmaCreationActivity.class.getName();
 
     private TextView textMedia;
 
+    private HttpManager httpManager;
+    private Gson gson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enigma_creation);
+
+        httpManager = new HttpManager(this);
+        gson = new Gson();
 
         textMedia = findViewById(R.id.text_media_chosen);
         ImageButton btnMedia = findViewById(R.id.btn_add_media);
