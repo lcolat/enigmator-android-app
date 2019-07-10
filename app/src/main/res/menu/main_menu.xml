@@ -7,6 +7,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_friend_requests"
+        android:title=""
+        android:icon="@drawable/ic_person_add_white_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_settings"
         android:title="@string/action_settings"
         app:showAsAction="never" />
