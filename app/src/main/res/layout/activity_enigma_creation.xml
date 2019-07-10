@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:hint="@string/hint_enigma_title"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:selectAllOnFocus="true"
@@ -55,7 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:hint="@string/hint_enigma_score"
@@ -116,7 +115,6 @@
             android:visibility="gone"
             android:layout_below="@id/text_question_media"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_alignParentLeft="true"/>
     </RelativeLayout>
@@ -139,9 +137,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:hint="@string/hint_enigma_question"
         android:selectAllOnFocus="true"
         android:imeOptions="actionNext"
         android:inputType="text" />
@@ -164,10 +162,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:selectAllOnFocus="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:hint="@string/hint_enigma_answer"
         android:maxLines="2"
         android:inputType="text"
         android:imeOptions="actionDone" />

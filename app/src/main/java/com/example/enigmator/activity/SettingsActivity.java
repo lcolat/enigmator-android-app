@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.view.MenuItem;
 
 import com.example.enigmator.R;
 import com.example.enigmator.fragment.EditDialogFragment;
@@ -23,8 +24,16 @@ public class SettingsActivity extends AppCompatActivity implements EditDialogFra
     @Override
     public void onDialogPositiveClick(AppCompatDialogFragment dialog, String edited, @StringRes int title) {
         if (title == R.string.new_password) {
-            // TODO: request
+            // TODO: request update password
             System.out.println("Password: " + edited);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 }

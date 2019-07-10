@@ -55,7 +55,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
 
         String result = null;
         HttpURLConnection connection = null;
-        int responseCode = 4000;
+        int responseCode = 400; // Default
         com.squareup.okhttp.Response response = null;
 
         try {

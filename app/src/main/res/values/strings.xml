@@ -13,6 +13,7 @@
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
+    <string name="login_failed">Login failed</string>
 
     <!-- Main Activity -->
     <string name="enigma">Enigmas</string>
@@ -58,7 +59,10 @@
     <string name="question">Question</string>
     <string name="answer_case_sensitive">Answer (Case sensitive)</string>
     <string name="enigma_score_input">Enigma Score</string>
+    <string name="hint_enigma_title">A nice title</string>
     <string name="hint_enigma_score">Between 0 and 100</string>
+    <string name="hint_enigma_question">To be or not to be ?</string>
+    <string name="hint_enigma_answer">The answer is 42</string>
     <string name="image_gallery_description">Open Gallery</string>
     <string name="toast_invalid_form">Incorrect values or missing fields</string>
     <string name="enigma_submitted">Enigma submitted !</string>

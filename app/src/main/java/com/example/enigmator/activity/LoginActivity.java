@@ -146,6 +146,7 @@ public class LoginActivity extends HttpActivity {
             public void handleError(Response error) {
                 mProgressBar.setVisibility(View.GONE);
                 mButton.setEnabled(true);
+                Toast.makeText(LoginActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "/UserEnigmators/login : " + body);
                 Log.e(TAG, error.toString());
             }

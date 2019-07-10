@@ -9,6 +9,7 @@ import android.provider.OpenableColumns;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,7 @@ import java.io.InputStream;
 import static com.example.enigmator.controller.HttpRequest.POST;
 
 public class EnigmaCreationActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE = 43;
+    private static final int REQUEST_CODE_CHOOSE_MEDIA = 43;
 
     private static final String TAG = EnigmaCreationActivity.class.getName();
 
@@ -65,7 +66,7 @@ public class EnigmaCreationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent mediaChooser = new Intent(Intent.ACTION_GET_CONTENT);
                 mediaChooser.setType("image/*, video/*");
-                startActivityForResult(mediaChooser, REQUEST_CODE);
+                startActivityForResult(mediaChooser, REQUEST_CODE_CHOOSE_MEDIA);
             }
         });
 
@@ -151,43 +152,50 @@ public class EnigmaCreationActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE_CHOOSE_MEDIA) {
             if (resultCode == RESULT_OK) {
-                //TODO CC DIEGO
                 Uri uri = data.getData();
 
                 assert uri != null;
                 String filename = getFileName(uri);
 
-                System.out.println(data);
                 String extension = filename.substring(filename.indexOf(".") + 1);
+                String path_temp = getCacheDir() + filename;
+                File file = new File(path_temp);
 
-
-                System.out.println("oui");
-                String path_temp = this.getCacheDir()+filename;
-                System.out.println(path_temp);
-                File file = new File(this.getCacheDir()+filename);
-                System.out.println(file.exists());
-                byte[] buffer = new byte[1024];
-                int len = 0;
+                FileOutputStream fos = null;
                 try {
-                    FileOutputStream fos = new FileOutputStream(file);
-                    InputStream is = this.getContentResolver().openInputStream(uri);
-                    len = is.read(buffer);
+                    byte[] buffer = new byte[1024];
+                    fos = new FileOutputStream(file);
+                    InputStream is = getContentResolver().openInputStream(uri);
+                    assert is != null;
+                    int len = is.read(buffer);
                     while (len != -1) {
                         fos.write(buffer, 0, len);
                         len = is.read(buffer);
                     }
-                    fos.close();
                 } catch (FileNotFoundException e) {
-                    System.out.println("oui");
-                    e.printStackTrace();
+                    Log.e(TAG, "Error while opening file", e);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Error while opening file", e);
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            Log.e(TAG, "Error while closing output stream", e);
+                        }
+                    }
                 }
-                System.out.println("non");
-
 
                 if ("jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)
                         || "png".equalsIgnoreCase(extension)) {
