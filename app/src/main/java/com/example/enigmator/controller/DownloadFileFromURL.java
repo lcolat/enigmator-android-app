@@ -97,8 +97,8 @@ public class DownloadFileFromURL extends AsyncTask<StoreMedia, String, Response>
             input.close();
 
         } catch (Exception e) {
-            Log.e(TAG + " Error: ", e.getMessage());
-            return null;
+            Log.e(TAG, "Error: " + e.getMessage());
+            return new Response(400, null);
         }
         return new Response(200,
                 context.getExternalFilesDir(folderType) + "/" +fileName);
