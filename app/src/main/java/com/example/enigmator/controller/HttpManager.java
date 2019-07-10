@@ -38,6 +38,15 @@ public class HttpManager {
     }
 
     /**
+     * File upload.
+     * @param filePath  the path of file to upload
+     * @param mediaType  the type of the file (e.g video or image)
+     */
+    public void addToQueue(String method, String route, String filePath, String mediaType, HttpRequest.HttpRequestListener listener) {
+        requestQueue.add(new HttpRequest(method, route, filePath, mediaType, listener));
+        startNext(false);
+    }
+    /**
      * Starts the next request if there is one pending, and the previous has finished
      */
     void startNext(boolean forceNext) {
