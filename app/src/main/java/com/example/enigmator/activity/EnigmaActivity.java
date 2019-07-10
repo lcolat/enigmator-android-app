@@ -109,7 +109,7 @@ public class EnigmaActivity extends AppCompatActivity {
 
         // Validator setup
         boolean isValidator = UserEnigmator.getCurrentUser(this).isValidator();
-        if (!enigma.isStatus() && isValidator) {
+        if (true/*!enigma.isStatus() && isValidator*/) {
             LinearLayout layoutButtons = findViewById(R.id.layout_validator_buttons);
             layoutButtons.setVisibility(View.VISIBLE);
 
