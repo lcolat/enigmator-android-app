@@ -4,21 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/app_padding"
     tools:context=".activity.EnigmaActivity">
 
     <TextView
-        android:id="@+id/enigma_question"
-        android:layout_width="wrap_content"
+        android:id="@+id/text_enigma_question"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:hint="@string/enigma_question"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/list_category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Question" />
 
     <ProgressBar
         android:id="@+id/progress_loading"
@@ -35,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/image_view"
@@ -47,14 +51,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:contentDescription="@string/image_enigma"
+        android:contentDescription="@string/image_enigma_description"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enigma_question"
+        app:layout_constraintTop_toBottomOf="@+id/text_enigma_question"
         app:srcCompat="@android:drawable/ic_menu_gallery"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoView"
@@ -65,92 +69,113 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:contentDescription="@string/image_enigma"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enigma_question"
+        app:layout_constraintTop_toBottomOf="@+id/text_enigma_question"
         app:srcCompat="@android:drawable/ic_lock_silent_mode_off"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="395dp"
-        android:layout_height="100dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/layout_validator_buttons"
-        app:layout_constraintTop_toBottomOf="@+id/enigma_question"
+        app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        tools:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/layout_validator_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
+
+    <RelativeLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/edit_chat"
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:id="@+id/layout_answer_enigma"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true">
+
+            <EditText
+                android:id="@+id/edit_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_toStartOf="@+id/btn_send_response"
+                android:layout_toLeftOf="@id/btn_send_response"
+                android:hint="@string/text_enigma_response_field"
+                android:imeOptions="actionSend|flagNoEnterAction"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="3" />
+
+            <ImageButton
+                android:id="@+id/btn_send_response"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:contentDescription="@string/send_icon_description"
+                app:srcCompat="@drawable/ic_send_purple_24dp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_validator_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/btn_send_response"
-            android:layout_toLeftOf="@id/btn_send_response"
-            android:layout_weight="1"
-            android:hint="@string/text_enigma_response_field"
-            android:imeOptions="flagNoEnterAction"
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="3" />
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="2"
+            tools:visibility="gone">
 
-        <ImageButton
-            android:id="@+id/btn_send_response"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="1"
-            android:contentDescription="@string/send_icon_description"
-            app:srcCompat="@drawable/ic_send_purple_24dp" />
+            <Button
+                android:id="@+id/btn_reject"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_reject"
+                android:textColor="@android:color/holo_red_light" />
 
-        <Button
-            android:id="@+id/btn_reject"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btn_reject"
-            android:textColor="@android:color/holo_red_light"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/btn_validate"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_validate"
+                android:textColor="@android:color/holo_green_light" />
 
-        <Button
-            android:id="@+id/btn_validate"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btn_validate"
-            android:textColor="@android:color/holo_green_light"
-            android:visibility="gone" />
+        </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

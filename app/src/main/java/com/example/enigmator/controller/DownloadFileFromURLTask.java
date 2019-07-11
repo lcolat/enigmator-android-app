@@ -19,14 +19,14 @@ import android.util.Log;
 import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.StoreMedia;
 
-public class DownloadFileFromURL extends AsyncTask<StoreMedia, String, Response> {
-    private static final String TAG = DownloadFileFromURL.class.getName();
+public class DownloadFileFromURLTask extends AsyncTask<StoreMedia, String, Response> {
+    private static final String TAG = DownloadFileFromURLTask.class.getName();
 
-    private static final String BASE_URL = "http://35.180.227.54:3000/api/Containers/enigme/download/";
+    private static final String BASE_DOWNLOAD_URL = HttpAsyncTask.BASE_URL + "/Containers/enigme/download/";
 
     private final HttpRequest.HttpRequestListener listener;
 
-    public DownloadFileFromURL(HttpRequest.HttpRequestListener listener) {
+    public DownloadFileFromURLTask(HttpRequest.HttpRequestListener listener) {
         this.listener = listener;
     }
 
@@ -40,11 +40,12 @@ public class DownloadFileFromURL extends AsyncTask<StoreMedia, String, Response>
         Context context = mediaSpec[0].getContext();
         URL url;
         try {
-            String urlText = BASE_URL + mediaSpec[0].getUrl();
+            String urlText = BASE_DOWNLOAD_URL + mediaSpec[0].getUrl();
             url = new URL(urlText);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
+            Log.e(TAG, "MalformedURL: " + BASE_DOWNLOAD_URL + mediaSpec[0].getUrl());
+            cancel(false);
+            return new Response(400, e.getMessage());
         }
 
         String fileName = mediaSpec[0].getUrl();

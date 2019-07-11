@@ -18,17 +18,17 @@ public class Media {
     private String fileName;
     private String type;
 
-    public static RequestBody buildRequestBody(Media media) {
+    public static RequestBody buildRequestBody(String fileName, String type) {
         MultipartBuilder builder = new MultipartBuilder();
         builder.type(MultipartBuilder.FORM);
-        builder.addFormDataPart("mediaType", media.getType());
-        builder.addFormDataPart("file", media.getFileName(), RequestBody.create(mediaTypeFromMedia(media), new File(media.getFileName())));
+        builder.addFormDataPart("mediaType", type);
+        builder.addFormDataPart("file", fileName, RequestBody.create(mediaTypeFromFilename(fileName), new File(fileName)));
 
         return builder.build();
     }
 
-    private static MediaType mediaTypeFromMedia(Media media) {
-        String extension = media.getFileName().substring(media.getFileName().lastIndexOf(".") + 1);
+    private static MediaType mediaTypeFromFilename(String fileName) {
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
         String type;
         switch (extension.toLowerCase()) {
             case "png":

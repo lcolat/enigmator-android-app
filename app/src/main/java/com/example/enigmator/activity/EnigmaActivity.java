@@ -23,10 +23,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.enigmator.R;
-import com.example.enigmator.controller.DownloadFileFromURL;
+import com.example.enigmator.controller.DownloadFileFromURLTask;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.HttpRequest.HttpRequestListener;
@@ -52,8 +53,11 @@ public class EnigmaActivity extends AppCompatActivity {
     public static final String VALIDATION_STATUS_KEY = "validation_status_key";
 
     private ProgressBar progressLoading;
+    private TextView textQuestion;
+    private ImageButton btnSendAnswer;
+
     private HttpManager httpManager;
-    HttpRequestGenerator httpRequestGenerator;
+    private HttpRequestGenerator httpRequestGenerator;
     private Gson gson;
 
     private Enigma enigma;
@@ -63,6 +67,9 @@ public class EnigmaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enigma);
+
+        textQuestion = findViewById(R.id.text_enigma_question);
+        btnSendAnswer = findViewById(R.id.btn_send_response);
 
         httpManager = new HttpManager(this);
         gson = new Gson();
@@ -108,7 +115,6 @@ public class EnigmaActivity extends AppCompatActivity {
     private void setupScreen() {
         setTitle(enigma.getName());      
         
-        TextView textQuestion = findViewById(R.id.enigma_question);
         textQuestion.setText(enigma.getQuestion());
       
         // Validator setup
@@ -116,6 +122,8 @@ public class EnigmaActivity extends AppCompatActivity {
         if (!enigma.isStatus() && isValidator) {
             LinearLayout layoutButtons = findViewById(R.id.layout_validator_buttons);
             layoutButtons.setVisibility(View.VISIBLE);
+            RelativeLayout layoutAnswer = findViewById(R.id.layout_answer_enigma);
+            layoutAnswer.setVisibility(View.GONE);
 
             Button btnReject = findViewById(R.id.btn_reject);
             Button btnValidate = findViewById(R.id.btn_validate);
@@ -158,10 +166,9 @@ public class EnigmaActivity extends AppCompatActivity {
                 public void handleSuccess(Response response) {
                     findViewById(R.id.layout_validator_buttons).setVisibility(View.VISIBLE);
 
-                    ImageButton button = findViewById(R.id.btn_send_response);
-                    button.setOnClickListener(sendAnswerEnigma(button));
+                    btnSendAnswer.setOnClickListener(sendAnswerEnigma(btnSendAnswer));
 
-                    if(response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
+                    if (response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
                             gson.fromJson(response.getContent(), JsonArray.class).size() != 0) {
 
                         String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
@@ -188,7 +195,7 @@ public class EnigmaActivity extends AppCompatActivity {
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
         final Context context = this;
       
-        new DownloadFileFromURL(new HttpRequestListener() {
+        new DownloadFileFromURLTask(new HttpRequestListener() {
             @Override
             public void prepareRequest() { }
 
@@ -221,8 +228,7 @@ public class EnigmaActivity extends AppCompatActivity {
 
             @Override
             public void handleError(Response error) {
-                Log.e(TAG, " Error when download Media > " +
-                        error.getStatusCode());
+                Log.e(TAG, " Error when download Media > " + error);
             }
         } ).execute(new StoreMedia(fileNameMedia, this, enigmaType));
     }
@@ -239,14 +245,17 @@ public class EnigmaActivity extends AppCompatActivity {
                         @Override
                         public void prepareRequest() {
                             button.setEnabled(false);
-                            hideSoftKeyboard();
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            View view = getCurrentFocus();
+                            if (view == null) {
+                                view = new View(EnigmaActivity.this);
+                            }
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         }
 
                         @Override
                         public void handleSuccess(Response response) {
-                            Log.i(TAG, "responce=" + response.getContent());
-                            if(response.getContent().contains("mauvaise réponse !")) {
-                                Log.d(TAG, "BAD Answer");
+                            if (response.getContent().contains("mauvaise réponse !")) {
                                 zoneText.startAnimation(shakeError(zoneText));
                             } else {
                                 zoneText.setTextColor(Color.GREEN);
@@ -288,7 +297,6 @@ public class EnigmaActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        exitActivity();
         setResult(Activity.RESULT_CANCELED);
         super.onBackPressed();
     }
@@ -301,9 +309,9 @@ public class EnigmaActivity extends AppCompatActivity {
         return true;
     }
 
-
-    void exitActivity() {
-        if(findViewById(R.id.videoView).getVisibility() == View.VISIBLE) {
+    @Override
+    protected void onDestroy() {
+        if (findViewById(R.id.videoView).getVisibility() == View.VISIBLE) {
             Log.d(TAG, "Player released");
             PlayerView videoView = findViewById(R.id.videoView);
             videoView.getPlayer().stop();
@@ -312,15 +320,9 @@ public class EnigmaActivity extends AppCompatActivity {
 
         if (mediaDlFileName != null) {
             String status = new File(mediaDlFileName).delete() ? "Successfully" : "Unsuccessfully";
-            Log.i(TAG, "Media Downloaded has been deleted > " + status);
+            Log.d(TAG, "Media Downloaded has been deleted > " + status);
         }
-    }
 
-    private void hideSoftKeyboard() {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) this.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                this.getCurrentFocus().getWindowToken(), 0);
+        super.onDestroy();
     }
 }

@@ -27,7 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     private static final String TAG = HttpAsyncTask.class.getName();
 
-    private static final String BASE_URL = "http://35.180.227.54:3000/api";
+    static final String BASE_URL = "http://35.180.227.54:3000/api";
 
     private static final int READ_TIMEOUT = 10000;
     private static final int CONNECT_TIMEOUT = 15000;
@@ -66,7 +66,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
             String filePath = request.getFilePath();
             if (filePath != null) {
                 OkHttpClient httpClient = new OkHttpClient();
-                RequestBody requestBody = Media.buildRequestBody(new Media(filePath, request.getMediaType()));
+                RequestBody requestBody = Media.buildRequestBody(filePath, request.getMediaType());
 
                 assert token != null;
                 Request request = new Request.Builder()
@@ -133,7 +133,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
                     result = readStream(errorStream);
                 }
                 cancel(false);
-                Log.e(TAG, "Error Stream: " + result + " for {" + request.getRoute() + "}");
+                Log.e(TAG, "Error Stream: " + result);
             }
         } catch (MalformedURLException e) {
             Log.e(TAG, "MalformedURL: " + BASE_URL + request.getRoute());

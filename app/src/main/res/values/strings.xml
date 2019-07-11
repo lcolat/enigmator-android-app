@@ -54,11 +54,8 @@
     <string name="no_enigmas_found">No enigmas found</string>
     <string name="enigma_score">%d pts</string>
     <string name="btn_reject">Reject</string>
-    
-    <!-- Refactor -->
-    <string name="image_enigma">Image enigma</string>
-    <string name="enigma_question">Question</string>
-  
+    <string name="image_enigma_description">Image of the enigma</string>
+
     <!-- Enigma Creation Activity -->
     <string name="enigma_creation">Enigma Creation</string>
     <string name="media_question">Media (Optional)</string>
