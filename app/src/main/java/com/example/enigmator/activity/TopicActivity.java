@@ -19,7 +19,6 @@ import com.example.enigmator.controller.PostRecyclerViewAdapter;
 import com.example.enigmator.entity.Post;
 import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -28,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 public class TopicActivity extends HttpActivity {
+    private static final String TAG = TopicActivity.class.getName();
+
     public static final String TOPIC_ID_KEY = "topic_id_key";
     public static final String TOPIC_TITLE_KEY  = "topic_title_key";
 
@@ -76,8 +77,8 @@ public class TopicActivity extends HttpActivity {
         });
 
         final EditText editPost = findViewById(R.id.edit_post);
-        final ImageButton button = findViewById(R.id.btn_send_post);
-        button.setOnClickListener(new View.OnClickListener() {
+        final ImageButton btnLink = findViewById(R.id.btn_send_post);
+        btnLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isInternetConnected()) {
@@ -98,7 +99,10 @@ public class TopicActivity extends HttpActivity {
                             }
 
                             @Override
-                            public void handleError(Response error) {}
+                            public void handleError(Response error) {
+                                Log.e(TAG, "/Messages : " + gson.toJson(post));
+                                Log.e(TAG, error.toString());
+                            }
                         });
                     }
                 } else {
@@ -107,25 +111,28 @@ public class TopicActivity extends HttpActivity {
             }
         });
 
+        // TODO: change route
         // Get Enigma for topic
+        /*
         httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
             @Override
             public void prepareRequest() {
-                button.setVisibility(View.GONE);
+
             }
 
             @Override
             public void handleSuccess(Response response) {
-                button.setVisibility(View.VISIBLE);
+                btnLink.setVisibility(View.VISIBLE);
                 enigmaId = gson.fromJson(response.getContent(), JsonObject.class)
                         .get("id").getAsInt();
             }
 
             @Override
             public void handleError(Response error) {
-
+                Log.e(TAG, "/Messages");
+                Log.e(TAG, error.toString());
             }
-        });
+        });*/
 
         //  Get all Posts for topic
         httpManager.addToQueue(HttpRequest.GET, "/Messages?filter[where][topicId]=" + topicId+
@@ -152,7 +159,8 @@ public class TopicActivity extends HttpActivity {
             public void handleError(Response error) {
                 progressBar.setVisibility(View.GONE);
                 textEmpty.setVisibility(View.VISIBLE);
-                Log.e(TopicActivity.class.getName(), "GetAllPosts" + error.toString());
+                Log.e(TAG, "/Messages?filter[where][topicId]=" + topicId + "&filter[order]=creationDate%20ASC&filter[include]=user");
+                Log.e(TAG, error.toString());
             }
         });
     }

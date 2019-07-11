@@ -38,7 +38,7 @@ public class TopicRecyclerViewAdapter extends RecyclerView.Adapter<TopicRecycler
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Topic topic = mValues.get(position);
         holder.mItem = topic;
-        holder.mTitle.setText(topic.getEnigmaTitle());
+        holder.mTitle.setText(topic.getTitle());
         holder.mMessageAmount.setText(String.format(mLocale,"%d",topic.getMessageCount()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

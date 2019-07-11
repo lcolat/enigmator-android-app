@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ import java.util.List;
 
 // TODO: periodically pull
 public class ChatActivity extends HttpActivity {
+    private static final String TAG = ChatActivity.class.getName();
+
     private List<Message> messages;
     private MessageRecyclerViewAdapter mAdapter;
 
@@ -70,6 +73,8 @@ public class ChatActivity extends HttpActivity {
                             @Override
                             public void handleError(Response error) {
                                 mAdapter.notifyDataSetChanged();
+                                Log.e(TAG, "/messages :" + gson.toJson(message));
+                                Log.e(TAG, error.toString());
                             }
                         });
                     }
@@ -97,6 +102,8 @@ public class ChatActivity extends HttpActivity {
             @Override
             public void handleError(Response error) {
                 mAdapter.notifyDataSetChanged();
+                Log.e(TAG, "/messages");
+                Log.e(TAG, error.toString());
             }
         });
     }

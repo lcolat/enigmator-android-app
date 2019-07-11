@@ -44,6 +44,8 @@ import static com.example.enigmator.controller.HttpRequest.GET;
  * A simple {@link Fragment} subclass.
  */
 public class EnigmaFragment extends Fragment {
+    private static final String TAG = EnigmaFragment.class.getName();
+
     private static final int REQUEST_CODE = 87;
 
     private List<Enigma> enigmas, waitingValidation;
@@ -52,18 +54,20 @@ public class EnigmaFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private Gson gson;
 
-    Button btnEasy, btnHard, btnRandom, btnValidate;
+    private Button btnEasy, btnHard, btnRandom, btnValidate;
 
     private TextView textEmpty;
     private ProgressBar progressBar;
 
     private boolean isValidator;
     private int userId;
+    private SortType lastSort;
 
     private enum SortType {
         EASIEST,
         HARDEST,
-        RANDOM
+        RANDOM,
+        VALIDATE
     }
 
     public EnigmaFragment() {
@@ -98,8 +102,10 @@ public class EnigmaFragment extends Fragment {
 
         UserEnigmator user = UserEnigmator.getCurrentUser(getContext());
         assert user != null;
-        isValidator = user.isValidator();
+        //TODO:
+        isValidator = true;//user.isValidator();
         userId = user.getId();
+        lastSort = SortType.EASIEST;
     }
 
     @Override
@@ -136,6 +142,22 @@ public class EnigmaFragment extends Fragment {
             }
         });
 
+        // Restore select button color
+        switch (lastSort) {
+            case EASIEST:
+                btnEasy.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case HARDEST:
+                btnHard.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case RANDOM:
+                btnRandom.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case VALIDATE:
+                btnValidate.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+        }
+
         FloatingActionButton btnAdd = view.findViewById(R.id.btn_add_enigma);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             btnAdd.setSupportBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
@@ -160,8 +182,6 @@ public class EnigmaFragment extends Fragment {
                 public void handleSuccess(Response response) {
                     progressBar.setVisibility(View.GONE);
 
-                    System.out.println(response.getContent());
-
                     if (response.getStatusCode() != 204) {
                         enigmas = Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class));
                         adapter.setValues(enigmas);
@@ -177,7 +197,8 @@ public class EnigmaFragment extends Fragment {
                 public void handleError(Response error) {
                     progressBar.setVisibility(View.GONE);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(EnigmaFragment.class.getName(), "Enigmas error. " + error);
+                    Log.e(TAG, "/UserEnigmators/" + userId + "/GetEnigmeNotDone");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
@@ -193,11 +214,11 @@ public class EnigmaFragment extends Fragment {
 
                     adapter.setValues(waitingValidation);
                     adapter.notifyDataSetChanged();
+                    lastSort = SortType.VALIDATE;
                 }
             });
 
-            // TODO: change route
-            httpManager.addToQueue(GET, "Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(GET, "/Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     recyclerView.setVisibility(View.GONE);
@@ -218,6 +239,8 @@ public class EnigmaFragment extends Fragment {
                 public void handleError(Response error) {
                     recyclerView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
+                    Log.e(TAG, "Enigmes?filter[where][status]=false");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
@@ -269,8 +292,6 @@ public class EnigmaFragment extends Fragment {
         resetButtonsColor();
         textEmpty.setVisibility(enigmas.isEmpty() ? View.VISIBLE : View.GONE);
 
-        System.out.println("Empty: " + enigmas.isEmpty());
-
         switch (sortType) {
             case EASIEST:
                 btnEasy.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -295,6 +316,7 @@ public class EnigmaFragment extends Fragment {
                 Collections.shuffle(enigmas);
                 break;
         }
+        lastSort = sortType;
         adapter.setValues(enigmas);
         adapter.notifyDataSetChanged();
     }
@@ -304,13 +326,8 @@ public class EnigmaFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Enigma enigma);
     }
-
 }

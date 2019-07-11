@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Topic {
-    private String enigmaTitle;
+    private String title;
     private int id;
     private int messageCount;
 }

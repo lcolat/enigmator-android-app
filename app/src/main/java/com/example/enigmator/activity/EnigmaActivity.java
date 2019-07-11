@@ -45,7 +45,7 @@ import java.net.HttpURLConnection;
 
 
 public class EnigmaActivity extends AppCompatActivity {
-    private static final String TAG = TopicActivity.class.getName();
+    private static final String TAG = EnigmaActivity.class.getName();
 
     public static final String ENIGMA_ID_KEY = "enigma_id_key";
     public static final String ENIGMA_KEY = "enigma_key";
@@ -75,7 +75,7 @@ public class EnigmaActivity extends AppCompatActivity {
             enigma = gson.fromJson(enigmaJson, Enigma.class);
             setupScreen();
         } else {
-            int id = intent.getIntExtra(ENIGMA_ID_KEY, -1);
+            final int id = intent.getIntExtra(ENIGMA_ID_KEY, -1);
             if (id < 0) {
                 finish();
             } else {
@@ -96,6 +96,8 @@ public class EnigmaActivity extends AppCompatActivity {
                     @Override
                     public void handleError(Response error) {
                         progressLoading.setVisibility(View.GONE);
+                        Log.e(TAG, "/Enigmes/" + id);
+                        Log.e(TAG, error.toString());
                         finish();
                     }
                 });
@@ -104,12 +106,14 @@ public class EnigmaActivity extends AppCompatActivity {
     }
 
     private void setupScreen() {
-        setTitle(enigma.getName());
-        ((TextView)findViewById(R.id.enigma_question)).setText(enigma.getQuestion());
-
+        setTitle(enigma.getName());      
+        
+        TextView textQuestion = findViewById(R.id.enigma_question);
+        textQuestion.setText(enigma.getQuestion());
+      
         // Validator setup
-        //boolean isValidator = UserEnigmator.getCurrentUser(this).isValidator();
-        if (!enigma.isStatus() /*&& isValidator*/) {
+        boolean isValidator = UserEnigmator.getCurrentUser(this).isValidator();
+        if (!enigma.isStatus() && isValidator) {
             LinearLayout layoutButtons = findViewById(R.id.layout_validator_buttons);
             layoutButtons.setVisibility(View.VISIBLE);
 
@@ -123,7 +127,6 @@ public class EnigmaActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // TODO: POST Rejection
-
 
                     intent.putExtra(VALIDATION_STATUS_KEY, false);
                     setResult(Activity.RESULT_OK, intent);
@@ -175,7 +178,7 @@ public class EnigmaActivity extends AppCompatActivity {
                 @Override
                 public void handleError(Response error) {
                     progressLoading.setVisibility(View.GONE);
-                    Log.e(TAG, "GetMediaOfEnigma" + error.toString());
+                    Log.e(TAG, "GetMediaOfEnigma. " + error);
                     finish();
                 }
             });
@@ -183,10 +186,9 @@ public class EnigmaActivity extends AppCompatActivity {
     }
 
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
-
         final Context context = this;
-        new DownloadFileFromURL( new HttpRequestListener() {
-
+      
+        new DownloadFileFromURL(new HttpRequestListener() {
             @Override
             public void prepareRequest() { }
 
@@ -205,8 +207,8 @@ public class EnigmaActivity extends AppCompatActivity {
                         imageView.setImageBitmap(bitmap);
                         imageView.setVisibility(View.VISIBLE);
                         break;
-
                     case "audio":
+                        break;
                     case "video":
                         PlayerView videoView = findViewById(R.id.videoView);
                         MediaPlayer mediaPlayer = new MediaPlayer();
@@ -308,7 +310,7 @@ public class EnigmaActivity extends AppCompatActivity {
             videoView.getPlayer().release();
         }
 
-        if(mediaDlFileName != null) {
+        if (mediaDlFileName != null) {
             String status = new File(mediaDlFileName).delete() ? "Successfully" : "Unsuccessfully";
             Log.i(TAG, "Media Downloaded has been deleted > " + status);
         }

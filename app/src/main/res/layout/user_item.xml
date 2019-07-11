@@ -14,11 +14,11 @@
         android:gravity="center_vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/text_user_rank"
-        android:layout_toStartOf="@+id/text_user_rank" />
+        android:layout_toLeftOf="@+id/text_user_score"
+        android:layout_toStartOf="@+id/text_user_score" />
 
     <TextView
-        android:id="@+id/text_user_rank"
+        android:id="@+id/text_user_score"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/list_item_height"
         android:textColor="@color/black"

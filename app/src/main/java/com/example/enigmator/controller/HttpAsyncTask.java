@@ -1,10 +1,15 @@
 package com.example.enigmator.controller;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.enigmator.entity.Media;
 import com.example.enigmator.entity.Response;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,6 +21,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     private static final String TAG = HttpAsyncTask.class.getName();
@@ -46,46 +53,85 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     protected Response doInBackground(Void... voids) {
         Log.d(TAG, "Request: " + request.getRoute());
 
-        String result;
+        String result = null;
         HttpURLConnection connection = null;
-        int responseCode = 500;
+        int responseCode = 400; // Default
+        com.squareup.okhttp.Response response = null;
 
         try {
             // Initialization
             URL url = new URL(BASE_URL + request.getRoute());
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(request.getMethod());
-            connection.setReadTimeout(READ_TIMEOUT);
-            connection.setConnectTimeout(CONNECT_TIMEOUT);
-            connection.setRequestProperty("Accept", "application/json");
 
-            // Set Token
-            if (token != null) {
-                connection.setRequestProperty("Authorization", token);
+            // File upload
+            String filePath = request.getFilePath();
+            if (filePath != null) {
+                OkHttpClient httpClient = new OkHttpClient();
+                RequestBody requestBody = Media.buildRequestBody(new Media(filePath, request.getMediaType()));
+
+                assert token != null;
+                Request request = new Request.Builder()
+                        .header("Authorization", token)
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+
+                response = httpClient.newCall(request).execute();
+
+                responseCode = response.code();
+                result = response.message();
+            } else {
+                // Other requests
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod(request.getMethod());
+                connection.setReadTimeout(READ_TIMEOUT);
+                connection.setConnectTimeout(CONNECT_TIMEOUT);
+                connection.setRequestProperty("Accept", "application/json");
+
+                // Set Token
+                if (token != null) {
+                    connection.setRequestProperty("Authorization", token);
+                }
+
+                String requestBody = request.getRequestBody();
+                // Send data
+                if (requestBody != null) {
+                    connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    connection.setDoOutput(true);
+                    byte[] output;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        output = requestBody.getBytes(UTF_8);
+                    } else {
+                        //noinspection CharsetObjectCanBeUsed
+                        output = requestBody.getBytes("UTF-8");
+                    }
+                    //connection.setFixedLengthStreamingMode(output.length);
+
+                    OutputStream om = new BufferedOutputStream(connection.getOutputStream());
+                    om.write(output);
+                    om.flush();
+                    om.close();
+                }
+
+                responseCode = connection.getResponseCode();
             }
 
-            String requestBody = request.getRequestBody();
-            // Send data
-            if (requestBody != null) {
-                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                connection.setDoOutput(true);
-                connection.setFixedLengthStreamingMode(requestBody.length());
+            Log.d(TAG, "StatusCode: " + responseCode + ". Request: " + request.getRoute());
 
-                OutputStream om = new BufferedOutputStream(connection.getOutputStream());
-                om.write(requestBody.getBytes());
-                om.close();
-            }
-
-            responseCode  = connection.getResponseCode();
-            Log.d(TAG, "Code: " + responseCode + " for {" + request.getRoute() + "}");
-
+            // Handle result
             if (responseCode < 400) {
                 // Read data
-                InputStream im = new BufferedInputStream(connection.getInputStream());
-                result = readStream(im);
+                InputStream im;
+                if (connection != null) {
+                    im = new BufferedInputStream(connection.getInputStream());
+                    result = readStream(im);
+                } else {
+                    result = response.body().string();
+                }
             } else {
-                InputStream errorStream = new BufferedInputStream(connection.getErrorStream());
-                result = readStream(errorStream);
+                if (connection != null) {
+                    InputStream errorStream = new BufferedInputStream(connection.getErrorStream());
+                    result = readStream(errorStream);
+                }
                 cancel(false);
                 Log.e(TAG, "Error Stream: " + result + " for {" + request.getRoute() + "}");
             }
@@ -102,6 +148,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
                 connection.disconnect();
             }
         }
+
         return new Response(responseCode, result);
     }
 

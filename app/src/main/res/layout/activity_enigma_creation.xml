@@ -1,13 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.EnigmaCreationActivity">
+    tools:context=".activity.EnigmaCreationActivity"
+    android:padding="@dimen/app_padding">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="TODO create Enigma"/>
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/enigma_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/list_category" />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:hint="@string/hint_enigma_title"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionNext"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/enigma_score_input"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/list_category" />
+
+    <EditText
+        android:id="@+id/edit_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="@string/hint_enigma_score"
+        android:maxLength="3"
+        android:imeOptions="actionNext"
+        android:inputType="numberSigned" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/question"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/list_category" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp">
+
+        <TextView
+            android:id="@+id/text_question_media"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/media_question"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:layout_alignBottom="@+id/btn_add_media"
+            android:layout_alignTop="@+id/btn_add_media"
+            android:textSize="@dimen/list_item_text_size"/>
+
+        <ImageButton
+            android:id="@+id/btn_add_media"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle"
+            app:srcCompat="@drawable/ic_photo_library_purple_24dp"
+            android:contentDescription="@string/image_gallery_description"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/text_question_media"
+            android:layout_toEndOf="@id/text_question_media"/>
+
+        <TextView
+            android:id="@+id/text_media_chosen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_below="@id/text_question_media"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentLeft="true"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:labelFor="@+id/edit_question"
+        android:text="@string/question"
+        android:textColor="@color/black"
+        android:textSize="@dimen/list_item_text_size" />
+
+    <EditText
+        android:id="@+id/edit_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="@string/hint_enigma_question"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionNext"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/answer_case_sensitive"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/list_category" />
+
+    <EditText
+        android:id="@+id/edit_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:selectAllOnFocus="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="@string/hint_enigma_answer"
+        android:maxLines="2"
+        android:inputType="text"
+        android:imeOptions="actionDone" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:text="@string/submit"/>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
@@ -13,6 +14,8 @@ import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+    private static final String TAG = SettingsFragment.class.getName();
+
     private HttpManager httpManager;
 
     @Override
@@ -25,16 +28,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         gdprPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                assert getContext() != null;
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(preference.getContext());
                 builder.setTitle(R.string.gdpr_dialog_title);
                 builder.setMessage(R.string.gdpr_dialog_message);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
-                        // TODO: change route
-                        /*
-                        httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
+                        // TODO: change route : get gdpr
+                        /*httpManager.addToQueue(HttpRequest.GET, "/", null, new HttpRequest.HttpRequestListener() {
                             @Override
                             public void prepareRequest() { }
 
@@ -46,11 +47,29 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             @Override
                             public void handleError(Response error) {
                                 Toast.makeText(getContext(), "Gdpr failed", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, );
+                                Log.e(TAG, error.toString());
                             }
                         });*/
                     }
                 });
                 builder.create().show();
+                return true;
+            }
+        });
+
+        Preference passwordPref = findPreference("password");
+        passwordPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(EditDialogFragment.STRING_RESOURCE, R.string.new_password);
+                EditDialogFragment dialogFragment = new EditDialogFragment();
+                dialogFragment.setArguments(bundle);
+
+                assert getFragmentManager() != null;
+                dialogFragment.show(getFragmentManager(), EditDialogFragment.class.getName());
+
                 return true;
             }
         });

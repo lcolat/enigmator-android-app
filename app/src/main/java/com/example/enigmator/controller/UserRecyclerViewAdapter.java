@@ -37,7 +37,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         UserEnigmator user = mValues.get(position);
         holder.mItem = user;
         holder.mUsername.setText(user.getUsername());
-        holder.mUserRank.setText(holder.mView.getContext().getString(R.string.rank, user.getRank()));
+        holder.mUserRank.setText(holder.mView.getContext().getString(R.string.rank, position + 1));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +74,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             super(view);
             mView = view;
             mUsername = view.findViewById(R.id.text_username);
-            mUserRank = view.findViewById(R.id.text_user_rank);
+            mUserRank = view.findViewById(R.id.text_user_score);
         }
     }
 }

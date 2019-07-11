@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.enigmator"
-    tools:ignore="GoogleAppIndexingWarning">
+    tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,12 +15,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activity.EnigmaActivity"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.FriendInviteActivity"
+            android:label="@string/friend_invites"
             android:parentActivityName=".activity.CategoriesActivity"/>
         <activity
-            android:name=".activity.EnigmaCreationActivity"
+            android:name=".activity.EnigmaActivity"
             android:parentActivityName=".activity.CategoriesActivity" />
+        <activity
+            android:name=".activity.EnigmaCreationActivity"
+            android:label="@string/enigma_creation"
+            android:parentActivityName=".activity.CategoriesActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

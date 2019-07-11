@@ -28,12 +28,16 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LeaderboardFragment extends Fragment {
+    private static final String TAG = LeaderboardFragment.class.getName();
+
     private OnListFragmentInteractionListener mListener;
     private ProgressBar mProgressBar;
     private UserRecyclerViewAdapter mAdapter;
@@ -115,16 +119,15 @@ public class LeaderboardFragment extends Fragment {
         });
 
         TextView userName = view.findViewById(R.id.text_username);
-        TextView userRank = view.findViewById(R.id.text_user_rank);
+        final TextView userScore = view.findViewById(R.id.text_user_score);
         userName.setText(currentUser.getUsername());
-        userRank.setText(getString(R.string.rank, currentUser.getRank()));
+
         View selfUserItem = view.findViewById(R.id.user_item);
         selfUserItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), UserActivity.class);
                 intent.putExtra(UserActivity.USER_KEY, currentUser);
-                intent.putExtra(UserActivity.IS_SELF_KEY, true);
                 startActivity(intent);
             }
         });
@@ -132,7 +135,7 @@ public class LeaderboardFragment extends Fragment {
         mProgressBar = view.findViewById(R.id.progress_loading);
 
         if (mAllUsers.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[order]=rank%20Desc",
+            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[order]=score%20Desc",
                     null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
@@ -148,6 +151,14 @@ public class LeaderboardFragment extends Fragment {
                         if (mAllUsers.isEmpty()) {
                             textEmpty.setVisibility(View.VISIBLE);
                         }
+
+                        for (int i = 0; i < mAllUsers.size(); i++) {
+                            if (mAllUsers.get(i).getId() == currentUser.getId()) {
+                                userScore.setText(getString(R.string.rank, i + 1));
+                                break;
+                            }
+                        }
+
                         mAdapter.setValues(mAllUsers);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -157,7 +168,8 @@ public class LeaderboardFragment extends Fragment {
                 public void handleError(Response error) {
                     mProgressBar.setVisibility(View.GONE);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(LeaderboardFragment.class.getName(), error.toString());
+                    Log.e(TAG, "/UserEnigmators?filter[order]=score%20Desc");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
@@ -172,17 +184,31 @@ public class LeaderboardFragment extends Fragment {
                 public void handleSuccess(Response response) {
                     if (response.getStatusCode() != 204) {
                         mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                        Collections.sort(mFriends, new Comparator<UserEnigmator>() {
+                            @Override
+                            public int compare(UserEnigmator o1, UserEnigmator o2) {
+                                return o2.getScore() - o1.getScore();
+                            }
+                        });
+
                         mAdapter.notifyDataSetChanged();
                     }
                 }
 
                 @Override
                 public void handleError(Response error) {
-                    Log.e(LeaderboardFragment.class.getName(), error.toString());
+                    Log.e(TAG, "/UserEnigmators/GetMyFriend");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        httpManager.cancel(true);
     }
 }

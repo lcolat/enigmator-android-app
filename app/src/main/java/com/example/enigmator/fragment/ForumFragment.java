@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class ForumFragment extends Fragment {
+    private static final String TAG = ForumFragment.class.getName();
+
     private OnListFragmentInteractionListener mListener;
     private HttpManager httpManager;
     private List<Topic> topTopics, searchedTopics;
@@ -68,7 +70,7 @@ public class ForumFragment extends Fragment {
                 public void onListFragmentInteraction(Topic topic) {
                     Intent intent = new Intent(getContext(), TopicActivity.class);
                     intent.putExtra(TopicActivity.TOPIC_ID_KEY, topic.getId());
-                    intent.putExtra(TopicActivity.TOPIC_TITLE_KEY, topic.getEnigmaTitle());
+                    intent.putExtra(TopicActivity.TOPIC_TITLE_KEY, topic.getTitle());
                     startActivity(intent);
                 }
             };
@@ -105,7 +107,7 @@ public class ForumFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searched = searchTopic.getText().toString();
+                final String searched = searchTopic.getText().toString();
                 if (searched.length() > 0) {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -142,6 +144,9 @@ public class ForumFragment extends Fragment {
                             recyclerView.setVisibility(View.VISIBLE);
                             if (topTopics.isEmpty()) textEmpty.setVisibility(View.VISIBLE);
                             button.setEnabled(true);
+                            Log.e(TAG, "/Topics?filter={\"where\":{\"title\":{\"like\":\""
+                                    + searched + "%\",\"options\":\"i\"}}}");
+                            Log.e(TAG, error.toString());
                         }
                     });
                 }
@@ -178,7 +183,7 @@ public class ForumFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         if (topTopics.isEmpty()) {
-            httpManager.addToQueue(HttpRequest.GET, "/api/Topics?filter[order]=messagesCount%20Desc",
+            httpManager.addToQueue(HttpRequest.GET, "/Topics?filter[order]=messagesCount%20Desc",
                     null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
@@ -207,7 +212,8 @@ public class ForumFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     button.setEnabled(true);
                     textEmpty.setVisibility(View.VISIBLE);
-                    Log.e(ForumFragment.class.getName(), "Top topic error. " + error);
+                    Log.e(TAG, "/Topics?filter[order]=messagesCount%20Desc");
+                    Log.e(TAG, error.toString());
                 }
             });
         }
@@ -232,10 +238,6 @@ public class ForumFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Topic topic);
