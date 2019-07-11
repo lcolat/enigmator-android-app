@@ -20,7 +20,6 @@ import com.example.enigmator.fragment.NonSwipeableViewPager;
 
 public class CategoriesActivity extends HttpActivity {
     public static final String PREF_USER = "pref_user";
-    private static final String INITIAL_FRAGMENT_KEY = "initial_fragment_key";
 
     private CategoriesFragmentAdapter fragmentAdapter;
     private NonSwipeableViewPager viewPager;
@@ -41,8 +40,7 @@ public class CategoriesActivity extends HttpActivity {
         fragmentAdapter = new CategoriesFragmentAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(fragmentAdapter);
 
-        int initialFragment = getIntent().getIntExtra(INITIAL_FRAGMENT_KEY, R.id.navigation_enigma);
-        navView.setSelectedItemId(initialFragment);
+        navView.setSelectedItemId(R.id.navigation_enigma);
     }
 
     @Override
@@ -114,6 +112,9 @@ public class CategoriesActivity extends HttpActivity {
             case R.id.menu_friend_requests:
                 Intent inviteIntent = new Intent(this, FriendInviteActivity.class);
                 startActivity(inviteIntent);
+                return true;
+            case R.id.menu_refresh_enigmas :
+                fragmentAdapter.notifyDataSetChanged();
                 return true;
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);

@@ -23,6 +23,7 @@
 
     <string name="action_profile">My Profile</string>
     <string name="action_see_invites">Friend Invites</string>
+    <string name="action_refresh_enigmas">Refresh Enigmas</string>
     <string name="action_settings">Settings</string>
     <string name="action_disconnect">Disconnect</string>
 

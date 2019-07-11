@@ -27,7 +27,7 @@ public class TermsActivity extends AppCompatActivity {
         textAgree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkBoxAgree.setChecked(!checkBoxAgree.isChecked());
+                checkBoxAgree.setChecked(!checkBoxAgree.isChecked() );
             }
         });
 
