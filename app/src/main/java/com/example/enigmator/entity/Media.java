@@ -8,24 +8,27 @@ import java.io.File;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
+import lombok.Setter;
+  
 @Getter
+@Setter
 @AllArgsConstructor
 public class Media {
-    private String file;
-    private String mediaType;
+    private int id;
+    private String fileName;
+    private String type;
 
     public static RequestBody buildRequestBody(Media media) {
         MultipartBuilder builder = new MultipartBuilder();
         builder.type(MultipartBuilder.FORM);
-        builder.addFormDataPart("mediaType", media.getMediaType());
-        builder.addFormDataPart("file", media.getFile(), RequestBody.create(mediaTypeFromMedia(media), new File(media.getFile())));
+        builder.addFormDataPart("mediaType", media.getType());
+        builder.addFormDataPart("file", media.getFileName(), RequestBody.create(mediaTypeFromMedia(media), new File(media.getFileName())));
 
         return builder.build();
     }
 
     private static MediaType mediaTypeFromMedia(Media media) {
-        String extension = media.getFile().substring(media.getFile().lastIndexOf(".") + 1);
+        String extension = media.getFileName().substring(media.getFileName().lastIndexOf(".") + 1);
         String type;
         switch (extension.toLowerCase()) {
             case "png":

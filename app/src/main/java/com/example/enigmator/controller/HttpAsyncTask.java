@@ -133,7 +133,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
                     result = readStream(errorStream);
                 }
                 cancel(false);
-                Log.e(TAG, "Error Stream: " + result);
+                Log.e(TAG, "Error Stream: " + result + " for {" + request.getRoute() + "}");
             }
         } catch (MalformedURLException e) {
             Log.e(TAG, "MalformedURL: " + BASE_URL + request.getRoute());

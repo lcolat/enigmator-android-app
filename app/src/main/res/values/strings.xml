@@ -35,6 +35,7 @@
     <string name="profile_picture_description">Avatar picture</string>
     <string name="send_icon_description">Send icon</string>
     <string name="send_message_hint">Enter message here</string>
+    <string name="text_enigma_response_field">Write answer here</string>
     <string name="no_friends_found">No friends found</string>
     <string name="no_users_found">No users found</string>
     <string name="invite_sent">Friend invite sent !</string>
@@ -53,7 +54,11 @@
     <string name="no_enigmas_found">No enigmas found</string>
     <string name="enigma_score">%d pts</string>
     <string name="btn_reject">Reject</string>
-
+    
+    <!-- Refactor -->
+    <string name="image_enigma">Image enigma</string>
+    <string name="enigma_question">Question</string>
+  
     <!-- Enigma Creation Activity -->
     <string name="enigma_creation">Enigma Creation</string>
     <string name="media_question">Media (Optional)</string>
