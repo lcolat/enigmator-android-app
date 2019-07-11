@@ -85,7 +85,7 @@ public class UserActivity extends HttpActivity {
 
                 List<Enigma> userSolved = new ArrayList<>();
                 if (response.getStatusCode() != 204) {
-                    userSolved = Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class));
+                    userSolved = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class)));
                 }
 
                 setTextViews(UserActivity.this, userSolved, textEasy, textMedium, textHard, textExtreme, textTotal);
@@ -123,7 +123,7 @@ public class UserActivity extends HttpActivity {
 
                     List<Enigma> selfSolved = new ArrayList<>();
                     if (response.getStatusCode() != 204) {
-                        selfSolved = Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class));
+                        selfSolved = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class)));
                     }
 
                     setTextViews(UserActivity.this, selfSolved, textSelfEasy, textSelfMedium, textSelfHard, textSelfExtreme, textSelfTotal);

@@ -146,7 +146,7 @@ public class LeaderboardFragment extends Fragment {
                 public void handleSuccess(Response response) {
                     mProgressBar.setVisibility(View.GONE);
                     if (response.getStatusCode() != 204) {
-                        mAllUsers = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                        mAllUsers = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class)));
 
                         if (mAllUsers.isEmpty()) {
                             textEmpty.setVisibility(View.VISIBLE);
@@ -183,7 +183,7 @@ public class LeaderboardFragment extends Fragment {
                 @Override
                 public void handleSuccess(Response response) {
                     if (response.getStatusCode() != 204) {
-                        mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                        mFriends = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class)));
                         Collections.sort(mFriends, new Comparator<UserEnigmator>() {
                             @Override
                             public int compare(UserEnigmator o1, UserEnigmator o2) {

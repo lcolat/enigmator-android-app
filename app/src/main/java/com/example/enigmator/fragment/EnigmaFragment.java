@@ -102,8 +102,7 @@ public class EnigmaFragment extends Fragment {
 
         UserEnigmator user = UserEnigmator.getCurrentUser(getContext());
         assert user != null;
-        //TODO:
-        isValidator = true;//user.isValidator();
+        isValidator = user.isValidator();
         userId = user.getId();
         lastSort = SortType.EASIEST;
     }
@@ -183,7 +182,7 @@ public class EnigmaFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
 
                     if (response.getStatusCode() != 204) {
-                        enigmas = Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class));
+                        enigmas = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class)));
                         adapter.setValues(enigmas);
                         textEmpty.setVisibility(View.GONE);
                     } else {
@@ -231,7 +230,7 @@ public class EnigmaFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
 
                     if (response.getStatusCode() != 204) {
-                        waitingValidation = Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class));
+                        waitingValidation = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class)));
                     }
                 }
 
@@ -250,7 +249,6 @@ public class EnigmaFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 int enigmaId = data.getIntExtra(EnigmaActivity.ENIGMA_ID_KEY, -1);

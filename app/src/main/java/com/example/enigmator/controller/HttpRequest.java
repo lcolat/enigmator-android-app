@@ -11,7 +11,6 @@ public class HttpRequest {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PUT = "PUT";
-    public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
 
     public static final String MEDIA_VIDEO = "video";
@@ -45,7 +44,7 @@ public class HttpRequest {
 
     private static boolean isSupportedOperation(String method) {
         return GET.equals(method) || POST.equals(method) || PUT.equals(method)
-                || DELETE.equals(method) || PATCH.equals(method);
+                || DELETE.equals(method);
     }
 
     public interface HttpRequestListener {

@@ -129,7 +129,7 @@ public class ForumFragment extends Fragment {
                             button.setEnabled(true);
 
                             if (response.getStatusCode() != 204) {
-                                searchedTopics = Arrays.asList(gson.fromJson(response.getContent(), Topic[].class));
+                                searchedTopics = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Topic[].class)));
                                 adapter.setValues(searchedTopics);
                                 adapter.notifyDataSetChanged();
                                 textEmpty.setVisibility(View.GONE);
@@ -198,7 +198,7 @@ public class ForumFragment extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     button.setEnabled(true);
                     if (response.getStatusCode() != 204) {
-                        topTopics = Arrays.asList(gson.fromJson(response.getContent(), Topic[].class));
+                        topTopics = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Topic[].class)));
                         adapter.setValues(topTopics);
                         textEmpty.setVisibility(View.GONE);
                     } else {

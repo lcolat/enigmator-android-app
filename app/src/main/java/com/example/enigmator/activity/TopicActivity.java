@@ -146,7 +146,7 @@ public class TopicActivity extends HttpActivity {
             public void handleSuccess(Response response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.getStatusCode() != 204) {
-                    List<Post> posts = Arrays.asList(gson.fromJson(response.getContent(), Post[].class));
+                    List<Post> posts = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Post[].class)));
                     mAdapter.setValues(posts);
                     mAdapter.notifyDataSetChanged();
                     textEmpty.setVisibility(View.GONE);

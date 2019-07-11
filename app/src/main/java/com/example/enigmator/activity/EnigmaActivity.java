@@ -6,10 +6,12 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,11 +19,13 @@ import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +47,12 @@ import com.google.gson.JsonArray;
 
 import java.io.File;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.example.enigmator.controller.HttpRequest.GET;
 
 
 public class EnigmaActivity extends AppCompatActivity {
@@ -52,16 +62,21 @@ public class EnigmaActivity extends AppCompatActivity {
     public static final String ENIGMA_KEY = "enigma_key";
     public static final String VALIDATION_STATUS_KEY = "validation_status_key";
 
+    private static final String PAST_ANSWERS_BASE_KEY = "past_answers_";
+
     private ProgressBar progressLoading;
     private TextView textQuestion;
     private ImageButton btnSendAnswer;
 
-    private HttpManager httpManager;
+    private SharedPreferences prefs;
     private HttpRequestGenerator httpRequestGenerator;
     private Gson gson;
+    private HttpManager httpManager;
 
+    private List<String> pastAnswers;
+    private ArrayAdapter adapter;
     private Enigma enigma;
-    private String mediaDlFileName = null;
+    private String mediaDlFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +86,12 @@ public class EnigmaActivity extends AppCompatActivity {
         textQuestion = findViewById(R.id.text_enigma_question);
         btnSendAnswer = findViewById(R.id.btn_send_response);
 
-        httpManager = new HttpManager(this);
-        gson = new Gson();
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         progressLoading = findViewById(R.id.progress_loading);
         httpRequestGenerator = new HttpRequestGenerator(this);
+        httpManager = new HttpManager(this);
+        gson = new Gson();
 
         Intent intent = getIntent();
         String enigmaJson = intent.getStringExtra(ENIGMA_KEY);
@@ -86,7 +103,7 @@ public class EnigmaActivity extends AppCompatActivity {
             if (id < 0) {
                 finish();
             } else {
-                httpManager.addToQueue(HttpRequest.GET, "/Enigmes/" + id, null, new HttpRequestListener() {
+                httpManager.addToQueue(GET, "/Enigmes/" + id, null, new HttpRequestListener() {
                     @Override
                     public void prepareRequest() {
                         progressLoading.setVisibility(View.VISIBLE);
@@ -122,8 +139,6 @@ public class EnigmaActivity extends AppCompatActivity {
         if (!enigma.isStatus() && isValidator) {
             LinearLayout layoutButtons = findViewById(R.id.layout_validator_buttons);
             layoutButtons.setVisibility(View.VISIBLE);
-            RelativeLayout layoutAnswer = findViewById(R.id.layout_answer_enigma);
-            layoutAnswer.setVisibility(View.GONE);
 
             Button btnReject = findViewById(R.id.btn_reject);
             Button btnValidate = findViewById(R.id.btn_validate);
@@ -135,8 +150,8 @@ public class EnigmaActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // TODO: POST Rejection
-
                     intent.putExtra(VALIDATION_STATUS_KEY, false);
+                    intent.putExtra(ENIGMA_ID_KEY, enigma.getId());
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }
@@ -145,16 +160,31 @@ public class EnigmaActivity extends AppCompatActivity {
             btnValidate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    httpManager.addToQueue(HttpRequest.PATCH,
-                            "/Enigmes/" + enigma.getId() + "/ValidateEnigme", null,null);
+                    // TODO: change method
+                    //httpManager.addToQueue(HttpRequest.PUT,
+                      //      "/Enigmes/" + enigma.getId() + "/ValidateEnigme", null,null);
 
                     intent.putExtra(VALIDATION_STATUS_KEY, true);
+                    intent.putExtra(ENIGMA_ID_KEY, enigma.getId());
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }
             });
         }
         else {
+            RelativeLayout layoutAnswer = findViewById(R.id.layout_answer_enigma);
+            layoutAnswer.setVisibility(View.VISIBLE);
+
+            // List past answers
+            Set<String> pastSavedAnswers = prefs.getStringSet(PAST_ANSWERS_BASE_KEY + enigma.getId(), new HashSet<String>());
+            if (pastSavedAnswers == null) pastAnswers = new ArrayList<>();
+            else pastAnswers = new ArrayList<>(pastSavedAnswers);
+
+            ListView listAnswers = findViewById(R.id.list_past_answers);
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, pastAnswers);
+            listAnswers.setAdapter(adapter);
+
+
             httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
                     new HttpRequestListener() {
                 @Override
@@ -164,8 +194,6 @@ public class EnigmaActivity extends AppCompatActivity {
 
                 @Override
                 public void handleSuccess(Response response) {
-                    findViewById(R.id.layout_validator_buttons).setVisibility(View.VISIBLE);
-
                     btnSendAnswer.setOnClickListener(sendAnswerEnigma(btnSendAnswer));
 
                     if (response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
@@ -238,10 +266,11 @@ public class EnigmaActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                httpRequestGenerator.answerEnigma(enigma.getId(),
-                    zoneText.getText().toString(),
-                    new HttpRequestListener() {
+                final String answer = zoneText.getText().toString();
 
+                httpRequestGenerator.answerEnigma(enigma.getId(),
+                    answer,
+                    new HttpRequestListener() {
                         @Override
                         public void prepareRequest() {
                             button.setEnabled(false);
@@ -255,11 +284,15 @@ public class EnigmaActivity extends AppCompatActivity {
 
                         @Override
                         public void handleSuccess(Response response) {
-                            if (response.getContent().contains("mauvaise réponse !")) {
+                            if (response.getContent().contains("mauvaise")) {
                                 zoneText.startAnimation(shakeError(zoneText));
+                                pastAnswers.add(answer);
+                                adapter.notifyDataSetChanged();
                             } else {
+                                zoneText.setEnabled(false);
                                 zoneText.setTextColor(Color.GREEN);
                                 zoneText.setFocusable(false);
+                                prefs.edit().remove(PAST_ANSWERS_BASE_KEY + enigma.getId()).apply();
                             }
                             button.setEnabled(true);
                         }
@@ -298,6 +331,13 @@ public class EnigmaActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         setResult(Activity.RESULT_CANCELED);
+
+        if (enigma != null) {
+            prefs.edit()
+                    .putStringSet(PAST_ANSWERS_BASE_KEY + enigma.getId(), new HashSet<>(pastAnswers))
+                    .apply();
+        }
+
         super.onBackPressed();
     }
 

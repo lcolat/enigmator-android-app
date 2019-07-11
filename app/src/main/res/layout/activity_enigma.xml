@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center"
@@ -23,23 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Question" />
-
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/image_view"
@@ -57,8 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_enigma_question"
-        app:srcCompat="@android:drawable/ic_menu_gallery"
-        tools:visibility="visible" />
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoView"
@@ -74,8 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_enigma_question"
-        app:srcCompat="@android:drawable/ic_lock_silent_mode_off"
-        tools:visibility="visible" />
+        app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -84,7 +65,8 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6" />
 
-    <android.support.v7.widget.RecyclerView
+    <ListView
+        android:id="@+id/list_past_answers"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -97,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
 
     <RelativeLayout
@@ -117,7 +99,9 @@
             android:id="@+id/layout_answer_enigma"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <EditText
                 android:id="@+id/edit_chat"
@@ -177,5 +161,22 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 </android.support.constraint.ConstraintLayout>

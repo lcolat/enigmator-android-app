@@ -126,7 +126,7 @@ public class UserFragment extends Fragment {
                     public void handleSuccess(Response response) {
                         button.setEnabled(true);
                         if (response.getStatusCode() != 204) {
-                            mOthers = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                            mOthers = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class)));
                             textOthersEmpty.setVisibility(View.GONE);
                         } else {
                             mOthers.clear();
@@ -172,7 +172,7 @@ public class UserFragment extends Fragment {
 
                     if (response.getStatusCode() != 204) {
                         textFriendsEmpty.setVisibility(View.GONE);
-                        mFriends = Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class));
+                        mFriends = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class)));
                     } else {
                         textFriendsEmpty.setVisibility(View.VISIBLE);
                     }
