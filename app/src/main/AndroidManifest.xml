@@ -17,9 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.FriendInviteActivity"
+        <activity android:name=".activity.TermsActivity"
+            android:label="@string/terms_title"/>
+        <activity
+            android:name=".activity.FriendInviteActivity"
             android:label="@string/friend_invites"
-            android:parentActivityName=".activity.CategoriesActivity"/>
+            android:parentActivityName=".activity.CategoriesActivity" />
         <activity
             android:name=".activity.EnigmaActivity"
             android:parentActivityName=".activity.CategoriesActivity" />

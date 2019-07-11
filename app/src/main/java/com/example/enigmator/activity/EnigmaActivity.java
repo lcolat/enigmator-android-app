@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.example.enigmator.R;
 import com.example.enigmator.controller.DownloadFileFromURLTask;
 import com.example.enigmator.controller.HttpManager;
-import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.HttpRequest.HttpRequestListener;
 import com.example.enigmator.entity.Enigma;
 import com.example.enigmator.entity.Response;
@@ -62,7 +61,7 @@ public class EnigmaActivity extends AppCompatActivity {
     public static final String ENIGMA_KEY = "enigma_key";
     public static final String VALIDATION_STATUS_KEY = "validation_status_key";
 
-    private static final String PAST_ANSWERS_BASE_KEY = "past_answers_";
+    private static final String PAST_ANSWERS_BASE_PREF = "past_answers_";
 
     private ProgressBar progressLoading;
     private TextView textQuestion;
@@ -176,7 +175,7 @@ public class EnigmaActivity extends AppCompatActivity {
             layoutAnswer.setVisibility(View.VISIBLE);
 
             // List past answers
-            Set<String> pastSavedAnswers = prefs.getStringSet(PAST_ANSWERS_BASE_KEY + enigma.getId(), new HashSet<String>());
+            Set<String> pastSavedAnswers = prefs.getStringSet(PAST_ANSWERS_BASE_PREF + enigma.getId(), new HashSet<String>());
             if (pastSavedAnswers == null) pastAnswers = new ArrayList<>();
             else pastAnswers = new ArrayList<>(pastSavedAnswers);
 
@@ -292,7 +291,7 @@ public class EnigmaActivity extends AppCompatActivity {
                                 zoneText.setEnabled(false);
                                 zoneText.setTextColor(Color.GREEN);
                                 zoneText.setFocusable(false);
-                                prefs.edit().remove(PAST_ANSWERS_BASE_KEY + enigma.getId()).apply();
+                                prefs.edit().remove(PAST_ANSWERS_BASE_PREF + enigma.getId()).apply();
                             }
                             button.setEnabled(true);
                         }
@@ -334,7 +333,7 @@ public class EnigmaActivity extends AppCompatActivity {
 
         if (enigma != null) {
             prefs.edit()
-                    .putStringSet(PAST_ANSWERS_BASE_KEY + enigma.getId(), new HashSet<>(pastAnswers))
+                    .putStringSet(PAST_ANSWERS_BASE_PREF + enigma.getId(), new HashSet<>(pastAnswers))
                     .apply();
         }
 

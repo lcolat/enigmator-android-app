@@ -95,7 +95,7 @@
             android:textColor="@color/black"
             android:layout_alignBottom="@+id/btn_add_media"
             android:layout_alignTop="@+id/btn_add_media"
-            android:textSize="@dimen/list_item_text_size"/>
+            android:textSize="@dimen/text_size"/>
 
         <ImageButton
             android:id="@+id/btn_add_media"
@@ -129,7 +129,7 @@
         android:labelFor="@+id/edit_question"
         android:text="@string/question"
         android:textColor="@color/black"
-        android:textSize="@dimen/list_item_text_size" />
+        android:textSize="@dimen/text_size" />
 
     <EditText
         android:id="@+id/edit_question"

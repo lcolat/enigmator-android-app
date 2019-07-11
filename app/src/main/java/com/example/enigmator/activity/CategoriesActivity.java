@@ -1,5 +1,6 @@
 package com.example.enigmator.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -47,8 +48,23 @@ public class CategoriesActivity extends HttpActivity {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (!TermsActivity.hasAgreed(this)) {
+            startActivity(new Intent(this, TermsActivity.class));
+        }
+
         if (!isInternetConnected()) {
-            buildNoConnectionErrorDialog(null).show();
+            buildNoConnectionErrorDialog(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    finish();
+                }
+            });
         }
     }
 

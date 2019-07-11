@@ -101,4 +101,11 @@
     <string name="no_invites">No invites found</string>
     <string name="btn_reject_description">Reject an invite</string>
     <string name="btn_accept_description">Accept an invite</string>
+
+    <!-- Terms Activity -->
+    <string name="terms_title">Terms and Conditions</string>
+    <string name="general_terms">Blabla</string>
+    <string name="checkbox_confirm">I confirm that I have read, understand and agree to the General Terms and Conditions</string>
+    <string name="btn_agree">I agree</string>
+    <string name="toast_must_confirm">You must confirm have read the terms and conditions</string>
 </resources>

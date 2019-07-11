@@ -72,7 +72,7 @@
                     android:text="@string/text_score"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_easy_solved"
@@ -81,7 +81,7 @@
                     android:text="@string/easy_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_medium_solved"
@@ -90,7 +90,7 @@
                     android:text="@string/medium_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_hard_solved"
@@ -99,7 +99,7 @@
                     android:text="@string/hard_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_extreme_solved"
@@ -108,7 +108,7 @@
                     android:text="@string/extreme_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_total_solved"
@@ -117,7 +117,7 @@
                     android:text="@string/total_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
             </LinearLayout>
 
@@ -146,7 +146,7 @@
                     android:text="@string/text_score"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_self_easy_solved"
@@ -155,7 +155,7 @@
                     android:text="@string/easy_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_self_medium_solved"
@@ -164,7 +164,7 @@
                     android:text="@string/medium_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_self_hard_solved"
@@ -173,7 +173,7 @@
                     android:text="@string/hard_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_self_extreme_solved"
@@ -182,7 +182,7 @@
                     android:text="@string/extreme_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
 
                 <TextView
                     android:id="@+id/text_self_total_solved"
@@ -191,7 +191,7 @@
                     android:text="@string/total_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
-                    android:textSize="@dimen/list_item_text_size"/>
+                    android:textSize="@dimen/text_size"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -60,12 +60,6 @@ public class TopicActivity extends HttpActivity {
         topicTitle.setText(title);
         final TextView textEmpty = findViewById(R.id.text_empty);
 
-        posts = new ArrayList<>();
-        mAdapter = new PostRecyclerViewAdapter(posts);
-        RecyclerView postsRecyclerView = findViewById(R.id.list_posts);
-        postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        postsRecyclerView.setAdapter(mAdapter);
-
         ImageButton btnOpenEnigma = findViewById(R.id.btn_open_enigma);
         btnOpenEnigma.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,11 +119,17 @@ public class TopicActivity extends HttpActivity {
                 btnLink.setVisibility(View.VISIBLE);
                 enigmaId = gson.fromJson(response.getContent(), JsonObject.class)
                         .get("id").getAsInt();
+
+                posts = new ArrayList<>();
+                mAdapter = new PostRecyclerViewAdapter(posts);
+                RecyclerView postsRecyclerView = findViewById(R.id.list_posts);
+                postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                postsRecyclerView.setAdapter(mAdapter);
             }
 
             @Override
             public void handleError(Response error) {
-                Log.e(TAG, "/Messages");
+                Log.e(TAG, "/TODO");
                 Log.e(TAG, error.toString());
             }
         });*/
