@@ -1,3 +1,113 @@
 <resources>
     <string name="app_name">Enigmator</string>
+
+    <string name="message_copied">Copied !</string>
+    <string name="search">Search</string>
+    <string name="results">Results</string>
+    <string name="submit">Submit</string>
+
+    <string name="dialog_no_connection_title">No Internet Connection</string>
+    <string name="dialog_no_connection_message">You must provide a valid Internet connection</string>
+
+    <!-- Login Activity -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="login_failed">Login failed</string>
+
+    <!-- Categories Activity -->
+    <string name="enigma">Enigmas</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="forum">Forum</string>
+    <string name="users">Users</string>
+
+    <string name="action_profile">My Profile</string>
+    <string name="action_see_invites">Friend Invites</string>
+    <string name="action_refresh_enigmas">Refresh Enigmas</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_disconnect">Disconnect</string>
+
+    <!-- Users -->
+    <string name="statistics">Statistics</string>
+    <string name="friends">Friends</string>
+    <string name="others">Others</string>
+    <string name="search_icon_description">Search icon</string>
+    <string name="rank"># %1$d</string>
+    <string name="profile_picture_description">Avatar picture</string>
+    <string name="send_icon_description">Send icon</string>
+    <string name="hint_send_message">Enter message here</string>
+    <string name="text_enigma_response_field">Write answer here</string>
+    <string name="no_friends_found">No friends found</string>
+    <string name="no_users_found">No users found</string>
+    <string name="invite_sent">Friend invite sent !</string>
+    <string name="text_score">Score : %d</string>
+    <string name="easy_solved">Easy solved : %d</string>
+    <string name="medium_solved">Medium solved : %d</string>
+    <string name="hard_solved">Hard solved : %d</string>
+    <string name="extreme_solved">Extreme solved : %d</string>
+    <string name="total_solved">Total solved : %d</string>
+
+    <!-- Enigma -->
+    <string name="btn_sort_easy">Easiest</string>
+    <string name="btn_sort_hard">Hardest</string>
+    <string name="btn_sort_random">Random</string>
+    <string name="btn_validate">Validate</string>
+    <string name="no_enigmas_found">No enigmas found</string>
+    <string name="enigma_score">%d pts</string>
+    <string name="btn_reject">Reject</string>
+    <string name="image_enigma_description">Image of the enigma</string>
+
+    <!-- Enigma Creation Activity -->
+    <string name="enigma_creation">Enigma Creation</string>
+    <string name="media_question">Media (Optional)</string>
+    <string name="question">Question</string>
+    <string name="answer_case_sensitive">Answer (Case sensitive)</string>
+    <string name="enigma_score_input">Enigma Score</string>
+    <string name="hint_enigma_title">A nice title</string>
+    <string name="hint_enigma_score">Between 0 and 100</string>
+    <string name="hint_enigma_question">To be or not to be ?</string>
+    <string name="hint_enigma_answer">The answer is 42</string>
+    <string name="image_gallery_description">Open Gallery</string>
+    <string name="toast_invalid_form">Incorrect values or missing fields</string>
+    <string name="enigma_submitted">Enigma submitted !</string>
+    <string name="enigma_name">Enigma Name</string>
+    <string name="enigma_dialog_message">Warning. The answer is case sensitive.</string>
+
+    <!-- Leaderboard -->
+    <string name="tab_overall">Overall</string>
+    <string name="me">Me</string>
+    <string name="empty_ladder">Ladder is empty</string>
+
+    <!-- Forum -->
+    <string name="top_topics">Top topics</string>
+    <string name="posts">Posts</string>
+    <string name="icon_open_in_new_description">Open Enigma in new window</string>
+    <string name="no_topics_found">No topics found</string>
+    <string name="no_posts_found">No posts found</string>
+
+    <!-- Settings -->
+    <string name="privacy_category">Privacy</string>
+    <string name="gdpr_title">Collect User data</string>
+    <string name="gdpr_summary">Obtain all your private data by email</string>
+    <string name="gdpr_dialog_title">Data Privacy</string>
+    <string name="gdpr_dialog_message">You are about to collect all your data (by email) in respect of GDPR policy.</string>
+    <string name="gdpr_toast_success">Request has been made</string>
+    <string name="user">User</string>
+    <string name="password_title">Change Password</string>
+    <string name="password_summary">Modify your password</string>
+    <string name="new_password">New password</string>
+    <string name="toast_password_updated">Password updated</string>
+
+    <!-- Friend Invite Activity -->
+    <string name="friend_invites">Friend Invites</string>
+    <string name="no_invites">No invites found</string>
+    <string name="btn_reject_description">Reject an invite</string>
+    <string name="btn_accept_description">Accept an invite</string>
+
+    <!-- Terms Activity -->
+    <string name="terms_title">Terms and Conditions</string>
+    <string name="general_terms">Blabla</string>
+    <string name="checkbox_confirm">I confirm that I have read, understand and agree to the General Terms and Conditions</string>
+    <string name="btn_agree">I agree</string>
+    <string name="toast_must_confirm">You must confirm have read the terms and conditions</string>
 </resources>

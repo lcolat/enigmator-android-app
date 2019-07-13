@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#A861A9</color>
+    <color name="colorPrimaryDark">#733E75</color>
+    <color name="colorAccent">#A9B1C3</color>
+    <color name="black">#000000</color>
+    <color name="message_sent">#F4BEFA</color>
+    <color name="message_received">#E385FF</color>
+    <color name="ic_launcher_background">#AE75E9</color>
 </resources>

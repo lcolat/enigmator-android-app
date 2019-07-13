@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    android:padding="8dp">
+
+    <View
+        android:id="@+id/viewMessageLeft"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:layout_weight="0.08" />
+
+    <TextView
+        android:id="@+id/textMessageContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.72"/>
+
+    <View
+        android:id="@+id/viewMessageRight"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:layout_weight="0.08" />
+
+    <TextView
+        android:id="@+id/textMessageHour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textSize="12sp"
+        android:gravity="end"
+        android:layout_weight="0.14"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+</LinearLayout>

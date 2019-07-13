@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.UserActivity">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <ImageView
+        android:id="@+id/image_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/profile_picture_description"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars[0]" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="true">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_statistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/list_category"
+                    tools:text="@string/statistics" />
+
+                <TextView
+                    android:id="@+id/text_user_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/text_score"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_easy_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/easy_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_medium_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/medium_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_hard_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/hard_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_extreme_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/extreme_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_total_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/total_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_compare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/text_me"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/me"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/list_category" />
+
+                <TextView
+                    android:id="@+id/text_self_user_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/text_score"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_easy_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/easy_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_medium_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/medium_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_hard_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/hard_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_extreme_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/extreme_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+
+                <TextView
+                    android:id="@+id/text_self_total_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/total_solved"
+                    android:textColor="@color/black"
+                    android:padding="@dimen/list_item_padding"
+                    android:textSize="@dimen/text_size"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_user_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_compare"
+        app:srcCompat="@drawable/ic_person_add_white_24dp"
+        tools:ignore="UnusedAttribute"
+        tools:visibility="visible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_compare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_compare_white_24dp"
+        tools:ignore="UnusedAttribute" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</android.support.constraint.ConstraintLayout>
