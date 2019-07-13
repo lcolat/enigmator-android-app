@@ -11,6 +11,6 @@ import lombok.Getter;
 public class Post implements Serializable {
     private final int id;
     private final String content;
-    private final Date postDate;
+    private final Date creationDate;
     private final UserEnigmator user;
 }

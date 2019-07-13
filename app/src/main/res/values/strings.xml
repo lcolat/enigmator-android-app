@@ -35,7 +35,7 @@
     <string name="rank"># %1$d</string>
     <string name="profile_picture_description">Avatar picture</string>
     <string name="send_icon_description">Send icon</string>
-    <string name="send_message_hint">Enter message here</string>
+    <string name="hint_send_message">Enter message here</string>
     <string name="text_enigma_response_field">Write answer here</string>
     <string name="no_friends_found">No friends found</string>
     <string name="no_users_found">No users found</string>
@@ -96,6 +96,7 @@
     <string name="password_title">Change Password</string>
     <string name="password_summary">Modify your password</string>
     <string name="new_password">New password</string>
+    <string name="toast_password_updated">Password updated</string>
 
     <!-- Friend Invite Activity -->
     <string name="friend_invites">Friend Invites</string>

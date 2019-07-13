@@ -8,5 +8,9 @@ import lombok.Getter;
 public class Topic {
     private String title;
     private int id;
-    private int messageCount;
+    private int messagesCount;
+
+    public void setMessagesCount(int messagesCount) {
+        this.messagesCount = messagesCount;
+    }
 }

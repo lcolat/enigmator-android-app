@@ -6,4 +6,5 @@
     <color name="black">#000000</color>
     <color name="message_sent">#F4BEFA</color>
     <color name="message_received">#E385FF</color>
+    <color name="ic_launcher_background">#AE75E9</color>
 </resources>

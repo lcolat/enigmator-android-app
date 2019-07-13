@@ -56,7 +56,7 @@ public class ChatActivity extends HttpActivity {
                         editable.clear();
 
                         // TODO: post Message
-                        final Message message = new Message(content, new Date());
+                        final Message message = new Message(content, new Date(), true);
                         messages.add(message);
                         httpManager.addToQueue(HttpRequest.POST, "/messages", gson.toJson(message), new HttpRequest.HttpRequestListener() {
                             @Override
@@ -94,7 +94,7 @@ public class ChatActivity extends HttpActivity {
             @Override
             public void handleSuccess(Response response) {
                 // TODO: update message List
-                messages.add(new Message("Hello", new Date()));
+                messages.add(new Message("Hello", new Date(), false));
 
                 mAdapter.notifyDataSetChanged();
             }

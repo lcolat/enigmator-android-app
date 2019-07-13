@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.example.enigmator.R;
 import com.example.enigmator.controller.DownloadFileFromURLTask;
 import com.example.enigmator.controller.HttpManager;
+import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.controller.HttpRequest.HttpRequestListener;
 import com.example.enigmator.entity.Enigma;
 import com.example.enigmator.entity.Response;
@@ -51,8 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.example.enigmator.controller.HttpRequest.GET;
-
+import static com.example.enigmator.controller.HttpRequest.PUT;
 
 public class EnigmaActivity extends AppCompatActivity {
     private static final String TAG = EnigmaActivity.class.getName();
@@ -64,11 +64,10 @@ public class EnigmaActivity extends AppCompatActivity {
     private static final String PAST_ANSWERS_BASE_KEY = "past_answers_";
 
     private ProgressBar progressLoading;
-    private TextView textQuestion;
-    private ImageButton btnSendAnswer;
 
     private SharedPreferences prefs;
     private HttpRequestGenerator httpRequestGenerator;
+    private HttpManager httpManager;
     private Gson gson;
 
     private List<String> pastAnswers;
@@ -81,57 +80,26 @@ public class EnigmaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enigma);
 
-        textQuestion = findViewById(R.id.text_enigma_question);
-        btnSendAnswer = findViewById(R.id.btn_send_response);
+        TextView textQuestion = findViewById(R.id.text_enigma_question);
+        final ImageButton btnSendAnswer = findViewById(R.id.btn_send_response);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         progressLoading = findViewById(R.id.progress_loading);
         httpRequestGenerator = new HttpRequestGenerator(this);
-        HttpManager httpManager = new HttpManager(this);
+        httpManager = new HttpManager(this);
         gson = new Gson();
 
         Intent intent = getIntent();
-        String enigmaJson = intent.getStringExtra(ENIGMA_KEY);
-        if (enigmaJson != null) {
-            enigma = gson.fromJson(enigmaJson, Enigma.class);
-            setupScreen();
-        } else {
-            final int id = intent.getIntExtra(ENIGMA_ID_KEY, -1);
-            if (id < 0) {
-                finish();
-            } else {
-                httpManager.addToQueue(GET, "/Enigmes/" + id, null, new HttpRequestListener() {
-                    @Override
-                    public void prepareRequest() {
-                        progressLoading.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void handleSuccess(Response response) {
-                        progressLoading.setVisibility(View.GONE);
-
-                        enigma = gson.fromJson(response.getContent(), Enigma.class);
-                        setupScreen();
-                    }
-
-                    @Override
-                    public void handleError(Response error) {
-                        progressLoading.setVisibility(View.GONE);
-                        Log.e(TAG, "/Enigmes/" + id);
-                        Log.e(TAG, error.toString());
-                        finish();
-                    }
-                });
-            }
+        enigma = (Enigma) intent.getSerializableExtra(ENIGMA_KEY);
+        if (enigma == null) {
+            throw new IllegalStateException("Enigma not found");
         }
-    }
 
-    private void setupScreen() {
-        setTitle(enigma.getName());      
-        
+        setTitle(enigma.getName());
+
         textQuestion.setText(enigma.getQuestion());
-      
+
         // Validator setup
         boolean isValidator = UserEnigmator.getCurrentUser(this).isValidator();
         if (!enigma.isStatus() && isValidator) {
@@ -141,16 +109,17 @@ public class EnigmaActivity extends AppCompatActivity {
             Button btnReject = findViewById(R.id.btn_reject);
             Button btnValidate = findViewById(R.id.btn_validate);
 
-            final Intent intent = new Intent();
-            intent.putExtra(ENIGMA_ID_KEY, enigma.getId());
+            final Intent resultIntent = new Intent();
+            resultIntent.putExtra(ENIGMA_ID_KEY, enigma.getId());
 
             btnReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: POST Rejection
-                    intent.putExtra(VALIDATION_STATUS_KEY, false);
-                    intent.putExtra(ENIGMA_ID_KEY, enigma.getId());
-                    setResult(Activity.RESULT_OK, intent);
+                    httpManager.addToQueue(PUT, "/Enigmes/" + enigma.getId() + "/RefuseEnigme", null, null);
+
+                    resultIntent.putExtra(VALIDATION_STATUS_KEY, false);
+                    resultIntent.putExtra(ENIGMA_ID_KEY, enigma.getId());
+                    setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
             });
@@ -158,13 +127,12 @@ public class EnigmaActivity extends AppCompatActivity {
             btnValidate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: change method
-                    //httpManager.addToQueue(HttpRequest.PUT,
-                      //      "/Enigmes/" + enigma.getId() + "/ValidateEnigme", null,null);
+                    httpManager.addToQueue(HttpRequest.PUT,
+                            "/Enigmes/" + enigma.getId() + "/ValidateEnigme", null,null);
 
-                    intent.putExtra(VALIDATION_STATUS_KEY, true);
-                    intent.putExtra(ENIGMA_ID_KEY, enigma.getId());
-                    setResult(Activity.RESULT_OK, intent);
+                    resultIntent.putExtra(VALIDATION_STATUS_KEY, true);
+                    resultIntent.putExtra(ENIGMA_ID_KEY, enigma.getId());
+                    setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
             });
@@ -185,36 +153,36 @@ public class EnigmaActivity extends AppCompatActivity {
 
             httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
                     new HttpRequestListener() {
-                @Override
-                public void prepareRequest() {
-                    progressLoading.setVisibility(View.VISIBLE);
-                }
+                        @Override
+                        public void prepareRequest() {
+                            progressLoading.setVisibility(View.VISIBLE);
+                        }
 
-                @Override
-                public void handleSuccess(Response response) {
-                    btnSendAnswer.setOnClickListener(sendAnswerEnigma(btnSendAnswer));
+                        @Override
+                        public void handleSuccess(Response response) {
+                            btnSendAnswer.setOnClickListener(sendAnswerEnigma(btnSendAnswer));
 
-                    if (response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
-                            gson.fromJson(response.getContent(), JsonArray.class).size() != 0) {
+                            if (response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
+                                    gson.fromJson(response.getContent(), JsonArray.class).size() != 0) {
 
-                        String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
-                                get(0).getAsJsonObject().get("type").getAsString();
+                                String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
+                                        get(0).getAsJsonObject().get("type").getAsString();
 
-                        downloadMedia(enigmaType,
-                                gson.fromJson(response.getContent(), JsonArray.class).get(0)
-                                        .getAsJsonObject().get("filename").getAsString());
-                    }
+                                downloadMedia(enigmaType,
+                                        gson.fromJson(response.getContent(), JsonArray.class).get(0)
+                                                .getAsJsonObject().get("filename").getAsString());
+                            }
 
-                    progressLoading.setVisibility(View.GONE);
-                }
+                            progressLoading.setVisibility(View.GONE);
+                        }
 
-                @Override
-                public void handleError(Response error) {
-                    progressLoading.setVisibility(View.GONE);
-                    Log.e(TAG, "GetMediaOfEnigma. " + error);
-                    finish();
-                }
-            });
+                        @Override
+                        public void handleError(Response error) {
+                            progressLoading.setVisibility(View.GONE);
+                            Log.e(TAG, "GetMediaOfEnigma. " + error);
+                            finish();
+                        }
+                    });
         }
     }
 
@@ -256,7 +224,7 @@ public class EnigmaActivity extends AppCompatActivity {
             public void handleError(Response error) {
                 Log.e(TAG, " Error when download Media > " + error);
             }
-        } ).execute(new StoreMedia(fileNameMedia, this, enigmaType));
+        }).execute(new StoreMedia(fileNameMedia, this, enigmaType));
     }
 
     private View.OnClickListener sendAnswerEnigma(final ImageButton button) {

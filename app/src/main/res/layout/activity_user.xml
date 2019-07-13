@@ -60,16 +60,16 @@
                     android:id="@+id/text_statistics"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/statistics"
                     android:layout_marginBottom="8dp"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="@dimen/list_category"/>
+                    android:textSize="@dimen/list_category"
+                    tools:text="@string/statistics" />
 
                 <TextView
                     android:id="@+id/text_user_score"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_score"
+                    tools:text="@string/text_score"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -78,7 +78,7 @@
                     android:id="@+id/text_easy_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/easy_solved"
+                    tools:text="@string/easy_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -87,7 +87,7 @@
                     android:id="@+id/text_medium_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/medium_solved"
+                    tools:text="@string/medium_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -96,7 +96,7 @@
                     android:id="@+id/text_hard_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/hard_solved"
+                    tools:text="@string/hard_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -105,7 +105,7 @@
                     android:id="@+id/text_extreme_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/extreme_solved"
+                    tools:text="@string/extreme_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -114,7 +114,7 @@
                     android:id="@+id/text_total_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/total_solved"
+                    tools:text="@string/total_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -143,7 +143,7 @@
                     android:id="@+id/text_self_user_score"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_score"
+                    tools:text="@string/text_score"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -152,7 +152,7 @@
                     android:id="@+id/text_self_easy_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/easy_solved"
+                    tools:text="@string/easy_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -161,7 +161,7 @@
                     android:id="@+id/text_self_medium_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/medium_solved"
+                    tools:text="@string/medium_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -170,7 +170,7 @@
                     android:id="@+id/text_self_hard_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/hard_solved"
+                    tools:text="@string/hard_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -179,7 +179,7 @@
                     android:id="@+id/text_self_extreme_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/extreme_solved"
+                    tools:text="@string/extreme_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>
@@ -188,7 +188,7 @@
                     android:id="@+id/text_self_total_solved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/total_solved"
+                    tools:text="@string/total_solved"
                     android:textColor="@color/black"
                     android:padding="@dimen/list_item_padding"
                     android:textSize="@dimen/text_size"/>

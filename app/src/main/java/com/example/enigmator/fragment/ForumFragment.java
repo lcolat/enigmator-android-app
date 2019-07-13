@@ -39,8 +39,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_OK;
+import static com.example.enigmator.activity.TopicActivity.TOPIC_ID_KEY;
+import static com.example.enigmator.activity.TopicActivity.TOPIC_TITLE_KEY;
+
 public class ForumFragment extends Fragment {
     private static final String TAG = ForumFragment.class.getName();
+
+    private static final int REQUEST_CODE = 4;
 
     private OnListFragmentInteractionListener mListener;
     private HttpManager httpManager;
@@ -69,9 +75,9 @@ public class ForumFragment extends Fragment {
                 @Override
                 public void onListFragmentInteraction(Topic topic) {
                     Intent intent = new Intent(getContext(), TopicActivity.class);
-                    intent.putExtra(TopicActivity.TOPIC_ID_KEY, topic.getId());
-                    intent.putExtra(TopicActivity.TOPIC_TITLE_KEY, topic.getTitle());
-                    startActivity(intent);
+                    intent.putExtra(TOPIC_ID_KEY, topic.getId());
+                    intent.putExtra(TOPIC_TITLE_KEY, topic.getTitle());
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
             };
         }
@@ -112,20 +118,20 @@ public class ForumFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                    httpManager.addToQueue(HttpRequest.GET, "/Topics?filter={\"where\":{\"title\":{\"like\":\""
-                            + searched + "%\",\"options\":\"i\"}}}", null, new HttpRequest.HttpRequestListener() {
+                    httpManager.addToQueue(HttpRequest.GET, "/Topics?filter={\"where\":{\"title\":{\"like\":\"%25"
+                            + searched + "%25\",\"options\":\"i\"}}}", null, new HttpRequest.HttpRequestListener() {
                         @Override
                         public void prepareRequest() {
                             progressBar.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                             button.setEnabled(false);
+                            listTitle.setText(R.string.results);
                         }
 
                         @Override
                         public void handleSuccess(Response response) {
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
-                            listTitle.setText(R.string.results);
                             button.setEnabled(true);
 
                             if (response.getStatusCode() != 204) {
@@ -133,7 +139,8 @@ public class ForumFragment extends Fragment {
                                 adapter.setValues(searchedTopics);
                                 adapter.notifyDataSetChanged();
                                 textEmpty.setVisibility(View.GONE);
-                            } else {
+                            }
+                            if (response.getStatusCode() == 204 || searchedTopics.isEmpty()) {
                                 textEmpty.setVisibility(View.VISIBLE);
                             }
                         }
@@ -144,7 +151,7 @@ public class ForumFragment extends Fragment {
                             recyclerView.setVisibility(View.VISIBLE);
                             if (topTopics.isEmpty()) textEmpty.setVisibility(View.VISIBLE);
                             button.setEnabled(true);
-                            Log.e(TAG, "/Topics?filter={\"where\":{\"title\":{\"like\":\""
+                            Log.e(TAG, "/Topics?filter={\"where\":{\"title\":{\"like\":\"%"
                                     + searched + "%\",\"options\":\"i\"}}}");
                             Log.e(TAG, error.toString());
                         }
@@ -219,6 +226,32 @@ public class ForumFragment extends Fragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                int topicId = data.getIntExtra(TOPIC_ID_KEY, -1);
+                int postsCount = data.getIntExtra(TopicActivity.POSTS_COUNT_KEY, 0);
+
+                if (topicId > -1 && postsCount > 0) {
+                    for (Topic topic : topTopics) {
+                        if (topic.getId() == topicId) {
+                            topic.setMessagesCount(postsCount);
+                            break;
+                        }
+                    }
+                    for (Topic topic : searchedTopics) {
+                        if (topic.getId() == topicId) {
+                            topic.setMessagesCount(postsCount);
+                            break;
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 
     @Override

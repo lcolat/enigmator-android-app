@@ -35,7 +35,7 @@
         android:layout_marginRight="8dp"
         android:selectAllOnFocus="true"
         android:imeOptions="actionNext"
-        android:inputType="text" />
+        android:inputType="textCapSentences" />
 
     <TextView
         android:layout_width="match_parent"
@@ -142,7 +142,7 @@
         android:hint="@string/hint_enigma_question"
         android:selectAllOnFocus="true"
         android:imeOptions="actionNext"
-        android:inputType="text" />
+        android:inputType="textCapSentences" />
 
     <TextView
         android:layout_width="match_parent"

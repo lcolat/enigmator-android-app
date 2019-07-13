@@ -57,7 +57,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
             }
         });
 
-        if (true){//message.isReceived()) { // TODO
+        if (message.isReceived()) {
             holder.mViewRight.setVisibility(View.INVISIBLE);
             holder.mContent.setBackgroundColor(receivedColor);
         } else {

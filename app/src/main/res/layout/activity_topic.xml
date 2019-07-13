@@ -67,22 +67,21 @@
         android:layout_alignParentBottom="true"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLines="3"
+        android:hint="@string/hint_send_message"
         android:imeOptions="flagNoEnterAction"
         android:layout_toStartOf="@+id/btn_send_post"
         android:layout_toLeftOf="@id/btn_send_post" />
 
     <ImageButton
         android:id="@+id/btn_send_post"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_send_purple_24dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        style="?android:attr/buttonBarButtonStyle"
-        android:contentDescription="@string/send_icon_description"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/send_icon_description"
+        app:srcCompat="@drawable/ic_send_purple_24dp" />
 
     <ProgressBar
         android:id="@+id/progress_loading"

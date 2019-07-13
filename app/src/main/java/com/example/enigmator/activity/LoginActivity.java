@@ -75,10 +75,13 @@ public class LoginActivity extends HttpActivity {
         String userToken = prefs.getString(HttpManager.PREF_USER_TOKEN, null);
         String user = prefs.getString(CategoriesActivity.PREF_USER, null);
 
-        // TODO: check internet before ?
         if (userToken != null && user != null) {
-            Intent intent = new Intent(this, CategoriesActivity.class);
-            startActivity(intent);
+            if (!isInternetConnected()) {
+                buildNoConnectionErrorDialog(null);
+            } else {
+                Intent intent = new Intent(this, CategoriesActivity.class);
+                startActivity(intent);
+            }
         } else {
             String username = prefs.getString(PREF_USERNAME, null);
             if (username != null) {
@@ -87,7 +90,6 @@ public class LoginActivity extends HttpActivity {
         }
     }
 
-    // TODO: Fix?: login fails on first attempt after disconnection
     private void login(String username, String password) {
         Credentials credentials = new Credentials(username, password);
         final String body = gson.toJson(credentials);

@@ -115,7 +115,7 @@ public class UserFragment extends Fragment {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                httpManager.addToQueue(HttpRequest.GET, "UserEnigmators?filter[where][username][like]=" + searched +"%",
+                httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators?filter[where][username][like]=%25" + searched +"%25",
                         null, new HttpRequest.HttpRequestListener() {
                     @Override
                     public void prepareRequest() {
@@ -128,7 +128,8 @@ public class UserFragment extends Fragment {
                         if (response.getStatusCode() != 204) {
                             mOthers = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class)));
                             textOthersEmpty.setVisibility(View.GONE);
-                        } else {
+                        }
+                        if (response.getStatusCode() == 204 || mOthers.isEmpty()) {
                             mOthers.clear();
                             textOthersEmpty.setVisibility(View.VISIBLE);
                         }

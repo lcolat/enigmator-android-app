@@ -39,7 +39,7 @@ public class TopicRecyclerViewAdapter extends RecyclerView.Adapter<TopicRecycler
         Topic topic = mValues.get(position);
         holder.mItem = topic;
         holder.mTitle.setText(topic.getTitle());
-        holder.mMessageAmount.setText(String.format(mLocale,"%d",topic.getMessageCount()));
+        holder.mMessageAmount.setText(String.format(mLocale,"%d",topic.getMessagesCount()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
