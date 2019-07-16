@@ -46,7 +46,8 @@ import static com.example.enigmator.controller.HttpRequest.GET;
 public class EnigmaFragment extends Fragment {
     private static final String TAG = EnigmaFragment.class.getName();
 
-    private static final int REQUEST_CODE = 87;
+    private static final int REQUEST_SEE_ENIGMA = 87;
+    private static final int REQUEST_CREATION = 88;
 
     private List<Enigma> enigmas, waitingValidation;
     private EnigmaRecyclerViewAdapter adapter;
@@ -87,7 +88,7 @@ public class EnigmaFragment extends Fragment {
                 public void onListFragmentInteraction(Enigma enigma) {
                     Intent intent = new Intent(getContext(), EnigmaActivity.class);
                     intent.putExtra(EnigmaActivity.ENIGMA_KEY, enigma);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivityForResult(intent, REQUEST_SEE_ENIGMA);
                 }
             };
         }
@@ -106,15 +107,12 @@ public class EnigmaFragment extends Fragment {
         isValidator = user.isValidator();
         userId = user.getId();
         lastSort = SortType.EASIEST;
-
-        System.out.println("Create");
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_enigma, container, false);
-        System.out.println("Create View");
 
         progressBar = view.findViewById(R.id.progress_loading);
         textEmpty = view.findViewById(R.id.text_empty);
@@ -157,6 +155,7 @@ public class EnigmaFragment extends Fragment {
                 btnRandom.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
             case VALIDATE:
+                if (waitingValidation.isEmpty()) textEmpty.setVisibility(View.VISIBLE);
                 btnValidate.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
         }
@@ -169,7 +168,7 @@ public class EnigmaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EnigmaCreationActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CREATION);
             }
         });
 
@@ -215,16 +214,38 @@ public class EnigmaFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CREATION) {
+            if (resultCode == Activity.RESULT_OK) {
+                loadWaitingValidation();
+            }
+        } else if (requestCode == REQUEST_SEE_ENIGMA) {
             if (resultCode == Activity.RESULT_OK) {
                 int enigmaId = data.getIntExtra(EnigmaActivity.ENIGMA_ID_KEY, -1);
+                boolean isEnigmaAnswered = data.getBooleanExtra(EnigmaActivity.ANSWERED_KEY, false);
                 boolean isEnigmaValidated = data.getBooleanExtra(EnigmaActivity.VALIDATION_STATUS_KEY, false);
 
-                for (Enigma enigma : waitingValidation) {
-                    if (enigma.getId() == enigmaId) {
-                        waitingValidation.remove(enigma);
-                        if (isEnigmaValidated) enigmas.add(enigma);
-                        break;
+                if (isEnigmaAnswered) {
+                    // Enigma answered
+                    for (int i = 0; i < enigmas.size(); i++) {
+                        if (enigmas.get(i).getId() == enigmaId) {
+                            enigmas.remove(i);
+                            break;
+                        }
+                    }
+                } else {
+                    // Enigma Validated/Rejected
+                    for (Enigma e : waitingValidation) {
+                        if (e.getId() == enigmaId) {
+                            waitingValidation.remove(e);
+                            if (isEnigmaValidated) {
+                                e.setStatus(true);
+                                enigmas.add(e);
+                            }
+                            break;
+                        }
+                    }
+                    if (waitingValidation.isEmpty()) {
+                        textEmpty.setVisibility(View.VISIBLE);
                     }
                 }
 

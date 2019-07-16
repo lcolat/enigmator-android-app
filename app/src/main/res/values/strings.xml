@@ -22,7 +22,7 @@
     <string name="users">Users</string>
 
     <string name="action_profile">My Profile</string>
-    <string name="action_see_invites">Friend Invites</string>
+    <string name="action_see_invites">Friends Invites</string>
     <string name="action_refresh_enigmas">Refresh Enigmas</string>
     <string name="action_settings">Settings</string>
     <string name="action_disconnect">Disconnect</string>
@@ -46,6 +46,7 @@
     <string name="hard_solved">Hard solved : %d</string>
     <string name="extreme_solved">Extreme solved : %d</string>
     <string name="total_solved">Total solved : %d</string>
+    <string name="no_profile_picture">No profile picture found</string>
 
     <!-- Enigma -->
     <string name="btn_sort_easy">Easiest</string>
@@ -56,12 +57,13 @@
     <string name="enigma_score">%d pts</string>
     <string name="btn_reject">Reject</string>
     <string name="image_enigma_description">Image of the enigma</string>
+    <string name="right_answer">Correct answer !</string>
 
     <!-- Enigma Creation Activity -->
     <string name="enigma_creation">Enigma Creation</string>
     <string name="media_question">Media (Optional)</string>
     <string name="question">Question</string>
-    <string name="answer_case_sensitive">Answer (Case sensitive)</string>
+    <string name="answer">Answer</string>
     <string name="enigma_score_input">Enigma Score</string>
     <string name="hint_enigma_title">A nice title</string>
     <string name="hint_enigma_score">Between 0 and 100</string>
@@ -71,7 +73,6 @@
     <string name="toast_invalid_form">Incorrect values or missing fields</string>
     <string name="enigma_submitted">Enigma submitted !</string>
     <string name="enigma_name">Enigma Name</string>
-    <string name="enigma_dialog_message">Warning. The answer is case sensitive.</string>
 
     <!-- Leaderboard -->
     <string name="tab_overall">Overall</string>

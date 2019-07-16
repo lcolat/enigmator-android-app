@@ -36,6 +36,7 @@
             android:layout_toRightOf="@id/checkbox_agree"
             android:layout_below="@id/text_general_terms"
             android:layout_toEndOf="@id/checkbox_agree"
+            android:layout_marginTop="8dp"
             android:padding="4dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"

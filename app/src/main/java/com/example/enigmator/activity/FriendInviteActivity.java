@@ -76,7 +76,7 @@ public class FriendInviteActivity extends HttpActivity {
             public void handleSuccess(Response response) {
                 progressLoading.setVisibility(View.GONE);
 
-                if (response.getStatusCode() == 200) {
+                if (response.getStatusCode() == 204) {
                     textEmpty.setVisibility(View.VISIBLE);
                 } else {
                     JsonArray array = gson.fromJson(response.getContent(), JsonArray.class);

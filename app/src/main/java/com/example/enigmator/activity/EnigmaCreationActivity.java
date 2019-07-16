@@ -1,12 +1,10 @@
 package com.example.enigmator.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -92,60 +90,51 @@ public class EnigmaCreationActivity extends AppCompatActivity {
                     enigma.setName(name);
                     enigma.setQuestion(question);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EnigmaCreationActivity.this);
-                    builder.setTitle(R.string.enigma_creation);
-                    builder.setMessage(R.string.enigma_dialog_message);
-                    builder.setNegativeButton(android.R.string.cancel, null);
-                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    httpManager.addToQueue(POST, "/Enigmes/CreateEnigme", gson.toJson(enigma), new HttpRequest.HttpRequestListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            httpManager.addToQueue(POST, "/Enigmes/CreateEnigme", gson.toJson(enigma), new HttpRequest.HttpRequestListener() {
-                                @Override
-                                public void prepareRequest() {
-                                    btnSubmit.setEnabled(false);
-                                }
+                        public void prepareRequest() {
+                            btnSubmit.setEnabled(false);
+                        }
 
-                                @Override
-                                public void handleSuccess(Response response) {
-                                    if (chosenMedia == null) {
-                                        Toast.makeText(EnigmaCreationActivity.this, R.string.enigma_submitted, Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    } else {
-                                        final int enigmaId = gson.fromJson(response.getContent(), JsonObject.class)
-                                                .get("id").getAsInt();
+                        @Override
+                        public void handleSuccess(Response response) {
+                            if (chosenMedia == null) {
+                                Toast.makeText(EnigmaCreationActivity.this, R.string.enigma_submitted, Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                final int enigmaId = gson.fromJson(response.getContent(), JsonObject.class)
+                                        .get("id").getAsInt();
 
-                                        httpManager.addToQueue(POST, "/Enigmes/" + enigmaId + "/AddMediaToEnigme",
-                                                chosenMedia, mediaType, new HttpRequest.HttpRequestListener() {
-                                            @Override
-                                            public void prepareRequest() {
+                                httpManager.addToQueue(POST, "/Enigmes/" + enigmaId + "/AddMediaToEnigme",
+                                        chosenMedia, mediaType, new HttpRequest.HttpRequestListener() {
+                                    @Override
+                                    public void prepareRequest() {
 
-                                            }
-
-                                            @Override
-                                            public void handleSuccess(Response response) {
-                                                Toast.makeText(EnigmaCreationActivity.this, R.string.enigma_submitted, Toast.LENGTH_SHORT).show();
-                                                finish();
-                                            }
-
-                                            @Override
-                                            public void handleError(Response error) {
-                                                Log.e(TAG, "/Enigmes/" + enigmaId + "/AddMediaToEnigme");
-                                                Log.e(TAG, error.toString());
-                                            }
-                                        });
                                     }
-                                }
 
-                                @Override
-                                public void handleError(Response error) {
-                                    btnSubmit.setEnabled(true);
-                                    Log.e(TAG, "/Enigmes/CreateEnigme : " + gson.toJson(enigma));
-                                    Log.e(TAG, error.toString());
-                                }
-                            });
+                                    @Override
+                                    public void handleSuccess(Response response) {
+                                        Toast.makeText(EnigmaCreationActivity.this, R.string.enigma_submitted, Toast.LENGTH_SHORT).show();
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void handleError(Response error) {
+                                        Log.e(TAG, "/Enigmes/" + enigmaId + "/AddMediaToEnigme");
+                                        Log.e(TAG, error.toString());
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void handleError(Response error) {
+                            btnSubmit.setEnabled(true);
+                            Log.e(TAG, "/Enigmes/CreateEnigme : " + gson.toJson(enigma));
+                            Log.e(TAG, error.toString());
                         }
                     });
-                    builder.create().show();
                 }
             }
         });
@@ -157,6 +146,12 @@ public class EnigmaCreationActivity extends AppCompatActivity {
             onBackPressed();
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
     }
 
     @Override

@@ -33,6 +33,7 @@ public class UserActivity extends HttpActivity {
     private FloatingActionButton btnCompare, btnAddUser;
     private ProgressBar progressLoading;
     private LinearLayout layoutCompare;
+    private TextView emptyPicture;
 
     private UserEnigmator currentUser;
 
@@ -98,6 +99,10 @@ public class UserActivity extends HttpActivity {
                 Log.e(TAG, error.toString());
             }
         });
+
+        emptyPicture = findViewById(R.id.text_empty);
+        // TODO: getProfile pic
+        emptyPicture.setVisibility(View.VISIBLE);
 
         if (isSelfProfile) {
             btnCompare.hide();
