@@ -85,7 +85,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/me"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/list_category"
         app:layout_constraintBottom_toTopOf="@+id/user_item"
         app:layout_constraintEnd_toEndOf="parent"

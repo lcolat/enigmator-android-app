@@ -13,7 +13,7 @@ import com.example.enigmator.entity.Response;
 import com.example.enigmator.fragment.EditDialogFragment;
 import com.example.enigmator.fragment.SettingsFragment;
 
-import static com.example.enigmator.controller.HttpRequest.PUT;
+import static com.example.enigmator.controller.HttpRequest.POST;
 
 public class SettingsActivity extends HttpActivity implements EditDialogFragment.NoticeDialogListener {
     private static final String TAG = SettingsActivity.class.getName();
@@ -29,12 +29,9 @@ public class SettingsActivity extends HttpActivity implements EditDialogFragment
     }
 
     @Override
-    public void onDialogPositiveClick(AppCompatDialogFragment dialog, String edited, @StringRes int title) {
+    public void onDialogPositiveClick(AppCompatDialogFragment dialog, final String edited, @StringRes int title) {
         if (title == R.string.new_password) {
-            // TODO: request update password
-            System.out.println("Password: " + edited);
-            /*
-            httpManager.addToQueue(PUT, "", "password", new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(POST, "/UserEnigmators/reset-password", "{\"newPassword\": \"" + edited + "\"}", new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
 
@@ -47,10 +44,10 @@ public class SettingsActivity extends HttpActivity implements EditDialogFragment
 
                 @Override
                 public void handleError(Response error) {
+                    Log.e(TAG, "/UserEnigmators/reset-password. {\"newPassword\": \"" + edited + "\"}");
                     Log.e(TAG, error.toString());
                 }
             });
-            */
         }
     }
 

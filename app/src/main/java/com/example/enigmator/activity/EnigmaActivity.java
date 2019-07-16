@@ -64,6 +64,7 @@ public class EnigmaActivity extends AppCompatActivity {
     private static final String PAST_ANSWERS_BASE_KEY = "past_answers_";
 
     private ProgressBar progressLoading;
+    private ListView listAnswers;
 
     private SharedPreferences prefs;
     private HttpRequestGenerator httpRequestGenerator;
@@ -146,7 +147,10 @@ public class EnigmaActivity extends AppCompatActivity {
             if (pastSavedAnswers == null) pastAnswers = new ArrayList<>();
             else pastAnswers = new ArrayList<>(pastSavedAnswers);
 
-            ListView listAnswers = findViewById(R.id.list_past_answers);
+            System.out.println("PAST ANSWERS");
+            System.out.println(pastAnswers);
+
+            listAnswers = findViewById(R.id.list_past_answers);
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, pastAnswers);
             listAnswers.setAdapter(adapter);
 
@@ -253,6 +257,10 @@ public class EnigmaActivity extends AppCompatActivity {
                             if (response.getContent().contains("mauvaise")) {
                                 zoneText.startAnimation(shakeError(zoneText));
                                 pastAnswers.add(answer);
+                                if (pastAnswers.size() == 1) {
+                                    adapter = new ArrayAdapter<>(EnigmaActivity.this, android.R.layout.simple_expandable_list_item_1, pastAnswers);
+                                }
+                                listAnswers.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                             } else {
                                 zoneText.setEnabled(false);
@@ -298,7 +306,7 @@ public class EnigmaActivity extends AppCompatActivity {
     public void onBackPressed() {
         setResult(Activity.RESULT_CANCELED);
 
-        if (enigma != null) {
+        if (enigma != null && enigma.isStatus() && !pastAnswers.isEmpty()) {
             prefs.edit()
                     .putStringSet(PAST_ANSWERS_BASE_KEY + enigma.getId(), new HashSet<>(pastAnswers))
                     .apply();

@@ -43,6 +43,9 @@ public class Media {
             case "mp4":
                 type = "video/mp4";
                 break;
+            case "3gp":
+                type = "video/3gpp";
+                break;
             default:
                 throw new UnsupportedOperationException("File extension not supported: " + extension);
         }

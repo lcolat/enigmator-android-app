@@ -76,7 +76,7 @@ public class FriendInviteActivity extends HttpActivity {
             public void handleSuccess(Response response) {
                 progressLoading.setVisibility(View.GONE);
 
-                if (response.getStatusCode() == 204) {
+                if (response.getStatusCode() == 200) {
                     textEmpty.setVisibility(View.VISIBLE);
                 } else {
                     JsonArray array = gson.fromJson(response.getContent(), JsonArray.class);
@@ -84,6 +84,10 @@ public class FriendInviteActivity extends HttpActivity {
                     friendRequesters = new ArrayList<>();
                     for (JsonElement object : array) {
                         friendRequesters.add(gson.fromJson(object.getAsJsonObject().get("FROM"), UserEnigmator.class));
+                    }
+
+                    if (friendRequesters.isEmpty()) {
+                        textEmpty.setVisibility(View.VISIBLE);
                     }
 
                     adapter.setValues(friendRequesters);

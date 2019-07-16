@@ -63,7 +63,7 @@
                     android:layout_marginBottom="8dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/list_category"
-                    tools:text="@string/statistics" />
+                    android:text="@string/statistics" />
 
                 <TextView
                     android:id="@+id/text_user_score"
