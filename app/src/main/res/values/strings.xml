@@ -47,6 +47,7 @@
     <string name="extreme_solved">Extreme solved : %d</string>
     <string name="total_solved">Total solved : %d</string>
     <string name="no_profile_picture">No profile picture found</string>
+    <string name="profile_picture_changed">Profile picture changed !</string>
 
     <!-- Enigma -->
     <string name="btn_sort_easy">Easiest</string>

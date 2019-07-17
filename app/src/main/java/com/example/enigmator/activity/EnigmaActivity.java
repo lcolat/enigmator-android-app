@@ -195,7 +195,7 @@ public class EnigmaActivity extends AppCompatActivity {
 
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
         final Context context = this;
-      
+
         new DownloadFileFromURLTask(new HttpRequestListener() {
             @Override
             public void prepareRequest() { }
@@ -211,7 +211,7 @@ public class EnigmaActivity extends AppCompatActivity {
                 switch (enigmaType.toLowerCase()) {
                     case "image":
                         Bitmap bitmap = BitmapFactory.decodeFile(response.getContent());
-                        ImageView imageView = findViewById(R.id.image_view);
+                        ImageView imageView = findViewById(R.id.image_enigma);
                         imageView.setImageBitmap(bitmap);
                         imageView.setVisibility(View.VISIBLE);
                         break;

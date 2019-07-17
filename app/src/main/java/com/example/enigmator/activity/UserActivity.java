@@ -2,42 +2,64 @@ package com.example.enigmator.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.enigmator.R;
+import com.example.enigmator.controller.DownloadProfilePictureTask;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Enigma;
 import com.example.enigmator.entity.Response;
 import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.JsonObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.enigmator.controller.HttpRequest.GET;
+import static com.example.enigmator.controller.HttpRequest.MEDIA_IMAGE;
+import static com.example.enigmator.controller.HttpRequest.POST;
+
 public class UserActivity extends HttpActivity {
     private static final String TAG = UserActivity.class.getName();
+
+    private static final int REQUEST_CODE_CHOOSE_PICTURE = 55;
 
     public static final String USER_KEY = "user_key";
 
     private FloatingActionButton btnCompare, btnAddUser;
-    private ProgressBar progressLoading;
+    private ProgressBar progressLoading, progressImage;
     private LinearLayout layoutCompare;
-    private TextView emptyPicture;
+    private TextView textEmptyPicture;
+    private ImageView imageUser;
+    private ImageButton btnChangePicture;
 
     private UserEnigmator currentUser;
 
-    private boolean isFriend, isComparing;
+    private boolean isFriend, isComparing, isSelfProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +70,7 @@ public class UserActivity extends HttpActivity {
         final UserEnigmator user = (UserEnigmator) intent.getSerializableExtra(USER_KEY);
         currentUser = UserEnigmator.getCurrentUser(this);
         assert currentUser != null;
-        boolean isSelfProfile = user.getId() == currentUser.getId();
+        isSelfProfile = user.getId() == currentUser.getId();
 
         isComparing = false;
 
@@ -59,6 +81,11 @@ public class UserActivity extends HttpActivity {
         btnCompare = findViewById(R.id.btn_compare);
         btnAddUser = findViewById(R.id.btn_user_action);
         progressLoading = findViewById(R.id.progress_loading);
+
+        progressImage = findViewById(R.id.progress_image);
+        imageUser = findViewById(R.id.image_profile);
+        textEmptyPicture = findViewById(R.id.text_empty);
+        btnChangePicture = findViewById(R.id.btn_change_picture);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             btnAddUser.setSupportBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
@@ -74,7 +101,7 @@ public class UserActivity extends HttpActivity {
         final TextView textExtreme = findViewById(R.id.text_extreme_solved);
         final TextView textTotal = findViewById(R.id.text_total_solved);
 
-        httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + user.getId() + "/GetEnigmeDone", null, new HttpRequest.HttpRequestListener() {
+        httpManager.addToQueue(GET, "/UserEnigmators/" + user.getId() + "/GetEnigmeDone", null, new HttpRequest.HttpRequestListener() {
             @Override
             public void prepareRequest() {
                 progressLoading.setVisibility(View.VISIBLE);
@@ -100,9 +127,12 @@ public class UserActivity extends HttpActivity {
             }
         });
 
-        emptyPicture = findViewById(R.id.text_empty);
-        // TODO: getProfile pic
-        emptyPicture.setVisibility(View.VISIBLE);
+        if (user.getProfilePicture() == null) {
+            textEmptyPicture.setVisibility(View.VISIBLE);
+            if (isSelfProfile) btnChangePicture.setVisibility(View.VISIBLE);
+        } else {
+            downloadMedia(user.getProfilePicture());
+        }
 
         if (isSelfProfile) {
             btnCompare.hide();
@@ -116,7 +146,7 @@ public class UserActivity extends HttpActivity {
             final TextView textSelfExtreme = findViewById(R.id.text_self_extreme_solved);
             final TextView textSelfTotal = findViewById(R.id.text_self_total_solved);
 
-            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + currentUser.getId() + "/GetEnigmeDone", null, new HttpRequest.HttpRequestListener() {
+            httpManager.addToQueue(GET, "/UserEnigmators/" + currentUser.getId() + "/GetEnigmeDone", null, new HttpRequest.HttpRequestListener() {
                 @Override
                 public void prepareRequest() {
                     btnCompare.setEnabled(false);
@@ -141,7 +171,7 @@ public class UserActivity extends HttpActivity {
                 }
             });
 
-            httpManager.addToQueue(HttpRequest.GET, "/UserEnigmators/" + user.getId() + "/isFriend",
+            httpManager.addToQueue(GET, "/UserEnigmators/" + user.getId() + "/isFriend",
                     null, new HttpRequest.HttpRequestListener() {
                         @Override
                         public void prepareRequest() {
@@ -202,6 +232,15 @@ public class UserActivity extends HttpActivity {
                 }
             });
         }
+
+        btnChangePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mediaChooser = new Intent(Intent.ACTION_GET_CONTENT);
+                mediaChooser.setType("image/*");
+                startActivityForResult(mediaChooser, REQUEST_CODE_CHOOSE_PICTURE);
+            }
+        });
     }
 
     private static void setTextViews(Context context, List<Enigma> enigmas, TextView easy, TextView medium, TextView hard, TextView extreme, TextView total) {
@@ -221,11 +260,116 @@ public class UserActivity extends HttpActivity {
         total.setText(context.getString(R.string.total_solved, enigmas.size()));
     }
 
+    private void downloadMedia(String filename) {
+        new DownloadProfilePictureTask(this, new HttpRequest.HttpRequestListener() {
+            @Override
+            public void prepareRequest() {
+                progressImage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void handleSuccess(Response response) {
+                progressImage.setVisibility(View.GONE);
+                String mediaDlFileName = response.getContent();
+                if (mediaDlFileName == null) {
+                    handleError(response);
+                    return;
+                }
+
+                Bitmap bitmap = BitmapFactory.decodeFile(response.getContent());
+                imageUser.setImageBitmap(bitmap);
+                if (isSelfProfile) btnChangePicture.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void handleError(Response error) {
+                progressImage.setVisibility(View.GONE);
+                if (isSelfProfile) btnChangePicture.setVisibility(View.VISIBLE);
+                textEmptyPicture.setVisibility(View.VISIBLE);
+                Log.e(TAG, " Error when download Media > " + error);
+            }
+        }).execute(filename);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE_CHOOSE_PICTURE) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+
+                assert uri != null;
+                final String filename = EnigmaCreationActivity.getFileName(this, uri);
+
+                final String path_temp = getCacheDir() + "/" + filename;
+                File file = new File(path_temp);
+
+                FileOutputStream fos = null;
+                InputStream is = null;
+                try {
+                    byte[] buffer = new byte[1024];
+                    fos = new FileOutputStream(file);
+                    is = getContentResolver().openInputStream(uri);
+                    assert is != null;
+                    int len = is.read(buffer);
+                    while (len != -1) {
+                        fos.write(buffer, 0, len);
+                        len = is.read(buffer);
+                    }
+                } catch (FileNotFoundException e) {
+                    Log.e(TAG, "Error while opening file", e);
+                } catch (IOException e) {
+                    Log.e(TAG, "Error while opening file", e);
+                } finally {
+                    try {
+                        if (fos != null) {
+                            fos.close();
+                        }
+                        if (is != null) {
+                            is.close();
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error on closing stream", e);
+                    }
+                }
+
+                httpManager.addToQueue(POST, "/UserEnigmators/AddProfilePic",
+                        path_temp, MEDIA_IMAGE, new HttpRequest.HttpRequestListener() {
+                            @Override
+                            public void prepareRequest() {
+                                progressImage.setVisibility(View.VISIBLE);
+                                btnChangePicture.setEnabled(false);
+                            }
+
+                            @Override
+                            public void handleSuccess(Response response) {
+                                Toast.makeText(UserActivity.this, R.string.profile_picture_changed, Toast.LENGTH_SHORT).show();
+                                btnChangePicture.setEnabled(true);
+                                imageUser.setImageBitmap(BitmapFactory.decodeFile(path_temp));
+                                progressImage.setVisibility(View.GONE);
+                                currentUser.setProfilePicture(filename);
+
+                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(UserActivity.this).edit();
+                                editor.putString(CategoriesActivity.PREF_USER, gson.toJson(currentUser));
+                                editor.apply();
+                            }
+
+                            @Override
+                            public void handleError(Response error) {
+                                progressImage.setVisibility(View.GONE);
+                                Log.e(TAG, "UserEnigmators/AddProfilePic");
+                                Log.e(TAG, error.toString());
+                                btnChangePicture.setEnabled(true);
+                            }
+                        });
+            }
+        }
     }
 }

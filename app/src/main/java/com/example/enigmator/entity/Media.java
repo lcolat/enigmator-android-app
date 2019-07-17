@@ -35,8 +35,6 @@ public class Media {
                 type = "image/png";
                 break;
             case "jpeg":
-                type = "image/jpeg";
-                break;
             case "jpg":
                 type = "image/jpeg";
                 break;

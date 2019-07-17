@@ -51,7 +51,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
 
     @Override
     protected Response doInBackground(Void... voids) {
-        Log.d(TAG, "Request: " + request.getRoute());
+        Log.d(TAG, "Request: " + BASE_URL + request.getRoute());
 
         String result = null;
         HttpURLConnection connection = null;
@@ -133,10 +133,10 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
                     result = readStream(errorStream);
                 }
                 cancel(false);
-                Log.e(TAG, "Error Stream: " + result);
+                Log.e(TAG, "Error in handling result Stream: " + result);
             }
         } catch (MalformedURLException e) {
-            Log.e(TAG, "MalformedURL: " + BASE_URL + request.getRoute());
+            Log.e(TAG, "MalformedURL: " + BASE_URL + request.getRoute(), e);
             cancel(false);
             result = e.getMessage();
         } catch (IOException e) {

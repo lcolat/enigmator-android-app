@@ -1,5 +1,6 @@
 package com.example.enigmator.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -161,7 +162,7 @@ public class EnigmaCreationActivity extends AppCompatActivity {
                 Uri uri = data.getData();
 
                 assert uri != null;
-                String filename = getFileName(uri);
+                String filename = getFileName(this, uri);
 
                 String extension = filename.substring(filename.indexOf(".") + 1);
                 String path_temp = getCacheDir() + filename;
@@ -205,10 +206,10 @@ public class EnigmaCreationActivity extends AppCompatActivity {
         }
     }
 
-    private String getFileName(Uri uri) {
+    static String getFileName(Context context, Uri uri) {
         String result = null;
         if ("content".equals(uri.getScheme())) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 try {
                     if (cursor.moveToFirst()) {

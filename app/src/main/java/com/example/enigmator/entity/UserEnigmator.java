@@ -23,6 +23,7 @@ public class UserEnigmator implements Serializable {
     private boolean validator;
     private Date inscription_date;
     private String username;
+    private String profilePicture;
 
     public static UserEnigmator getCurrentUser(Context context) {
         Gson gson = new Gson();
