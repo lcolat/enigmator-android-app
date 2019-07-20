@@ -2,14 +2,12 @@ package com.example.enigmator.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -225,8 +223,15 @@ public class UserActivity extends HttpActivity {
                         @Override
                         public void handleError(Response error) {
                             btnAddUser.setEnabled(true);
-                            Log.e(TAG, "/UserEnigmators/" + user.getId());
-                            Log.e(TAG, error.toString());
+                            Log.e(TAG, "/UserEnigmators/" + user.getId() + "/AddAFriend");
+
+                            if (error.getStatusCode() == 422) {
+                                Log.d(TAG, "Invite already sent");
+                                btnAddUser.hide();
+                                Toast.makeText(UserActivity.this, R.string.invite_sent, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e(TAG, error.toString());
+                            }
                         }
                     });
                 }
@@ -303,6 +308,7 @@ public class UserActivity extends HttpActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_CODE_CHOOSE_PICTURE) {
             if (resultCode == RESULT_OK) {
+                assert data != null;
                 Uri uri = data.getData();
 
                 assert uri != null;
@@ -356,9 +362,7 @@ public class UserActivity extends HttpActivity {
                                 progressImage.setVisibility(View.GONE);
                                 currentUser.setProfilePicture(filename);
 
-                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(UserActivity.this).edit();
-                                editor.putString(CategoriesActivity.PREF_USER, gson.toJson(currentUser));
-                                editor.apply();
+                                UserEnigmator.saveCurrentUser(UserActivity.this, gson.toJson(currentUser));
                             }
 
                             @Override

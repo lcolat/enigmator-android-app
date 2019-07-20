@@ -1,0 +1,118 @@
+<resources>
+    <string name="app_name">Enigmator</string>
+
+    <string name="message_copied">Copié !</string>
+    <string name="search">Recherche</string>
+    <string name="results">Resultats</string>
+    <string name="submit">Envoyer</string>
+
+    <string name="dialog_no_connection_title">Pas de connexion Internet</string>
+    <string name="dialog_no_connection_message">Vous devez fournir une connexion à Internet valide</string>
+
+    <!-- Login Activity -->
+    <string name="prompt_username">Nom d\'utilsateur</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Connexion</string>
+    <string name="login_failed">Connexion échouée</string>
+
+    <!-- Categories Activity -->
+    <string name="enigma">Enigmes</string>
+    <string name="leaderboard">Classement</string>
+    <string name="forum">Forum</string>
+    <string name="users">Users</string>
+
+    <string name="action_profile">Mon Profil</string>
+    <string name="action_see_invites">Demandes d\'amis</string>
+    <string name="action_refresh_enigmas">Refresh Enigmes</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_disconnect">Déconnexion</string>
+
+    <!-- Users -->
+    <string name="statistics">Statistiques</string>
+    <string name="friends">Amis</string>
+    <string name="others">Autres</string>
+    <string name="search_icon_description">Icône de recherche</string>
+    <string name="rank"># %1$d</string>
+    <string name="profile_picture_description">Photo de profile</string>
+    <string name="send_icon_description">Icôen d\'envoi</string>
+    <string name="hint_send_message">Entrez votre message</string>
+    <string name="text_enigma_response_field">Ecrivez une réponse</string>
+    <string name="no_friends_found">Aucun ami trouvé</string>
+    <string name="no_users_found">Aucun utilisateur trouvé</string>
+    <string name="invite_sent">Demande d\'ami envoyée !</string>
+    <string name="text_score">Score : %d</string>
+    <string name="easy_solved">Faciles : %d</string>
+    <string name="medium_solved">Moyennes : %d</string>
+    <string name="hard_solved">Difficiles : %d</string>
+    <string name="extreme_solved">Extremes : %d</string>
+    <string name="total_solved">Total : %d</string>
+    <string name="no_profile_picture">Aucune photo de profil trouvée</string>
+    <string name="profile_picture_changed">Photo de profil changée !</string>
+
+    <!-- Enigma -->
+    <string name="btn_sort_easy">+ facile</string>
+    <string name="btn_sort_hard">+ dure</string>
+    <string name="btn_sort_random">Hasard</string>
+    <string name="btn_validate">Valider</string>
+    <string name="no_enigmas_found">Aucune d\énigme trouvée</string>
+    <string name="enigma_score">%d pts</string>
+    <string name="btn_reject">Refuser</string>
+    <string name="image_enigma_description">Image de l\'enigme</string>
+    <string name="right_answer">Bonne réponse !</string>
+
+    <!-- Enigma Creation Activity -->
+    <string name="enigma_creation">Création d\'énigme</string>
+    <string name="media_question">Media (Optionnel)</string>
+    <string name="question">Question</string>
+    <string name="answer">Réponse</string>
+    <string name="enigma_score_input">Score de l\'énigme</string>
+    <string name="hint_enigma_title">Un titre</string>
+    <string name="hint_enigma_score">Entre 0 et 100</string>
+    <string name="hint_enigma_question">Etre ou ne pas être ?</string>
+    <string name="hint_enigma_answer">La réponse est 42</string>
+    <string name="image_gallery_description">Ouvrir la Gallerie</string>
+    <string name="toast_invalid_form">Champs manquant ou valeurs incorrectes</string>
+    <string name="enigma_submitted">Enigme soumise !</string>
+    <string name="enigma_name">Nom de l\'énigme</string>
+
+    <!-- Leaderboard -->
+    <string name="tab_overall">Général</string>
+    <string name="me">Moi</string>
+    <string name="empty_ladder">Classement vide</string>
+
+    <!-- Forum -->
+    <string name="top_topics">Top topics</string>
+    <string name="posts">Posts</string>
+    <string name="icon_open_in_new_description">Voir l\'énigme dans une nouvelle fenêtre</string>
+    <string name="no_topics_found">Aucun topic trouvé</string>
+    <string name="no_posts_found">Aucun post trouvé</string>
+
+    <!-- Settings -->
+    <string name="privacy_category">Confidentialité</string>
+    <string name="gdpr_title">Récupération des données utilisateur</string>
+    <string name="gdpr_summary">Récuperez toutes vos données par mail</string>
+    <string name="gdpr_dialog_title">Données personnelles</string>
+    <string name="gdpr_dialog_message">Vous allez recevoir toutes vos données par email en accord avec RGPD</string>
+    <string name="gdpr_toast_success">La demande a été faite</string>
+    <string name="user">Utilisateur</string>
+    <string name="username_title">Nom d\'utilisateur</string>
+    <string name="username_summary">Modifiez votre nom d\'utilisateur</string>
+    <string name="new_username">Nouveau nom d\'utilisateur</string>
+    <string name="toast_username_updated">Pseudo mis à jour !</string>
+    <string name="password_title">Mot de passe</string>
+    <string name="password_summary">Modifiez votre mot de passe</string>
+    <string name="new_password">Nouveau mot de passe</string>
+    <string name="toast_password_updated">Mot de passe mis à jour !</string>
+
+    <!-- Friend Invite Activity -->
+    <string name="friend_invites">Demandes d\'amis</string>
+    <string name="no_invites">Aucune demande</string>
+    <string name="btn_reject_description">Refuser une demande</string>
+    <string name="btn_accept_description">Accepter une demande</string>
+
+    <!-- Terms Activity -->
+    <string name="terms_title">Termes et Conditions</string>
+    <string name="checkbox_confirm">Je confirme avoir lu, compris et accepté les Conditions Générales d\'Utilisation</string>
+    <string name="btn_agree">J\'accepte</string>
+    <string name="toast_must_confirm">Vous devez confirmer avoir lu les CGU</string>
+</resources>

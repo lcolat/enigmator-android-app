@@ -5,6 +5,11 @@
         android:title="@string/user">
 
         <Preference
+            android:key="username"
+            android:title="@string/username_title"
+            android:summary="@string/username_summary"/>
+
+        <Preference
             android:key="password"
             android:title="@string/password_title"
             android:summary="@string/password_summary" />

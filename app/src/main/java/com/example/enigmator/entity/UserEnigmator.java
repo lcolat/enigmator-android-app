@@ -31,4 +31,10 @@ public class UserEnigmator implements Serializable {
         String json = prefs.getString(CategoriesActivity.PREF_USER, null);
         return json == null ? null : gson.fromJson(json, UserEnigmator.class);
     }
+
+    public static void saveCurrentUser(Context context, String userJson) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(CategoriesActivity.PREF_USER, userJson);
+        editor.apply();
+    }
 }

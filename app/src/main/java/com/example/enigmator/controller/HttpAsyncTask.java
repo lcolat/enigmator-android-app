@@ -155,7 +155,7 @@ class HttpAsyncTask extends AsyncTask<Void, Void, Response> {
     @Override
     protected void onCancelled(Response response) {
         super.onCancelled();
-        if (request.getListener() != null) {
+        if (request.getListener() != null && response != null) {
             request.getListener().handleError(response);
         }
         httpManager.startNext(true);

@@ -58,6 +58,22 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        Preference usernamePref = findPreference("username");
+        usernamePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(EditDialogFragment.STRING_RESOURCE, R.string.new_username);
+                EditDialogFragment dialogFragment = new EditDialogFragment();
+                dialogFragment.setArguments(bundle);
+
+                assert getFragmentManager() != null;
+                dialogFragment.show(getFragmentManager(), EditDialogFragment.class.getName());
+
+                return true;
+            }
+        });
+
         Preference passwordPref = findPreference("password");
         passwordPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

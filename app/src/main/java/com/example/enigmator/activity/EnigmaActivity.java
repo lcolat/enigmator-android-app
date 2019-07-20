@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -194,8 +193,6 @@ public class EnigmaActivity extends AppCompatActivity {
     }
 
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
-        final Context context = this;
-
         new DownloadFileFromURLTask(new HttpRequestListener() {
             @Override
             public void prepareRequest() { }
@@ -216,11 +213,10 @@ public class EnigmaActivity extends AppCompatActivity {
                         imageView.setVisibility(View.VISIBLE);
                         break;
                     case "audio":
-                        break;
                     case "video":
                         PlayerView videoView = findViewById(R.id.videoView);
                         MediaPlayer mediaPlayer = new MediaPlayer();
-                        videoView.setPlayer(mediaPlayer.getPlayerImpl(context));
+                        videoView.setPlayer(mediaPlayer.getPlayerImpl(EnigmaActivity.this));
                         mediaPlayer.play(response.getContent());
                         videoView.setVisibility(View.VISIBLE);
                         break;
