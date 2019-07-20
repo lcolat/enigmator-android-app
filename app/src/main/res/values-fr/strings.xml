@@ -12,10 +12,18 @@
     <string name="dialog_no_connection_message">Vous devez fournir une connexion à Internet valide</string>
 
     <!-- Login Activity -->
-    <string name="prompt_username">Nom d\'utilsateur</string>
-    <string name="prompt_password">Mot de passe</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="password">Mot de passe</string>
     <string name="action_sign_in">Connexion</string>
     <string name="login_failed">Connexion échouée</string>
+
+    <!-- RegisterActivity -->
+    <string name="register">S\'enregister</string>
+    <string name="email">Email</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom</string>
+    <string name="country">Pays</string>
+    <string name="toast_account_created">Votre compte a été créé</string>
 
     <!-- Categories Activity -->
     <string name="enigma">Enigmes</string>

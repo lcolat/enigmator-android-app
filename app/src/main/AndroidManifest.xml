@@ -17,8 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.TermsActivity"
-            android:label="@string/terms_title"/>
+        <activity android:name=".activity.RegisterActivity"
+            android:label="@string/register"
+            android:parentActivityName=".activity.LoginActivity"/>
+        <activity
+            android:name=".activity.TermsActivity"
+            android:label="@string/terms_title" />
         <activity
             android:name=".activity.FriendInviteActivity"
             android:label="@string/friend_invites"
@@ -26,7 +30,7 @@
         <activity
             android:name=".activity.EnigmaActivity"
             android:parentActivityName=".activity.CategoriesActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.EnigmaCreationActivity"
             android:label="@string/enigma_creation"
