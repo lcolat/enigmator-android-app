@@ -21,6 +21,8 @@ import com.example.enigmator.fragment.NonSwipeableViewPager;
 public class CategoriesActivity extends HttpActivity {
     public static final String PREF_USER = "pref_user";
 
+    private static final int REQUEST_SETTINGS = 41;
+
     private CategoriesFragmentAdapter fragmentAdapter;
     private NonSwipeableViewPager viewPager;
 
@@ -118,7 +120,7 @@ public class CategoriesActivity extends HttpActivity {
                 return true;
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                startActivity(settingsIntent);
+                startActivityForResult(settingsIntent, REQUEST_SETTINGS);
                 return true;
             case R.id.menu_disconnect:
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -134,7 +136,15 @@ public class CategoriesActivity extends HttpActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                editor.remove(PREF_USER);
+                editor.apply();
+                finish();
+            }
+        }
+        else super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

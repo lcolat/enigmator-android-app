@@ -5,6 +5,8 @@
     <string name="search">Recherche</string>
     <string name="results">Resultats</string>
     <string name="submit">Envoyer</string>
+    <string name="warning">Attention !</string>
+    <string name="request_failed">Requête échouée</string>
 
     <string name="dialog_no_connection_title">Pas de connexion Internet</string>
     <string name="dialog_no_connection_message">Vous devez fournir une connexion à Internet valide</string>
@@ -94,6 +96,9 @@
     <string name="gdpr_dialog_title">Données personnelles</string>
     <string name="gdpr_dialog_message">Vous allez recevoir toutes vos données par email en accord avec RGPD</string>
     <string name="gdpr_toast_success">La demande a été faite</string>
+    <string name="delete_account_title">Suppression du compte</string>
+    <string name="delete_account_summary">Supprimez votre compte et toutes les données associées</string>
+    <string name="dialog_delete_account">Cette action est irréversible. Etes-vous sûr ?</string>
     <string name="user">Utilisateur</string>
     <string name="username_title">Nom d\'utilisateur</string>
     <string name="username_summary">Modifiez votre nom d\'utilisateur</string>

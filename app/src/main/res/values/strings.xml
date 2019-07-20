@@ -5,6 +5,8 @@
     <string name="search">Search</string>
     <string name="results">Results</string>
     <string name="submit">Submit</string>
+    <string name="warning">Warning !</string>
+    <string name="request_failed">Request failed</string>
 
     <string name="dialog_no_connection_title">No Internet Connection</string>
     <string name="dialog_no_connection_message">You must provide a valid Internet connection</string>
@@ -94,6 +96,9 @@
     <string name="gdpr_dialog_title">Data Privacy</string>
     <string name="gdpr_dialog_message">You are about to collect all your data (by email) in respect of GDPR policy.</string>
     <string name="gdpr_toast_success">Request has been made</string>
+    <string name="delete_account_title">Delete account</string>
+    <string name="delete_account_summary">Delete your account and all data associated</string>
+    <string name="dialog_delete_account">This action is not reversible. Are you sure ?</string>
     <string name="user">User</string>
     <string name="username_title">Change username</string>
     <string name="username_summary">Modify your username</string>
