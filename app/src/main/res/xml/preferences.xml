@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/user">
+
+        <Preference
+            android:key="username"
+            android:title="@string/username_title"
+            android:summary="@string/username_summary"/>
+
+        <Preference
+            android:key="password"
+            android:title="@string/password_title"
+            android:summary="@string/password_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/privacy_category">
+
+        <Preference
+            android:key="gdpr_get"
+            android:title="@string/gdpr_title"
+            android:summary="@string/gdpr_summary" />
+
+        <Preference
+            android:key="delete_account"
+            android:title="@string/delete_account_title"
+            android:summary="@string/delete_account_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_profile"
+        android:title="@string/action_profile"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_friend_requests"
+        android:title="@string/friend_invites"
+        android:icon="@drawable/ic_person_add_white_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_refresh_enigmas"
+        android:title="@string/action_refresh_enigmas"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_disconnect"
+        android:title="@string/action_disconnect"
+        app:showAsAction="never"/>
+</menu>

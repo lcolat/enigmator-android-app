@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.TopicActivity"
+    android:padding="@dimen/app_padding">
+
+    <TextView
+        android:id="@+id/text_topic_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/btn_open_enigma"
+        android:layout_toLeftOf="@+id/btn_open_enigma"
+        android:layout_toStartOf="@+id/btn_open_enigma"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/list_category"/>
+
+    <ImageButton
+        android:id="@+id/btn_open_enigma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_open_in_new_purple_24dp"
+        style="?android:attr/buttonBarButtonStyle"
+        android:contentDescription="@string/icon_open_in_new_description"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_posts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_post"
+        android:layout_below="@id/btn_open_enigma"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/empty_text_height"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/no_posts_found"
+        android:textSize="@dimen/text_size"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/edit_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLines="3"
+        android:hint="@string/hint_send_message"
+        android:imeOptions="flagNoEnterAction"
+        android:layout_toStartOf="@+id/btn_send_post"
+        android:layout_toLeftOf="@id/btn_send_post" />
+
+    <ImageButton
+        android:id="@+id/btn_send_post"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/send_icon_description"
+        app:srcCompat="@drawable/ic_send_purple_24dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>
