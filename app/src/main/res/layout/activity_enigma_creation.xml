@@ -152,7 +152,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/answer_case_sensitive"
+        android:text="@string/answer"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/list_category" />
 

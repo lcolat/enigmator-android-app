@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/prompt_username" />
+        tools:text="@string/username" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

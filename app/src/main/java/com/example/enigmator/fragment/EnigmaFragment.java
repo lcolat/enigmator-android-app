@@ -46,7 +46,8 @@ import static com.example.enigmator.controller.HttpRequest.GET;
 public class EnigmaFragment extends Fragment {
     private static final String TAG = EnigmaFragment.class.getName();
 
-    private static final int REQUEST_CODE = 87;
+    private static final int REQUEST_SEE_ENIGMA = 87;
+    private static final int REQUEST_CREATION = 88;
 
     private List<Enigma> enigmas, waitingValidation;
     private EnigmaRecyclerViewAdapter adapter;
@@ -58,6 +59,7 @@ public class EnigmaFragment extends Fragment {
 
     private TextView textEmpty;
     private ProgressBar progressBar;
+    private RecyclerView recyclerView;
 
     private boolean isValidator;
     private int userId;
@@ -85,8 +87,8 @@ public class EnigmaFragment extends Fragment {
                 @Override
                 public void onListFragmentInteraction(Enigma enigma) {
                     Intent intent = new Intent(getContext(), EnigmaActivity.class);
-                    intent.putExtra(EnigmaActivity.ENIGMA_KEY, gson.toJson(enigma));
-                    startActivityForResult(intent, REQUEST_CODE);
+                    intent.putExtra(EnigmaActivity.ENIGMA_KEY, enigma);
+                    startActivityForResult(intent, REQUEST_SEE_ENIGMA);
                 }
             };
         }
@@ -114,7 +116,7 @@ public class EnigmaFragment extends Fragment {
 
         progressBar = view.findViewById(R.id.progress_loading);
         textEmpty = view.findViewById(R.id.text_empty);
-        final RecyclerView recyclerView = view.findViewById(R.id.list_enigmas);
+        recyclerView = view.findViewById(R.id.list_enigmas);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -153,6 +155,7 @@ public class EnigmaFragment extends Fragment {
                 btnRandom.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
             case VALIDATE:
+                if (waitingValidation.isEmpty()) textEmpty.setVisibility(View.VISIBLE);
                 btnValidate.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
         }
@@ -165,7 +168,7 @@ public class EnigmaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EnigmaCreationActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CREATION);
             }
         });
 
@@ -203,45 +206,7 @@ public class EnigmaFragment extends Fragment {
         }
 
         if (isValidator) {
-            btnValidate.setVisibility(View.VISIBLE);
-            btnValidate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    resetButtonsColor();
-                    textEmpty.setVisibility(waitingValidation.isEmpty() ? View.VISIBLE : View.GONE);
-                    btnValidate.setTextColor(getResources().getColor(R.color.colorPrimary));
-
-                    adapter.setValues(waitingValidation);
-                    adapter.notifyDataSetChanged();
-                    lastSort = SortType.VALIDATE;
-                }
-            });
-
-            httpManager.addToQueue(GET, "/Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
-                @Override
-                public void prepareRequest() {
-                    recyclerView.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void handleSuccess(Response response) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-
-                    if (response.getStatusCode() != 204) {
-                        waitingValidation = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class)));
-                    }
-                }
-
-                @Override
-                public void handleError(Response error) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                    Log.e(TAG, "Enigmes?filter[where][status]=false");
-                    Log.e(TAG, error.toString());
-                }
-            });
+            loadWaitingValidation();
         }
 
         return view;
@@ -249,22 +214,88 @@ public class EnigmaFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CREATION) {
+            if (resultCode == Activity.RESULT_OK) {
+                loadWaitingValidation();
+            }
+        } else if (requestCode == REQUEST_SEE_ENIGMA) {
             if (resultCode == Activity.RESULT_OK) {
                 int enigmaId = data.getIntExtra(EnigmaActivity.ENIGMA_ID_KEY, -1);
+                boolean isEnigmaAnswered = data.getBooleanExtra(EnigmaActivity.ANSWERED_KEY, false);
                 boolean isEnigmaValidated = data.getBooleanExtra(EnigmaActivity.VALIDATION_STATUS_KEY, false);
 
-                for (Enigma enigma : waitingValidation) {
-                    if (enigma.getId() == enigmaId) {
-                        waitingValidation.remove(enigma);
-                        if (isEnigmaValidated) enigmas.add(enigma);
-                        break;
+                if (isEnigmaAnswered) {
+                    // Enigma answered
+                    for (int i = 0; i < enigmas.size(); i++) {
+                        if (enigmas.get(i).getId() == enigmaId) {
+                            enigmas.remove(i);
+                            break;
+                        }
+                    }
+                } else {
+                    // Enigma Validated/Rejected
+                    for (Enigma e : waitingValidation) {
+                        if (e.getId() == enigmaId) {
+                            waitingValidation.remove(e);
+                            if (isEnigmaValidated) {
+                                e.setStatus(true);
+                                enigmas.add(e);
+                            }
+                            break;
+                        }
+                    }
+                    if (waitingValidation.isEmpty()) {
+                        textEmpty.setVisibility(View.VISIBLE);
                     }
                 }
 
                 adapter.notifyDataSetChanged();
             }
         }
+    }
+
+    private void loadWaitingValidation() {
+        if (!isValidator) return;
+
+        btnValidate.setVisibility(View.VISIBLE);
+        btnValidate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetButtonsColor();
+                textEmpty.setVisibility(waitingValidation.isEmpty() ? View.VISIBLE : View.GONE);
+                btnValidate.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                adapter.setValues(waitingValidation);
+                adapter.notifyDataSetChanged();
+                lastSort = SortType.VALIDATE;
+            }
+        });
+
+        httpManager.addToQueue(GET, "/Enigmes?filter[where][status]=false", null, new HttpRequest.HttpRequestListener() {
+            @Override
+            public void prepareRequest() {
+                recyclerView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void handleSuccess(Response response) {
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+
+                if (response.getStatusCode() != 204) {
+                    waitingValidation = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), Enigma[].class)));
+                }
+            }
+
+            @Override
+            public void handleError(Response error) {
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Enigmes?filter[where][status]=false");
+                Log.e(TAG, error.toString());
+            }
+        });
     }
 
     @Override

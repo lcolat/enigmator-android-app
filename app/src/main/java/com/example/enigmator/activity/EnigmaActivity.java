@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -29,6 +28,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.enigmator.R;
 import com.example.enigmator.controller.DownloadFileFromURLTask;
@@ -60,10 +60,12 @@ public class EnigmaActivity extends AppCompatActivity {
     public static final String ENIGMA_ID_KEY = "enigma_id_key";
     public static final String ENIGMA_KEY = "enigma_key";
     public static final String VALIDATION_STATUS_KEY = "validation_status_key";
+    public static final String ANSWERED_KEY = "answered_key";
 
     private static final String PAST_ANSWERS_BASE_KEY = "past_answers_";
 
     private ProgressBar progressLoading;
+    private ListView listAnswers;
 
     private SharedPreferences prefs;
     private HttpRequestGenerator httpRequestGenerator;
@@ -100,8 +102,10 @@ public class EnigmaActivity extends AppCompatActivity {
 
         textQuestion.setText(enigma.getQuestion());
 
-        // Validator setup
+        @SuppressWarnings("ConstantConditions")
         boolean isValidator = UserEnigmator.getCurrentUser(this).isValidator();
+
+        // Validator setup
         if (!enigma.isStatus() && isValidator) {
             LinearLayout layoutButtons = findViewById(R.id.layout_validator_buttons);
             layoutButtons.setVisibility(View.VISIBLE);
@@ -146,10 +150,12 @@ public class EnigmaActivity extends AppCompatActivity {
             if (pastSavedAnswers == null) pastAnswers = new ArrayList<>();
             else pastAnswers = new ArrayList<>(pastSavedAnswers);
 
-            ListView listAnswers = findViewById(R.id.list_past_answers);
+            listAnswers = findViewById(R.id.list_past_answers);
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, pastAnswers);
             listAnswers.setAdapter(adapter);
-
+            if (!pastAnswers.isEmpty()) {
+                listAnswers.setSelection(adapter.getCount() - 1);
+            }
 
             httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
                     new HttpRequestListener() {
@@ -187,8 +193,6 @@ public class EnigmaActivity extends AppCompatActivity {
     }
 
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
-        final Context context = this;
-      
         new DownloadFileFromURLTask(new HttpRequestListener() {
             @Override
             public void prepareRequest() { }
@@ -204,16 +208,15 @@ public class EnigmaActivity extends AppCompatActivity {
                 switch (enigmaType.toLowerCase()) {
                     case "image":
                         Bitmap bitmap = BitmapFactory.decodeFile(response.getContent());
-                        ImageView imageView = findViewById(R.id.image_view);
+                        ImageView imageView = findViewById(R.id.image_enigma);
                         imageView.setImageBitmap(bitmap);
                         imageView.setVisibility(View.VISIBLE);
                         break;
                     case "audio":
-                        break;
                     case "video":
                         PlayerView videoView = findViewById(R.id.videoView);
                         MediaPlayer mediaPlayer = new MediaPlayer();
-                        videoView.setPlayer(mediaPlayer.getPlayerImpl(context));
+                        videoView.setPlayer(mediaPlayer.getPlayerImpl(EnigmaActivity.this));
                         mediaPlayer.play(response.getContent());
                         videoView.setVisibility(View.VISIBLE);
                         break;
@@ -250,15 +253,25 @@ public class EnigmaActivity extends AppCompatActivity {
 
                         @Override
                         public void handleSuccess(Response response) {
-                            if (response.getContent().contains("mauvaise")) {
+                            if (response.getContent().contains("mauvais")) {
                                 zoneText.startAnimation(shakeError(zoneText));
                                 pastAnswers.add(answer);
+                                if (pastAnswers.size() == 1) {
+                                    adapter = new ArrayAdapter<>(EnigmaActivity.this, android.R.layout.simple_expandable_list_item_1, pastAnswers);
+                                }
+                                listAnswers.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
+
+                                listAnswers.setSelection(adapter.getCount() - 1);
                             } else {
-                                zoneText.setEnabled(false);
-                                zoneText.setTextColor(Color.GREEN);
-                                zoneText.setFocusable(false);
                                 prefs.edit().remove(PAST_ANSWERS_BASE_KEY + enigma.getId()).apply();
+                                Toast.makeText(EnigmaActivity.this, R.string.right_answer, Toast.LENGTH_SHORT).show();
+
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra(ENIGMA_ID_KEY, enigma.getId());
+                                resultIntent.putExtra(ANSWERED_KEY, true);
+                                setResult(RESULT_OK, resultIntent);
+                                finish();
                             }
                             button.setEnabled(true);
                         }
@@ -266,27 +279,8 @@ public class EnigmaActivity extends AppCompatActivity {
                         @Override
                         public void handleError(Response error) {
                             button.setEnabled(true);
-                        }
-
-                        private TranslateAnimation shakeError(EditText zoneText) {
-                            TranslateAnimation shake = new TranslateAnimation(0,
-                                    0,
-                                    0,
-                                    10);
-                            shake.setDuration(1000);
-                            shake.setInterpolator(new CycleInterpolator(5));
-
-                            ValueAnimator valueAnimator = ObjectAnimator.ofInt(zoneText,
-                                    "textColor",
-                                    Color.BLACK,
-                                    Color.RED
-                            );
-                            valueAnimator.setEvaluator(new ArgbEvaluator());
-                            valueAnimator.setDuration(1000);
-                            valueAnimator.setRepeatCount(1);
-                            valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
-                            valueAnimator.start();
-                            return shake;
+                            Log.e(TAG, "Answer Enigma : " + answer);
+                            Log.e(TAG, error.toString());
                         }
                     });
             }
@@ -296,9 +290,9 @@ public class EnigmaActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(Activity.RESULT_CANCELED);
+        setResult(RESULT_CANCELED);
 
-        if (enigma != null) {
+        if (enigma != null && enigma.isStatus() && !pastAnswers.isEmpty()) {
             prefs.edit()
                     .putStringSet(PAST_ANSWERS_BASE_KEY + enigma.getId(), new HashSet<>(pastAnswers))
                     .apply();
@@ -330,5 +324,27 @@ public class EnigmaActivity extends AppCompatActivity {
         }
 
         super.onDestroy();
+    }
+
+
+    private TranslateAnimation shakeError(EditText zoneText) {
+        TranslateAnimation shake = new TranslateAnimation(0,
+                0,
+                0,
+                10);
+        shake.setDuration(1000);
+        shake.setInterpolator(new CycleInterpolator(5));
+
+        ValueAnimator valueAnimator = ObjectAnimator.ofInt(zoneText,
+                "textColor",
+                Color.BLACK,
+                Color.RED
+        );
+        valueAnimator.setEvaluator(new ArgbEvaluator());
+        valueAnimator.setDuration(1000);
+        valueAnimator.setRepeatCount(1);
+        valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        valueAnimator.start();
+        return shake;
     }
 }

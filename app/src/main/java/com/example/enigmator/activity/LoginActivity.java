@@ -18,6 +18,7 @@ import com.example.enigmator.R;
 import com.example.enigmator.controller.HttpManager;
 import com.example.enigmator.controller.HttpRequest;
 import com.example.enigmator.entity.Response;
+import com.example.enigmator.entity.UserEnigmator;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -56,6 +57,15 @@ public class LoginActivity extends HttpActivity {
                         buildNoConnectionErrorDialog(null).show();
                     }
                 }
+            }
+        });
+
+        Button btnRegister = findViewById(R.id.btn_register);
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -126,9 +136,7 @@ public class LoginActivity extends HttpActivity {
                             public void handleSuccess(Response response) {
                                 mProgressBar.setVisibility(View.GONE);
 
-                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
-                                editor.putString(CategoriesActivity.PREF_USER, response.getContent());
-                                editor.apply();
+                                UserEnigmator.saveCurrentUser(LoginActivity.this, response.getContent());
 
                                 Intent intent = new Intent(LoginActivity.this, CategoriesActivity.class);
                                 startActivity(intent);

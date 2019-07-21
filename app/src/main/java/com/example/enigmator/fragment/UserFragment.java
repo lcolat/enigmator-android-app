@@ -174,7 +174,8 @@ public class UserFragment extends Fragment {
                     if (response.getStatusCode() != 204) {
                         textFriendsEmpty.setVisibility(View.GONE);
                         mFriends = new ArrayList<>(Arrays.asList(gson.fromJson(response.getContent(), UserEnigmator[].class)));
-                    } else {
+                    }
+                    if (response.getStatusCode() == 204 || mFriends.isEmpty()) {
                         textFriendsEmpty.setVisibility(View.VISIBLE);
                     }
 

@@ -86,6 +86,10 @@ public class FriendInviteActivity extends HttpActivity {
                         friendRequesters.add(gson.fromJson(object.getAsJsonObject().get("FROM"), UserEnigmator.class));
                     }
 
+                    if (friendRequesters.isEmpty()) {
+                        textEmpty.setVisibility(View.VISIBLE);
+                    }
+
                     adapter.setValues(friendRequesters);
                     adapter.notifyDataSetChanged();
                 }

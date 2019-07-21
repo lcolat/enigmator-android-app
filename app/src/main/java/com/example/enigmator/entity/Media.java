@@ -35,13 +35,14 @@ public class Media {
                 type = "image/png";
                 break;
             case "jpeg":
-                type = "image/jpeg";
-                break;
             case "jpg":
                 type = "image/jpeg";
                 break;
             case "mp4":
                 type = "video/mp4";
+                break;
+            case "3gp":
+                type = "video/3gpp";
                 break;
             default:
                 throw new UnsupportedOperationException("File extension not supported: " + extension);

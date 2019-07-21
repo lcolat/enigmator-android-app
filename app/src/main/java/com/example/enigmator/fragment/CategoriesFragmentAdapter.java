@@ -24,7 +24,6 @@ public class CategoriesFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        System.out.println("position: "+ position);
         switch (position) {
             case 0:
                 return new UserFragment();

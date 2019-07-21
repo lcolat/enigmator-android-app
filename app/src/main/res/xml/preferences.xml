@@ -5,6 +5,11 @@
         android:title="@string/user">
 
         <Preference
+            android:key="username"
+            android:title="@string/username_title"
+            android:summary="@string/username_summary"/>
+
+        <Preference
             android:key="password"
             android:title="@string/password_title"
             android:summary="@string/password_summary" />
@@ -15,9 +20,14 @@
         android:title="@string/privacy_category">
 
         <Preference
-            android:key="gdpr"
+            android:key="gdpr_get"
             android:title="@string/gdpr_title"
             android:summary="@string/gdpr_summary" />
+
+        <Preference
+            android:key="delete_account"
+            android:title="@string/delete_account_title"
+            android:summary="@string/delete_account_summary" />
 
     </PreferenceCategory>
 
