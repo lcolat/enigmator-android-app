@@ -156,40 +156,40 @@ public class EnigmaActivity extends AppCompatActivity {
             if (!pastAnswers.isEmpty()) {
                 listAnswers.setSelection(adapter.getCount() - 1);
             }
-
-            httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
-                    new HttpRequestListener() {
-                        @Override
-                        public void prepareRequest() {
-                            progressLoading.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void handleSuccess(Response response) {
-                            btnSendAnswer.setOnClickListener(sendAnswerEnigma(btnSendAnswer));
-
-                            if (response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
-                                    gson.fromJson(response.getContent(), JsonArray.class).size() != 0) {
-
-                                String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
-                                        get(0).getAsJsonObject().get("type").getAsString();
-
-                                downloadMedia(enigmaType,
-                                        gson.fromJson(response.getContent(), JsonArray.class).get(0)
-                                                .getAsJsonObject().get("filename").getAsString());
-                            }
-
-                            progressLoading.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void handleError(Response error) {
-                            progressLoading.setVisibility(View.GONE);
-                            Log.e(TAG, "GetMediaOfEnigma. " + error);
-                            finish();
-                        }
-                    });
         }
+
+        httpRequestGenerator.requestMediaOfEnigma(enigma.getId(),
+                new HttpRequestListener() {
+                    @Override
+                    public void prepareRequest() {
+                        progressLoading.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void handleSuccess(Response response) {
+                        btnSendAnswer.setOnClickListener(sendAnswerEnigma(btnSendAnswer));
+
+                        if (response.getStatusCode() != HttpURLConnection.HTTP_NO_CONTENT &&
+                                gson.fromJson(response.getContent(), JsonArray.class).size() != 0) {
+
+                            String enigmaType = gson.fromJson(response.getContent(), JsonArray.class).
+                                    get(0).getAsJsonObject().get("type").getAsString();
+
+                            downloadMedia(enigmaType,
+                                    gson.fromJson(response.getContent(), JsonArray.class).get(0)
+                                            .getAsJsonObject().get("filename").getAsString());
+                        }
+
+                        progressLoading.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void handleError(Response error) {
+                        progressLoading.setVisibility(View.GONE);
+                        Log.e(TAG, "GetMediaOfEnigma. " + error);
+                        finish();
+                    }
+                });
     }
 
     private void downloadMedia(final String enigmaType, String fileNameMedia) {
